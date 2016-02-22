@@ -7,13 +7,13 @@ SwissalpS.doorsteward = {
 }
 SwissalpS.info.timerStart(SwissalpS.doorsteward)
 
-function SwissalpS.doorsteward.toggle(tPos, oNodeDoorBottom)
+function SwissalpS.doorsteward.toggle(tPos, oNodeDoor)
     local tParams, sReplaceBottom, sReplaceTop
-    local p2 = oNodeDoorBottom.param2
+    local p2 = oNodeDoor.param2
     if nil == p2 then
         SwissalpS.info.broadcast('nil param2 in SwissalpS.doorsteward.toggle')
     end
-    local sNameDoorFull = oNodeDoorBottom.name
+    local sNameDoorFull = oNodeDoor.name
     local iLen = string.len(sNameDoorFull)
     local sNameDoor = string.sub(sNameDoorFull, 1, iLen - 4)
     local bOpen = ('2' == string.sub(sNameDoorFull, iLen))
@@ -29,25 +29,22 @@ function SwissalpS.doorsteward.toggle(tPos, oNodeDoorBottom)
         sReplaceBottom = sNameDoor .. '_b_2'
         sReplaceTop = sNameDoor .. '_t_2'
     end -- if open or closed
---local sBottom = 'false'
---if bBottom then sBottom = 'true' end
---local sOpen = 'false'
---if bOpen then sOpen = 'true' end
---SwissalpS.info.broadcast('sss '..ssss..' p2 '..p2..' len'..iLen..' sNameDoor '..sNameDoor..' sRepB '..sReplaceBottom..' sRepT '..sReplaceTop..' bopen '..sOpen..' bB '..sBottom)
 	p2 = tParams[p2 + 1]
     if not bBottom then
         -- correct tPos
         tPos.y = tPos.y - 1
-    end -- if bottom or top
+    end -- if top node given, jic we find use for this giving top-nodes
+    -- replace bottom node
     minetest.swap_node(tPos, {name = sReplaceBottom, param2 = p2})
+    -- move up one node and replace top
     tPos.y = tPos.y + 1
     minetest.swap_node(tPos, {name = sReplaceTop, param2 = p2})
 end -- SwissalpS.doorsteward.toggle
 
-function SwissalpS.doorsteward.fABM(tPos, oNode, active_object_count, active_object_count_wider)
+function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, active_object_count, active_object_count_wider)
 
     -- determine if door is open or not
-    local sNameDoor = oNode.name
+    local sNameDoor = oNodeDoor.name
     local iLen = string.len(sNameDoor)
     local bOpen = ('2' == string.sub(sNameDoor, iLen))
 
@@ -70,14 +67,14 @@ function SwissalpS.doorsteward.fABM(tPos, oNode, active_object_count, active_obj
         if 0 == iCountPlayers then
             -- has NO players nearby -> close door
 --SwissalpS.info.broadcast('door is open and 0 players nearby')
-            SwissalpS.doorsteward.toggle(tPos, oNode)
+            SwissalpS.doorsteward.toggle(tPos, oNodeDoor)
         end
     else
         -- door is closed
         if 0 < iCountPlayers then
             -- has players nearby -> open door ... if..
 --SwissalpS.info.broadcast('door is closed and ' .. iCountPlayers .. ' players nearby')
-            SwissalpS.doorsteward.toggle(tPos, oNode)
+            SwissalpS.doorsteward.toggle(tPos, oNodeDoor)
         end
     end -- if open or closed
     --[[
