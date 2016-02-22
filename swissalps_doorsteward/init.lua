@@ -1,17 +1,17 @@
 
 SwissalpS = SwissalpS or {}
-SwissalpS.doorcloser = {
+SwissalpS.doorsteward = {
     version = 0.1,
-    sSwissalpSmodTag = 'mod_doorcloser',
-    sSwissalpSmodTitle = 'doorcloser'
+    sSwissalpSmodTag = 'mod_doorsteward',
+    sSwissalpSmodTitle = 'doorsteward'
 }
-SwissalpS.info.timerStart(SwissalpS.doorcloser)
+SwissalpS.info.timerStart(SwissalpS.doorsteward)
 
-function SwissalpS.doorcloser.toggle(tPos, oNodeDoorBottom)
+function SwissalpS.doorsteward.toggle(tPos, oNodeDoorBottom)
     local tParams, sReplaceBottom, sReplaceTop
     local p2 = oNodeDoorBottom.param2
     if nil == p2 then
-        SwissalpS.info.broadcast('nil param2 in SwissalpS.doorcloser.toggle')
+        SwissalpS.info.broadcast('nil param2 in SwissalpS.doorsteward.toggle')
     end
     local sNameDoorFull = oNodeDoorBottom.name
     local iLen = string.len(sNameDoorFull)
@@ -42,9 +42,9 @@ function SwissalpS.doorcloser.toggle(tPos, oNodeDoorBottom)
     minetest.swap_node(tPos, {name = sReplaceBottom, param2 = p2})
     tPos.y = tPos.y + 1
     minetest.swap_node(tPos, {name = sReplaceTop, param2 = p2})
-end -- SwissalpS.doorcloser.toggle
+end -- SwissalpS.doorsteward.toggle
 
-function SwissalpS.doorcloser.fABM(tPos, oNode, active_object_count, active_object_count_wider)
+function SwissalpS.doorsteward.fABM(tPos, oNode, active_object_count, active_object_count_wider)
 
     -- determine if door is open or not
     local sNameDoor = oNode.name
@@ -70,14 +70,14 @@ function SwissalpS.doorcloser.fABM(tPos, oNode, active_object_count, active_obje
         if 0 == iCountPlayers then
             -- has NO players nearby -> close door
 --SwissalpS.info.broadcast('door is open and 0 players nearby')
-            SwissalpS.doorcloser.toggle(tPos, oNode)
+            SwissalpS.doorsteward.toggle(tPos, oNode)
         end
     else
         -- door is closed
         if 0 < iCountPlayers then
             -- has players nearby -> open door ... if..
 --SwissalpS.info.broadcast('door is closed and ' .. iCountPlayers .. ' players nearby')
-            SwissalpS.doorcloser.toggle(tPos, oNode)
+            SwissalpS.doorsteward.toggle(tPos, oNode)
         end
     end -- if open or closed
     --[[
@@ -86,15 +86,15 @@ function SwissalpS.doorcloser.fABM(tPos, oNode, active_object_count, active_obje
         return false
     end
     --]]
-end -- SwissalpS.doorcloser.fABM
+end -- SwissalpS.doorsteward.fABM
 
-SwissalpS.doorcloser.tABM = {
+SwissalpS.doorsteward.tABM = {
     nodenames = {'doors:door_wood_b_1', 'doors:door_wood_b_2'},
 	interval = 1.0,
 	chance = 1,
-	action = SwissalpS.doorcloser.fABM
+	action = SwissalpS.doorsteward.fABM
 }
 
-minetest.register_abm(SwissalpS.doorcloser.tABM)
+minetest.register_abm(SwissalpS.doorsteward.tABM)
 
-SwissalpS.info.timerDiffLog(SwissalpS.doorcloser)
+SwissalpS.info.timerDiffLog(SwissalpS.doorsteward)
