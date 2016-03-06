@@ -9,6 +9,11 @@ SwissalpS.info = {
 SwissalpS.info.tStartTimes = {}
 SwissalpS.info.tStartTimes[SwissalpS.info.sSwissalpSmodTag] = os.clock()
 
+--TODO: figure a way to determine if NTFS OS
+DIR_DELIM = DIR_DELIM or '/';
+
+SwissalpS.info.bCanShell = os.execute()
+
 -- depricated, use SwissalpS.info.notifyPlayer instead
 SwissalpS.info.player_notify = function(sName, sMessage)
 	minetest.chat_send_player(sName, "SssSinfo - " .. sMessage, false)
@@ -61,8 +66,8 @@ function SwissalpS.info.timerStart(oMod)
 
 end -- SwissalpS.info.timerStart
 
-local sPathMod = minetest.get_modpath(minetest.get_current_modname())
-dofile(sPathMod .. '/chatCommandFunctions.lua')
-dofile(sPathMod .. '/registerChatCommands.lua')
+local sPathMod = minetest.get_modpath(minetest.get_current_modname());
+dofile(sPathMod .. DIR_DELIM .. 'chatCommandFunctions.lua');
+dofile(sPathMod .. DIR_DELIM .. 'registerChatCommands.lua');
 
-SwissalpS.info.timerDiffLog(SwissalpS.info)
+SwissalpS.info.timerDiffLog(SwissalpS.info);
