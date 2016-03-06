@@ -116,16 +116,16 @@ function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, iCountActiveObject, iCountA
         if 0 == iCountPlayers then
             -- has NO players nearby -> close door
 --SwissalpS.info.broadcast('door is open and 0 players nearby')
-            return SwissalpS.doorsteward:close(minetest.get_node_or_nil(tPos));
-            --return SwissalpS.doorsteward:toggle(tPos, oNodeDoor)
+            --return SwissalpS.doorsteward:close(minetest.get_node_or_nil(tPos));
+            return SwissalpS.doorsteward:toggle(tPos, oNodeDoor)
         end
     else
         -- door is closed
         if 0 < iCountPlayers then
             -- has players nearby -> open door ... if..
 --SwissalpS.info.broadcast('door is closed and ' .. iCountPlayers .. ' players nearby')
-            return SwissalpS.doorsteward:open(minetest.get_node_or_nil(tPos));
-            --return SwissalpS.doorsteward:toggle(tPos, oNodeDoor)
+            --return SwissalpS.doorsteward:open(minetest.get_node_or_nil(tPos));
+            return SwissalpS.doorsteward:toggle(tPos, oNodeDoor)
         end
     end -- if open or closed
     --[[
