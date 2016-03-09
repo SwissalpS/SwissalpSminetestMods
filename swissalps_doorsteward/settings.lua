@@ -28,3 +28,20 @@ end -- local setting
 --setting('boolean',  'gotWood', false);
 --setting('position', 'maxSize', {x = 22, y = 44, z = 44});
 --setting('number',   'healthGain', 4);
+
+-- setup player db
+setting('string', 'db_prefix_slot', '');
+-- the player name to use to store values for all players
+setting('string', 'db_global_player_name', '__SwissalpS_Global_Player_Name__');
+-- filename for player db
+setting('string', 'db_strategies_fs_name', 'SwissalpS_doorsteward');
+-- file format for player db
+setting('string', 'db_strategies_fs_form', 'json');
+-- path to player db
+setting('string', 'db_strategies_fs_place', 'world');
+SssSdsS = SwissalpS.doorsteward.setting;
+SssSdsS.db_strategies = {fs = {
+        name = SssSdsS.db_strategies_fs_name,
+        form = SssSdsS.db_strategies_fs_form,
+		place = SssSdsS.db_strategies_fs_place,
+}};
