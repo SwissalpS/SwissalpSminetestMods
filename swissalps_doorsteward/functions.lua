@@ -1,11 +1,11 @@
-function SwissalpS.doorsteward.mayOpen(tPos, oPlayer)
+function SwissalpS.doorsteward.mayOpen(tPos, sPlayer)
 	-- first check for doorsteweard groups
 	local meta = minetest.get_meta(tPos);
 	local sGroups = meta:get_string('swissalps_doorsteward_privs') or '';
 	local aGroups = string.split(sGroups, ',');
-	local sGroupsPlayer = SwissalpS.doorsteward.dbPlayer:get(oPlayer, 'groups', '');
+	local sGroupsPlayer = SwissalpS.doorsteward.dbPlayer:get(sPlayer, 'groups', '');
 	local aGroupsPlayer = string.split(sGroupsPlayer, ',');
-print('groups', aGroups);
+print('groups', dump(aGroups));
 	for iIndex, sGroup in pairs(aGroups) do
 		for iIndexPlayer, sGroupPlayer in pairs(aGroupsPlayer) do
 			if sGroupPlayer == sGroup then
@@ -18,7 +18,6 @@ print('groups', aGroups);
 	if '' == sOwner then
 		return true;
 	end; -- if no owner, anybody may open and close
-	local sPlayer = oPlayer:get_player_name();
 	return sOwner == sPlayer;
 end -- SwissalpS.doorsteward.mayOpen
 
@@ -43,7 +42,7 @@ function SwissalpS.doorsteward.doorBottoms()
 		if not bIsTrapdoor then
 			if 'doors:' == string.sub(sKey, 1, 6) then
 				if string.find(sKey, '_b_') then
-print('inserting into doorBottoms: ', sKey);
+--print('inserting into doorBottoms: ', sKey);
 					table.insert(aOut, sKey);
 					table.insert(aOut, sKey);
 				end; -- if is a bottom
@@ -169,8 +168,8 @@ function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, iCountActiveObject, iCountA
 --SwissalpS.info.broadcast('door is closed and ' .. iCountPlayers .. ' players nearby')
             -- has players nearby -> open door ... if..
 			-- any of their names match the owner or privs match
-			for iIndex, oPlayer in pairs(tPlayers) do
-				if SwissalpS.doorsteward.mayOpen(tPos, oPlayer) then
+			for iIndex, sPlayer in pairs(tNames) do
+				if SwissalpS.doorsteward.mayOpen(tPos, sPlayer) then
 					--return SwissalpS.doorsteward:open(minetest.get_node_or_nil(tPos));
 					return SwissalpS.doorsteward:toggle(tPos, oNodeDoor);
 				end;
