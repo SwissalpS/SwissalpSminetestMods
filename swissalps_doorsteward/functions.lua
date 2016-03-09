@@ -42,12 +42,14 @@ function SwissalpS.doorsteward.doorBottoms()
 		end -- if is trapdoor
 		if not bIsTrapdoor then
 			if 'doors:' == string.sub(sKey, 1, 6) then
+				if string.find(sKey, '_b_') then
 print('inserting into doorBottoms: ', sKey);
-				table.insert(aOut, sKey .. '_b_1');
-				table.insert(aOut, sKey .. '_b_2');
-			end -- if found a door
-		end -- if is not trapdoor
-	end -- loop all node types
+					table.insert(aOut, sKey);
+					table.insert(aOut, sKey);
+				end; -- if is a bottom
+			end; -- if found a door
+		end; -- if is not trapdoor
+	end ;-- loop all node types
 	return aOut;
 end -- SwissalpS.doorsteward.doorBottoms
 
