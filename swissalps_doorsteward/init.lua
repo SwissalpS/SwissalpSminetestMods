@@ -10,6 +10,7 @@ SwissalpS.info.timerStart(SwissalpS.doorsteward);
 local sPathMod = minetest.get_modpath(minetest.get_current_modname()) .. DIR_DELIM;
 dofile(sPathMod .. 'settings.lua');
 dofile(sPathMod .. 'functions.lua');
+dofile(sPathMod .. 'key.lua');
 
 -- init db
 SwissalpS.doorsteward.dbPlayer = SwissalpS.db.playerDB(SssSdsS.db_strategies);
