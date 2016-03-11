@@ -42,9 +42,10 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
     if nil == tMeta then
         SwissalpS.info.notifyPlayer(sName, 'Meta-data not found.');
     else
-        for sKey, sValue in pairs(tMeta) do
-            sInfo = sInfo .. "\n" .. 'meta.' .. sKey .. ' = ' .. dump(sValue);
-        end; -- loop all entries in meta
+        SwissalpS.info.notifyPlayer(sName, 'Meta-data: ' .. dump(tMeta));
+        --for sKey, sValue in pairs(tMeta) do
+        --    sInfo = sInfo .. "\n" .. 'meta.' .. sKey .. ' = ' .. dump(sValue);
+        --end; -- loop all entries in meta
     end; -- if failed to fetch meta
     SwissalpS.info.notifyPlayer(sName, sInfo);
 
