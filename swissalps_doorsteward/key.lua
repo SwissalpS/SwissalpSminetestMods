@@ -175,7 +175,7 @@ SssSdsK.def = {
     tool_capabilities = SssSdsK.tool_capabilities,
     node_placement_prediction = nil,
 
-    on_place = SssSdsK.onPlace,
+    --on_place = SssSdsK.onPlace,
     on_use = SssSdsK.onPlace,
 };
 
