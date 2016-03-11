@@ -39,7 +39,7 @@ function SssSdsK.showForm(tPos, sPlayer)
     local sFowner
     if isSuperUser or isOwner then
 print('isSuperUser or isOwner');
-        sFowner = 'field[0,0.4;5,1;owner;Owner:' .. sOwner .. ';]';
+        sFowner = 'field[0,1.4;5,1;owner;Owner:' .. sOwner .. ';]';
     else
 print('is not owner or admin');
         sFowner = 'label[0,0.4;Owner: ' .. sOwner .. ';]';
