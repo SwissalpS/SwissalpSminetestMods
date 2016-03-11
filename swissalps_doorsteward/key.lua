@@ -37,7 +37,8 @@ function SssSdsK.showForm(tPos, sPlayer)
     local isOwner = sOwner == sPlayer;
     local hasOwner = 0 < #sOwner;
     local oNode = minetest.get_node(tPos);
-    local sGroups = tMeta:get_string('swissalps_doorsteward_groups') or '';
+	local sKey = SwissalpS.doorsteward.setting.sMetaKeyGroups;
+    local sGroups = tMeta:get_string(sKey) or '';
     local sFormSpec = 'size[9,6]'
         .. 'label[0,0.2;SwissalpS doorsteward Key Edit: ' .. minetest.pos_to_string(tPos) .. ' ' .. oNode.name .. ']';
     local sFowner;
@@ -78,6 +79,25 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 	local sPos = aParts[2];
 	local tPos = minetest.string_to_pos(sPos);
 	print(dump(tPos));
+	local tMeta = minetest.get_meta(tPos);
+	local sKeyGroups = SwissalpS.doorsteward.setting.sMetaKeyGroups;
+
+	if nil ~= tFields.doors_owner then
+		local sOwnerNew = string.trim(tFields.doors_owner);
+		local sOwnerOld = tMeta:get_string('doors_owner') or '';
+		if sOwnerOld ~= sOwnerNew and '' ~= sOwnerNew then
+			tMeta:set_string('doors_owner', sOwnerNew);
+		end;
+	end; -- if owner set
+	if nil ~= tFields.doors_groups then
+		local sGroupsNewRaw = string.trim(tFields.doors_groups);
+		local sGroupsOld = tMeta:get_string(sKeyGroups) or '';
+		local sGroupsNew = sGroupsNewRaw;
+		--TODO: compare better
+		if sGroupsOld ~= sGroupsNew then
+			tMeta:set_string(sKeyGroups, sGroupsNew);
+		end; -- if changed
+	end; -- if groups set
 end; -- SssSdsK.onFields
 
 function SssSdsK.onPlace(oItemStack, oPlacer, oPointedThing)

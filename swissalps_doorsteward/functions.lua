@@ -1,7 +1,8 @@
 
 function SwissalpS.doorsteward.groupsOfPos(tPos)
 	local tMeta = minetest.get_meta(tPos);
-	local sGroups = tMeta:get_string('swissalps_doorsteward_groups') or '';
+	local sKey = SwissalpS.doorsteward.setting.sMetaKeyGroups;
+	local sGroups = tMeta:get_string(sKey) or '';
 	return string.split(sGroups, ',');
 end; -- SwissalpS.doorsteward.groupsOfPos
 
