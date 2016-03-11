@@ -74,7 +74,8 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 	local sPlayer = oPlayer:get_player_name();
 	print('Player ' .. sPlayer .. ' submitted fields ' .. dump(tFields));
 	SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
-	local _dev_null, sPos = string.split(sForm, '|');
+	local aParts = string.split(sForm, '|');
+	local sPos = aParts[2];
 	local tPos = minetest.string_to_pos(sPos);
 	print(dump(tPos));
 end; -- SssSdsK.onFields
