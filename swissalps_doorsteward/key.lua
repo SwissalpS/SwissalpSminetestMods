@@ -38,9 +38,9 @@ function SssSdsK.showForm(tPos, sPlayer)
     local sFormspec = 'size[9,10;]';
     local sFowner
     if isSuperUser or isOwner then
-        sFowner = 'field[0,0.2;5,1;owner;Owner:' .. sOwner .. ']';
+        sFowner = 'field[0,0.2;5,1;owner;Owner:' .. sOwner .. ';]';
     else
-        sFowner = 'label[0,0.2;Owner: ' .. sOwner .. ']';
+        sFowner = 'label[0,0.2;Owner: ' .. sOwner .. ';]';
     end; -- setup owner
     sFormspec = sFormspec .. sFowner;
     minetest.show_formspec(sPlayer, SssSdsK.formEdit.name, sFormspec);
