@@ -35,12 +35,12 @@ function SssSdsK.showForm(tPos, sPlayer)
 	local tMeta = minetest.get_meta(tPos);
 	local sOwner = tMeta:get_string('doors_owner') or '';
     local isOwner = sOwner == sPlayer;
-    local sFormspec = 'size[9,10;]'
+    local sFormspec = 'size[9,10]'
         .. 'label[0,0.2;SwissalpS doorsteward Key Edit]';
     local sFowner;
     if isSuperUser or isOwner then
 print('isSuperUser or isOwner');
-        sFowner = 'field[0,1.4;5,1;owner;Owner:' .. sOwner .. ';]';
+        sFowner = 'field[0,1.4;5,1;door_owner;Owner:;' .. sOwner .. ']';
     else
 print('is not owner or admin');
         sFowner = 'label[0,0.4;Owner: ' .. sOwner .. ']';
