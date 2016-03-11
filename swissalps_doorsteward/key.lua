@@ -38,7 +38,7 @@ function SssSdsK.showForm(tPos, sPlayer)
     local hasOwner = 0 < #sOwner;
     local oNode = minetest.get_node(tPos);
     local sGroups = tMeta:get_string('swissalps_doorsteward_groups') or '';
-    local sFormspec = 'size[9,10]'
+    local sFormspec = 'size[9,6]'
         .. 'label[0,0.2;SwissalpS doorsteward Key Edit: ' .. minetest.pos_to_string(tPos) .. ' ' .. oNode.name .. ']';
     local sFowner;
     if isSuperUser or isOwner then
@@ -64,7 +64,7 @@ print('is not owner or admin');
 end; -- SssSdsK.showForm
 
 function SssSdsK.onFields(oPlayer, sForm, tFields)
-	if SssSdsK.formEdit.name == sForm then
+	if SssSdsK.formEdit.name == sForm and tFields and tFields.buttonOK then
 		print('Player ' .. oPlayer:get_player_name() .. ' submitted fields ' .. dump(tFields));
 	end; -- if our form
 end; -- SssSdsK.onFields
