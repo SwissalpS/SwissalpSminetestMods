@@ -84,12 +84,11 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 		return;
 	end; -- if not a form we know of
 	local sPlayer = oPlayer:get_player_name();
-	print('Player ' .. sPlayer .. ' submitted fields ' .. dump(tFields));
-	SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
+	--print('Player ' .. sPlayer .. ' submitted fields ' .. dump(tFields));
+	--SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
 	local aParts = string.split(sForm, '|');
 	local sPos = aParts[2];
 	local tPos = minetest.string_to_pos(sPos);
-	print(dump(tPos));
 	local tMeta = minetest.get_meta(tPos);
 
 	if nil ~= tFields.doors_owner then
@@ -133,7 +132,7 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 	end;
 end; -- SssSdsK.onFields
 
-function SssSdsK.onPlace(oItemStack, oPlacer, oPointedThing)
+function SssSdsK.onUse(oItemStack, oPlacer, oPointedThing)
     if (nil == oPlacer or nil == oPointedThing) then
         return oItemStack; -- nothing consumed
     end;
@@ -184,7 +183,7 @@ function SssSdsK.onPlace(oItemStack, oPlacer, oPointedThing)
     -- show form
     SssSdsK.showForm(tPos, sPlayer);
     return oItemStack; -- nothing consumed, nothing changed
-end; -- SssSdsK.onPlace
+end; -- SssSdsK.onUse
 
 SssSdsK.def = {
     description = SssSdsK.description,
@@ -197,8 +196,8 @@ SssSdsK.def = {
     tool_capabilities = SssSdsK.tool_capabilities,
     node_placement_prediction = nil,
 
-    --on_place = SssSdsK.onPlace,
-    on_use = SssSdsK.onPlace,
+    --on_place = SssSdsK.onPlace, -- right-click (if on a door, need to pass thru)
+    on_use = SssSdsK.onUse, -- left-click aka punch
 };
 
 SssSdsK.craft = {};
