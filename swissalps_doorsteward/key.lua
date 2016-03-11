@@ -53,11 +53,11 @@ print('is not owner or admin');
             sFowner = sFowner .. '-none-]';
         end; -- if hase owner at all
     end; -- setup owner
-    local sFgroups = 'field[1,1.8;7,1;doors_groups;Door opens for members of these groups:;' .. sGroups .. ']';
-    local sFbuttonOK = 'button_exit[4,4;4,1;buttonOK;OK]';
-    local sFbuttonCancel = 'button_exit[2,5;5,1;buttonCancel;Cancel]';
-    local sFcheckboxLeaveOpen = 'checkbox[6.35,1.4;bLeaveOpen;Leave this door open;checkboxLeaveOpenLastField]';
-    local sFcheckboxSteward = 'checkbox[4.35,1.4;bStewardActive;Use Steward on this door;checkboxStewardLastField]';
+    local sFgroups = 'field[1,4.4;7,1;doors_groups;Door opens for members of these groups:;' .. sGroups .. ']';
+    local sFbuttonOK = 'button_exit[4,5;4,1;buttonOK;OK]';
+    local sFbuttonCancel = 'button_exit[1,5;3,1;buttonCancel;Cancel]';
+    local sFcheckboxLeaveOpen = 'checkbox[1.35,2.4;bLeaveOpen;Leave this door open;checkboxLeaveOpenLastField]';
+    local sFcheckboxSteward = 'checkbox[1.35,3.4;bStewardActive;Use Steward on this door;checkboxStewardLastField]';
     sFormspec = sFormspec .. sFowner .. sFgroups .. sFbuttonOK .. sFbuttonCancel;
     sFormspec = sFormspec .. sFcheckboxLeaveOpen .. sFcheckboxSteward;
     minetest.show_formspec(sPlayer, SssSdsK.formEdit.name, sFormspec);
