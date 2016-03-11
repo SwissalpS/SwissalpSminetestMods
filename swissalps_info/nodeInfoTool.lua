@@ -5,7 +5,7 @@ SssSiNiT.name = 'swissalps_info:node_info_tool';
 SssSiNiT.description = 'SwissalpS node info tool. Left-click with it to get information about the node you clicked on.';
 SssSiNiT.inventory_image = 'swissalps_info_nodeInfoTool.png';
 SssSiNiT.wield_image = '';
-SssSiNiT.wield_scale = {x=1, y=1, z=1};
+SssSiNiT.wield_scale = {x = 1, y = 1, z = 1};
 SssSiNiT.stack_max = 1; -- there is no need to have more than one
 SssSiNiT.liquids_pointable = true;
 -- the tool_capabilities are completely irrelevant here - no need to dig
