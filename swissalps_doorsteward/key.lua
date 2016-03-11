@@ -64,8 +64,10 @@ print('is not owner or admin');
 end; -- SssSdsK.showForm
 
 function SssSdsK.onFields(oPlayer, sForm, tFields)
+	local sPlayer = oPlayer:get_player_name();
 	if SssSdsK.formEdit.name == sForm and tFields and tFields.buttonOK then
-		print('Player ' .. oPlayer:get_player_name() .. ' submitted fields ' .. dump(tFields));
+		print('Player ' .. sPlayer .. ' submitted fields ' .. dump(tFields));
+		SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
 	end; -- if our form
 end; -- SssSdsK.onFields
 
