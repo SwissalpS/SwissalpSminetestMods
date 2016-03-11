@@ -41,6 +41,8 @@ setting('string', 'db_strategies_fs_form', 'json');
 setting('string', 'db_strategies_fs_place', 'world');
 SssSdsS = SwissalpS.doorsteward.setting;
 SssSdsS.sMetaKeyGroups = 'swissalps_doorsteward_groups';
+SssSdsS.sMetaKeyLeaveOpen = 'swissalps_doorsteward_leaveOpen';
+SssSdsS.sMetaKeyActive = 'swissalps_doorsteward_active';
 SssSdsS.db_strategies = {fs = {
         name = SssSdsS.db_strategies_fs_name,
         form = SssSdsS.db_strategies_fs_form,

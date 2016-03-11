@@ -187,6 +187,15 @@ function SwissalpS.doorsteward:isOpen(oNodeDoor)
 end -- SwissalpS.doorsteward:isOpen
 
 function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, iCountActiveObject, iCountActiveObjectWider)
+	local sKeyActive = SwissalpS.doorsteward.setting.sMetaKeyActive;
+	-- determine whether door is active or not
+	local tMeta = minetest.get_meta(tPos);
+	local sActive = tMeta:get_string(sKeyActive) or 'true';
+	if 'false' == sActive then
+		return;
+	end; -- if not active door
+	local sKeyLeaveOpen = SwissalpS.doorsteward.setting.sMetaKeyLeaveOpen;
+	local sLeaveOpen = tMeta:get_string(sKeyLeaveOpen) or 'false';
     -- determine if door is open or not
     local sNameDoor = oNodeDoor.name;
     local bOpen = ('2' == string.sub(sNameDoor, -1));
@@ -209,6 +218,9 @@ function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, iCountActiveObject, iCountA
         -- door is open
         if 0 == iCountPlayers then
             -- has NO players nearby -> close door
+			if 'true' == sLeaveOpen then
+				return;
+			end; -- if leave open
 --SwissalpS.info.broadcast('door is open and 0 players nearby')
 			-- TODO: check which player last was near door?
             --return SwissalpS.doorsteward:close(minetest.get_node_or_nil(tPos));

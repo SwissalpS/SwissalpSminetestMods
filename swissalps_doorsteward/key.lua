@@ -37,10 +37,15 @@ function SssSdsK.showForm(tPos, sPlayer)
     local isOwner = sOwner == sPlayer;
     local hasOwner = 0 < #sOwner;
     local oNode = minetest.get_node(tPos);
-	local sKey = SwissalpS.doorsteward.setting.sMetaKeyGroups;
-    local sGroups = tMeta:get_string(sKey) or '';
+	local sKeyGroups = SwissalpS.doorsteward.setting.sMetaKeyGroups;
+	local sKeyLeaveOpen = SwissalpS.doorsteward.setting.sMetaKeyLeaveOpen;
+	local sKeyActive = SwissalpS.doorsteward.setting.sMetaKeyActive;
+    local sGroups = tMeta:get_string(sKeyGroups) or '';
+	local sActive = tMeta:get_string(sKeyActive) or 'true';
+	local sLeaveOpen = tMeta:get_string(sKeyLeaveOpen) or 'false';
     local sFormSpec = 'size[9,6]'
-        .. 'label[0,0.2;SwissalpS doorsteward Key Edit: ' .. minetest.pos_to_string(tPos) .. ' ' .. oNode.name .. ']';
+		.. 'label[0,0.2;SwissalpS doorsteward Key Edit: '
+		.. minetest.pos_to_string(tPos) .. ' ' .. oNode.name .. ']';
     local sFowner;
     if isSuperUser or isOwner then
 print('isSuperUser or isOwner');
@@ -58,8 +63,8 @@ print('is not owner or admin');
     local sFbuttonOK = '';--'button_exit[4,5;4,1;buttonOK;OK]';
     local sFbuttonCancel = '';--'button_exit[1,5;3,1;buttonCancel;Cancel]';
     local sFbuttonClose = 'button_exit[4,5;4,1;buttonClose;Close]';
-    local sFcheckboxLeaveOpen = 'checkbox[1,1.8;bLeaveOpen;Leave this door open;checkboxLeaveOpenLastField]';
-    local sFcheckboxSteward = 'checkbox[1,2.5;bStewardActive;Use Steward on this door;checkboxStewardLastField]';
+    local sFcheckboxLeaveOpen = 'checkbox[1,2.5;bLeaveOpen;Leave this door open;' .. sLeaveOpen .. ']';
+    local sFcheckboxSteward = 'checkbox[1,1.8;bStewardActive;Use Steward on this door;' .. sActive .. ']';
     sFormSpec = sFormSpec .. sFowner .. sFgroups .. sFbuttonOK .. sFbuttonCancel;
     sFormSpec = sFormSpec .. sFcheckboxLeaveOpen .. sFcheckboxSteward;
 	sFormSpec = sFormSpec .. sFbuttonClose;
