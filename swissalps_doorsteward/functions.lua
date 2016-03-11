@@ -141,6 +141,7 @@ function SwissalpS.doorsteward:toggle(tPos, oNodeDoor)
     tPos.y = tPos.y + 1
     minetest.swap_node(tPos, {name = sReplaceTop, param2 = p2})
 
+	-- play sound
 	local sSound = "_open";
 	if bOpen then
 		sSound = "_close";
@@ -191,11 +192,13 @@ function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, iCountActiveObject, iCountA
 	-- determine whether door is active or not
 	local tMeta = minetest.get_meta(tPos);
 	local sActive = tMeta:get_string(sKeyActive) or 'true';
-	if 'false' == sActive then
+	local bActive = not ('false' == sActive);
+	if not bActive then
 		return;
 	end; -- if not active door
 	local sKeyLeaveOpen = SwissalpS.doorsteward.setting.sMetaKeyLeaveOpen;
 	local sLeaveOpen = tMeta:get_string(sKeyLeaveOpen) or 'false';
+	local bLeaveOpen = 'true' == sLeaveOpen;
     -- determine if door is open or not
     local sNameDoor = oNodeDoor.name;
     local bOpen = ('2' == string.sub(sNameDoor, -1));
@@ -218,7 +221,7 @@ function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, iCountActiveObject, iCountA
         -- door is open
         if 0 == iCountPlayers then
             -- has NO players nearby -> close door
-			if 'true' == sLeaveOpen then
+			if bLeaveOpen then
 				return;
 			end; -- if leave open
 --SwissalpS.info.broadcast('door is open and 0 players nearby')
