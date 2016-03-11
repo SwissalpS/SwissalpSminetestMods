@@ -1,11 +1,48 @@
-function SwissalpS.doorsteward.mayOpen(tPos, sPlayer)
-	-- first check for doorsteweard groups
-	local meta = minetest.get_meta(tPos);
-	local sGroups = meta:get_string('swissalps_doorsteward_privs') or '';
-	local aGroups = string.split(sGroups, ',');
+
+function SwissalpS.doorsteward.groupsOfPos(tPos)
+	local tMeta = minetest.get_meta(tPos);
+	local sGroups = tMeta:get_string('swissalps_doorsteward_groups') or '';
+	return string.split(sGroups, ',');
+end; -- SwissalpS.doorsteward.groupsOfPos
+
+function SwissalpS.doorsteward.groupsOfPlayer(sPlayer)
 	local sGroupsPlayer = SwissalpS.doorsteward.dbPlayer:get(sPlayer, 'groups', '');
-	local aGroupsPlayer = string.split(sGroupsPlayer, ',');
-print('groups', dump(aGroups));
+	return string.split(sGroupsPlayer, ',');
+end; -- SwissalpS.doorsteward.groupsOfPlayer
+
+function SwissalpS.doorsteward.mayChange(tPos, sPlayer)
+	if sPlayer and minetest.check_player_privs(sPlayer, {server = true}) then
+		return true;
+	end; -- admin may change anything
+	if sPlayer and minetest.check_player_privs(sPlayer, {SwissalpS_doorsteward_Global = true}) then
+		return true;
+	end; -- global doorsteward admin may change any door
+	-- owner may always change his doors
+	local tMeta = minetest.get_meta(tPos);
+	local sOwner = tMeta:get_string('doors_owner') or '';
+	if sPlayer == sOwner then
+		return true;
+	end; -- if owner
+	local aGroups = SwissalpS.doorsteward.groupsOfPos(tPos);
+	local aGroupsPlayer = SwissalpS.doorsteward.groupsOfPlayer(sPlayer);
+	for iIndex, sGroup in pairs(aGroups) do
+		for iIndexPlayer, sGroupPlayer in pairs(aGroupsPlayer) do
+			if sGroupPlayer == sGroup .. '_admin' then
+				return true;
+			end; -- if found a match
+		end; -- loop groups of player
+	end; -- loop groups of node
+	-- fallback to protection rule
+	return not minetest.is_protected(tPos, sPlayer);
+end; -- SwissalpS.doorsteward.mayChange
+
+function SwissalpS.doorsteward.mayOpen(tPos, sPlayer)
+	if sPlayer and minetest.check_player_privs(sPlayer, {server = true}) then
+		return true;
+	end; -- admin may open anything
+	-- first check for doorsteward groups
+	local aGroups = SwissalpS.doorsteward.groupsOfPos(tPos);
+	local aGroupsPlayer = SwissalpS.doorsteward.groupsOfPlayer(sPlayer);
 	for iIndex, sGroup in pairs(aGroups) do
 		for iIndexPlayer, sGroupPlayer in pairs(aGroupsPlayer) do
 			if sGroupPlayer == sGroup then
@@ -14,6 +51,7 @@ print('groups', dump(aGroups));
 		end; -- loop groups of player
 	end; -- loop groups of node
 	-- fallback to normal door behaviuor
+	local tMeta = minetest.get_meta(tPos);
 	local sOwner = meta:get_string('doors_owner') or '';
 	if '' == sOwner then
 		return true;
@@ -34,7 +72,7 @@ function SwissalpS.doorsteward.doorBottoms()
 	local aOut = {};
 	local bIsTrapdoor = false;
 	for sKey, mValue in pairs(minetest.registered_nodes) do
-		if string.find(sKey, 'doors:trapdoor') then
+		if 1 == string.find(sKey, 'doors:trapdoor') then
 			bIsTrapdoor = true;
 		else
 			bIsTrapdoor = false;
@@ -121,6 +159,19 @@ function SwissalpS.doorsteward:isBottomNode(oNodeDoor)
            'invalid name on given object');
     return ('b' == string.sub(sNameDoorFull, -3, -3));
 end -- SwissalpS.doorsteward:isBottomNode
+
+function SwissalpS.doorsteward:isDoor(oNode)
+	assert(nil ~= oNode and nil ~= oNode.name, 'Invalid node passed');
+	local sName = oNode.name;
+	if 1 == string.find(sName, 'doors:trapdoor') then
+		-- basically a door, but not one we work with yet
+		return false;
+	end; -- if trapdoor given
+	if 'doors:' == string.sub(sName, 1, 6) then
+		return true;
+	end; -- if door found
+	return false;
+end; -- SwissalpS.doorsteward:isDoor
 
 function SwissalpS.doorsteward:isOpen(oNodeDoor)
     assert(nil ~= oNodeDoor, 'NIL passed as oNodeDoor');

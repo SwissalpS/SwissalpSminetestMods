@@ -69,5 +69,5 @@ end -- SwissalpS.info.timerStart
 local sPathMod = minetest.get_modpath(minetest.get_current_modname());
 dofile(sPathMod .. DIR_DELIM .. 'chatCommandFunctions.lua');
 dofile(sPathMod .. DIR_DELIM .. 'registerChatCommands.lua');
-
+dofile(sPathMod .. DIR_DELIM .. 'nodeInfoTool.lua');
 SwissalpS.info.timerDiffLog(SwissalpS.info);
