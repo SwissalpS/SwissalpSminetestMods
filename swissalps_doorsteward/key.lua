@@ -91,7 +91,6 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 	local tPos = minetest.string_to_pos(sPos);
 	print(dump(tPos));
 	local tMeta = minetest.get_meta(tPos);
-	local sKeyGroups = SwissalpS.doorsteward.setting.sMetaKeyGroups;
 
 	if nil ~= tFields.doors_owner then
 		local sOwnerNew = string.trim(tFields.doors_owner);
@@ -101,6 +100,7 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 		end;
 	end; -- if owner set
 	if nil ~= tFields.doors_groups then
+		local sKeyGroups = SwissalpS.doorsteward.setting.sMetaKeyGroups;
 		local sGroupsNewRaw = string.trim(tFields.doors_groups);
 		local sGroupsOld = tMeta:get_string(sKeyGroups) or '';
 		local sGroupsNew = sGroupsNewRaw;
@@ -109,6 +109,28 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 			tMeta:set_string(sKeyGroups, sGroupsNew);
 		end; -- if changed
 	end; -- if groups set
+	if nil ~= tFields.bLeaveOpen then
+		local sKeyLeaveOpen = SwissalpS.doorsteward.setting.sMetaKeyLeaveOpen;
+		local sLeaveOpenNew = tFields.bLeaveOpen;
+		local sLeaveOpenOld = tMeta:get_string(sKeyLeaveOpen);
+		if sLeaveOpenOld ~= sLeaveOpenNew then
+			if 'true' ~= sLeaveOpenNew then
+				sLeaveOpenNew = 'false';
+			end; -- clean
+			tMeta:set_string(sKeyLeaveOpen, sLeaveOpenNew);
+		end; -- if changed
+	end; -- if leave Open given
+	if nil ~= tFields.bStewardActive then
+		local sKeyActive = SwissalpS.doorsteward.setting.sMetaKeyActive;
+		local sActiveNew = tFields.bStewardActive;
+		local sActiveOld = tMeta:get_string(sKeyActive);
+		if sActiveOld ~= sActiveNew then
+			if 'false' ~= sActiveNew then
+				sActiveNew = 'true';
+			end; -- clean
+			tMeta:set_string(sKeyActive, sActiveNew);
+		end; -- if changed
+	end;
 end; -- SssSdsK.onFields
 
 function SssSdsK.onPlace(oItemStack, oPlacer, oPointedThing)
