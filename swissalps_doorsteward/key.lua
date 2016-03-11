@@ -42,7 +42,9 @@ function SssSdsK.showForm(tPos, sPlayer)
 	local sKeyActive = SwissalpS.doorsteward.setting.sMetaKeyActive;
     local sGroups = tMeta:get_string(sKeyGroups) or '';
 	local sActive = tMeta:get_string(sKeyActive) or 'true';
+print('active', sActive);
 	local sLeaveOpen = tMeta:get_string(sKeyLeaveOpen) or 'false';
+print('leaveopen', sLeaveOpen);
     local sFormSpec = 'size[9,6]'
 		.. 'label[0,0.2;SwissalpS doorsteward Key Edit: '
 		.. minetest.pos_to_string(tPos) .. ' ' .. oNode.name .. ']';
