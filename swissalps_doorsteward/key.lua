@@ -3,7 +3,7 @@ SwissalpS.doorsteward.key = {};
 SssSdsK = SwissalpS.doorsteward.key;
 SssSdsK.name = 'swissalps_doorsteward:key';
 SssSdsK.description = 'SwissalpS doorsteward key. Left-click with it to get information about who owns the door you clicked on.';
-SssSdsK.inventory_image = 'default_book.png'; --TODO:
+SssSdsK.inventory_image = 'swissalps_doorsteward_key.png';
 SssSdsK.wield_image = '';
 SssSdsK.wield_scale = {x=1, y=1, z=1};
 SssSdsK.stack_max = 1; -- there is no need to have more than one
