@@ -52,7 +52,7 @@ function SwissalpS.doorsteward.mayOpen(tPos, sPlayer)
 	end; -- loop groups of node
 	-- fallback to normal door behaviuor
 	local tMeta = minetest.get_meta(tPos);
-	local sOwner = meta:get_string('doors_owner') or '';
+	local sOwner = tMeta:get_string('doors_owner') or '';
 	if '' == sOwner then
 		return true;
 	end; -- if no owner, anybody may open and close
