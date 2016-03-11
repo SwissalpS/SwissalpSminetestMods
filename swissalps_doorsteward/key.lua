@@ -38,7 +38,7 @@ function SssSdsK.showForm(tPos, sPlayer)
     local hasOwner = 0 < #sOwner;
     local oNode = minetest.get_node(tPos);
     local sGroups = tMeta:get_string('swissalps_doorsteward_groups') or '';
-    local sFormspec = 'size[9,6]'
+    local sFormSpec = 'size[9,6]'
         .. 'label[0,0.2;SwissalpS doorsteward Key Edit: ' .. minetest.pos_to_string(tPos) .. ' ' .. oNode.name .. ']';
     local sFowner;
     if isSuperUser or isOwner then
@@ -54,21 +54,29 @@ print('is not owner or admin');
         end; -- if hase owner at all
     end; -- setup owner
     local sFgroups = 'field[1,3.8;7,1;doors_groups;Door opens for members of these groups:;' .. sGroups .. ']';
-    local sFbuttonOK = 'button_exit[4,5;4,1;buttonOK;OK]';
-    local sFbuttonCancel = 'button_exit[1,5;3,1;buttonCancel;Cancel]';
-    local sFcheckboxLeaveOpen = 'checkbox[1,1.7;bLeaveOpen;Leave this door open;checkboxLeaveOpenLastField]';
-    local sFcheckboxSteward = 'checkbox[1,2.4;bStewardActive;Use Steward on this door;checkboxStewardLastField]';
-    sFormspec = sFormspec .. sFowner .. sFgroups .. sFbuttonOK .. sFbuttonCancel;
-    sFormspec = sFormspec .. sFcheckboxLeaveOpen .. sFcheckboxSteward;
-    minetest.show_formspec(sPlayer, SssSdsK.formEdit.name, sFormspec);
+    local sFbuttonOK = '';--'button_exit[4,5;4,1;buttonOK;OK]';
+    local sFbuttonCancel = '';--'button_exit[1,5;3,1;buttonCancel;Cancel]';
+    local sFbuttonClose = 'button_exit[4,5;4,1;buttonClose;Close]';
+    local sFcheckboxLeaveOpen = 'checkbox[1,1.8;bLeaveOpen;Leave this door open;checkboxLeaveOpenLastField]';
+    local sFcheckboxSteward = 'checkbox[1,2.5;bStewardActive;Use Steward on this door;checkboxStewardLastField]';
+    sFormSpec = sFormSpec .. sFowner .. sFgroups .. sFbuttonOK .. sFbuttonCancel;
+    sFormSpec = sFormSpec .. sFcheckboxLeaveOpen .. sFcheckboxSteward;
+	sFormSpec = sFormSpec .. sFbuttonClose;
+	local sFormName = SssSdsK.formEdit.name .. '|' .. minetest.pos_to_string(tPos);
+    minetest.show_formspec(sPlayer, sFormName, sFormSpec);
 end; -- SssSdsK.showForm
 
 function SssSdsK.onFields(oPlayer, sForm, tFields)
+	if not (tFields and 1 == string.find(sForm, SssSdsK.formEdit.name)) then
+		-- not a form we know of
+		return;
+	end; -- if not a form we know of
 	local sPlayer = oPlayer:get_player_name();
-	if SssSdsK.formEdit.name == sForm and tFields and tFields.buttonOK then
-		print('Player ' .. sPlayer .. ' submitted fields ' .. dump(tFields));
-		SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
-	end; -- if our form
+	print('Player ' .. sPlayer .. ' submitted fields ' .. dump(tFields));
+	SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
+	local _dev_null, sPos = string.split(sForm, '|');
+	local tPos = minetest.string_to_pos(sPos);
+	print(dump(tPos));
 end; -- SssSdsK.onFields
 
 function SssSdsK.onPlace(oItemStack, oPlacer, oPointedThing)
