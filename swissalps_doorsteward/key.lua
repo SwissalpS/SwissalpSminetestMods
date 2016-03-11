@@ -35,17 +35,31 @@ function SssSdsK.showForm(tPos, sPlayer)
 	local tMeta = minetest.get_meta(tPos);
 	local sOwner = tMeta:get_string('doors_owner') or '';
     local isOwner = sOwner == sPlayer;
+    local hasOwner = 0 < #sOwner;
+    local oNode = minetest.get_node(tPos);
+    local sGroups = tMeta:get_string('swissalps_doorsteward_groups') or '';
     local sFormspec = 'size[9,10]'
-        .. 'label[0,0.2;SwissalpS doorsteward Key Edit]';
+        .. 'label[0,0.2;SwissalpS doorsteward Key Edit: ' .. minetest.pos_to_string(tPos) .. ' ' .. oNode.name .. ']';
     local sFowner;
     if isSuperUser or isOwner then
 print('isSuperUser or isOwner');
-        sFowner = 'field[0,1.4;5,1;door_owner;Owner:;' .. sOwner .. ']';
+        sFowner = 'field[1,1.4;5,1;doors_owner;Owner:;' .. sOwner .. ']';
     else
 print('is not owner or admin');
-        sFowner = 'label[0,0.4;Owner: ' .. sOwner .. ']';
+        sFowner = 'label[0,1.4;Owner: ';
+        if hasOwner then
+            sFowner = sFowner .. sOwner .. ']';
+        else
+            sFowner = sFowner .. '-none-]';
+        end; -- if hase owner at all
     end; -- setup owner
-    sFormspec = sFormspec .. sFowner;
+    local sFgroups = 'field[1,1.8;7,1;doors_groups;Door opens for members of these groups:;' .. sGroups .. ']';
+    local sFbuttonOK = 'button_exit[4,4;4,1;buttonOK;OK]';
+    local sFbuttonCancel = 'button_exit[2,5;5,1;buttonCancel;Cancel]';
+    local sFcheckboxLeaveOpen = 'checkbox[6.35,1.4;bLeaveOpen;Leave this door open;checkboxLeaveOpenLastField]';
+    local sFcheckboxSteward = 'checkbox[4.35,1.4;bStewardActive;Use Steward on this door;checkboxStewardLastField]';
+    sFormspec = sFormspec .. sFowner .. sFgroups .. sFbuttonOK .. sFbuttonCancel;
+    sFormspec = sFormspec .. sFcheckboxLeaveOpen .. sFcheckboxSteward;
     minetest.show_formspec(sPlayer, SssSdsK.formEdit.name, sFormspec);
 end; -- SssSdsK.showForm
 
@@ -55,7 +69,7 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 	end; -- if our form
 end; -- SssSdsK.onFields
 
-function SssSdsK.on_place(oItemStack, oPlacer, oPointedThing)
+function SssSdsK.onPlace(oItemStack, oPlacer, oPointedThing)
     if (nil == oPlacer or nil == oPointedThing) then
         return oItemStack; -- nothing consumed
     end;
@@ -103,11 +117,10 @@ function SssSdsK.on_place(oItemStack, oPlacer, oPointedThing)
         SwissalpS.info.notifyPlayer(sPlayer, 'You may not change this door, But here is a list of who can: TODO:');
         return oItemStack;
     end; -- if may not change
-    SwissalpS.info.notifyPlayer(sPlayer, oNode.name);
     -- show form
     SssSdsK.showForm(tPos, sPlayer);
     return oItemStack; -- nothing consumed, nothing changed
-end; -- SssSdsK.on_place
+end; -- SssSdsK.onPlace
 
 SssSdsK.def = {
     description = SssSdsK.description,
@@ -120,8 +133,8 @@ SssSdsK.def = {
     tool_capabilities = SssSdsK.tool_capabilities,
     node_placement_prediction = nil,
 
-    on_place = SssSdsK.on_place,
-    on_use = SssSdsK.on_place,
+    on_place = SssSdsK.onPlace,
+    on_use = SssSdsK.onPlace,
 };
 
 SssSdsK.craft = {};
