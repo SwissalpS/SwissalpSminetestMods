@@ -43,10 +43,27 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
         if nil == tMeta then
             SwissalpS.info.notifyPlayer(sName, 'Meta-data not found.');
         else
-            SwissalpS.info.notifyPlayer(sName, 'Meta-data: ' .. dump(tMeta:to_table()));
-            --for sKey, sValue in pairs(tMeta) do
-            --    sInfo = sInfo .. "\n" .. 'meta.' .. sKey .. ' = ' .. dump(sValue);
-            --end; -- loop all entries in meta
+            --SwissalpS.info.notifyPlayer(sName, 'Meta-data: ' .. dump(tMeta:to_table()));
+            local ttMeta = tMeta:to_table();
+            for sKey, mValue in pairs(ttMeta.fields) do
+                if 'formspec' == sKey then
+                    sInfo = sInfo .. "\n" .. 'meta.formspec = ';
+                    if nil == mValue then
+                        sInfo = sInfo .. 'nil';
+                    else
+                        sInfo = sInfo .. '<exists>';
+                    end; -- if got formspec or not
+                elseif 'inventory' == sKey then
+                    sInfo = sInfo .. "\n" .. 'meta.inventory = ';
+                    if nil == mValue then
+                        sInfo = sInfo .. 'nil';
+                    else
+                        sInfo = sInfo .. #mValue .. ' exist(s)';
+                    end; -- if got at least one inventory or not
+                else
+                    sInfo = sInfo .. "\n" .. 'meta.' .. sKey .. ' = ' .. dump(sValue);
+                end; -- if which key
+            end; -- loop all entries in meta
         end; -- if failed to fetch meta
     elseif 'object' == oPointedThing.type then
         local oObject = oPointedThing.ref;
@@ -54,17 +71,22 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
             SwissalpS.info.notifyPlayer(sName, 'Object not found.');
             return oItemStack;
         end; -- if no object
-        sInfo = sInfo .. "\n" .. 'object:get_luaentity().name: ' .. oObject:get_luaentity().name;
-        --sInfo = sInfo .. "\n" .. 'object:getpos(): ' .. minetest.pos_to_string(oObject:getpos());
-        sInfo = sInfo .. "\n" .. 'object:get_hp(): ' .. oObject:get_hp();
-        sInfo = sInfo .. "\n" .. 'object:getvelocity(): ' .. dump(oObject:getvelocity());
-        sInfo = sInfo .. "\n" .. 'object:getyaw(): ' .. oObject:getyaw();
-        sInfo = sInfo .. "\n" .. 'object:getacceleration(): ' .. dump(oObject:getacceleration());
+        sInfo = sInfo .. "\n" .. 'object:get_luaentity().name: '
+                .. oObject:get_luaentity().name
+                .. '  object:get_hp(): ' .. oObject:get_hp();
+        --sInfo = sInfo .. "\n" .. 'object:getpos(): ' .. minetest.pos_to_string(oObject:getpos(), 3);
+        sInfo = sInfo .. "\n" .. 'object:getyaw(): ' .. oObject:getyaw()
+                .. '  object:getvelocity(): ' .. dump(oObject:getvelocity())
+                .. '  object:getacceleration(): ' .. dump(oObject:getacceleration());
         --sInfo = sInfo .. "\n" .. 'object:get_armor_groups(): ' .. dump(oObject:get_armor_groups()); -- not yet implemented Returns {group1=rating, group2=rating, ...})
-        sInfo = sInfo .. "\n" .. 'object:get_inventory(): ' .. dump(oObject:get_inventory());
-        sInfo = sInfo .. "\n" .. 'object:get_wielded_item(): ' .. dump(oObject:get_wielded_item());
-        sInfo = sInfo .. "\n" .. 'object:get_wield_index(): ' .. dump(oObject:get_wield_index());
-        sInfo = sInfo .. "\n" .. 'object:get_wield_list(): ' .. dump(oObject:get_wield_list());
+        sInfo = sInfo .. "\n" .. 'object:get_inventory(): '
+                .. dump(oObject:get_inventory())
+                .. '  object:get_wielded_item(): '
+                .. dump(oObject:get_wielded_item())
+                .. '  object:get_wield_index(): '
+                .. dump(oObject:get_wield_index())
+                .. '  object:get_wield_list(): '
+                .. dump(oObject:get_wield_list());
     else
         print('unknown pointed_thing.type detected');
         sInfo = sInfo .. "\n" .. 'Sorry, can not yet help with that.';
