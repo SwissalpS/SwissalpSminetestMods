@@ -50,8 +50,16 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
         end; -- if failed to fetch meta
     elseif 'object' == oPointedThing.type then
         local oObject = oPointedThing.ref;
-        print(dump(oObject), oObject:getpos(), oObject:get_hp());
-        --[[
+        if nil == oObject then
+            SwissalpS.info.notifyPlayer(sName, 'Object not found.');
+            return oItemStack;
+        end; -- if no object
+        print(dump(oObject), dump(oObject:getpos()), oObject:get_hp(), oObject:get_luaentity().name);
+        --[[ getacceleration() — {x=num, y=num, z=num}
+getvelocity() — {x=num, y=num, z=num}
+getyaw() — returns yaw in radians
+get_entity_name() DEPRECATED: Will be removed in a future version
+get_luaentity()
              getpos() — returns {x=num, y=num, z=num}.
     get_armor_groups() - Returns {group1=rating, group2=rating, ...})
 
