@@ -16,16 +16,17 @@ SwissalpS.teleport.settings = {
     db_strategies = {fs = {
         name = 'SwissalpS_teleport',
         form = 'json', place = 'world'}},
-}
+    default_homePos = {x = -470, y = 15.5, z = 625},
+};
 SssStpS = SssStp.settings;
 SwissalpS.teleport.dbPlayer = SwissalpS.db.playerDB(SssStpS.db_strategies);
+SwissalpS.teleport.sPrivGlobal = 'SwissalpS_teleport_Global';
+SwissalpS.teleport.sPrivGlobalDescription = 'May set global teleport locations.';
 
-SssStpS.default_homePos = {x = -470, y = 15.5, z = 625}
+minetest.register_privilege(SssStp.sPrivGlobal, SssStp.sPrivGlobalDescription);
 
-minetest.register_privilege('SwissalpS_teleport_Global', 'Can set global teleport locations.');
-
-local sPathMod = minetest.get_modpath(minetest.get_current_modname());
-dofile(sPathMod .. DIR_DELIM .. 'chatCommandFunctions.lua');
-dofile(sPathMod .. DIR_DELIM .. 'registerChatCommands.lua');
+local sPathMod = minetest.get_modpath(minetest.get_current_modname()) .. DIR_DELIM;
+dofile(sPathMod .. 'chatCommandFunctions.lua');
+dofile(sPathMod .. 'registerChatCommands.lua');
 
 SwissalpS.info.timerDiffLog(SwissalpS.teleport);
