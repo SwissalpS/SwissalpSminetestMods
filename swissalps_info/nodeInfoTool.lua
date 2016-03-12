@@ -29,7 +29,7 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
         SwissalpS.info.notifyPlayer(sName, 'Position not found.');
         return oItemStack;
     end;
-    local sInfo = 'position: ' .. minetest.pos_to_string(tPos);
+    local sInfo = 'mpts position: ' .. minetest.pos_to_string(tPos);
     if 'node' == oPointedThing.type then
         local oNode = minetest.get_node(tPos);
         if (nil == oNode) or (nil == oNode.name) or ('' == oNode.name) then
@@ -50,7 +50,7 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
         end; -- if failed to fetch meta
     elseif 'object' == oPointedThing.type then
         local oObject = oPointedThing.ref;
-        print(dump(oObject), oObject.name);
+        print(dump(oObject), oObject:getpos(), oObject:get_armor_groups(), oObject:get_hp());
         --[[
              getpos() — returns {x=num, y=num, z=num}.
     get_armor_groups() - Returns {group1=rating, group2=rating, ...})
