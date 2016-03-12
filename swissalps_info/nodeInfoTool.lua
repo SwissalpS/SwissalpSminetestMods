@@ -29,7 +29,7 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
         SwissalpS.info.notifyPlayer(sName, 'Position not found.');
         return oItemStack;
     end;
-    local sInfo = 'mpts position: ' .. minetest.pos_to_string(tPos);
+    local sInfo = 'Position: ' .. minetest.pos_to_string(tPos, 2);
     if 'node' == oPointedThing.type then
         local oNode = minetest.get_node(tPos);
         if (nil == oNode) or (nil == oNode.name) or ('' == oNode.name) then
@@ -43,7 +43,7 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
         if nil == tMeta then
             SwissalpS.info.notifyPlayer(sName, 'Meta-data not found.');
         else
-            SwissalpS.info.notifyPlayer(sName, 'Meta-data: ' .. dump(tMeta));
+            SwissalpS.info.notifyPlayer(sName, 'Meta-data: ' .. dump(tMeta:to_table()));
             --for sKey, sValue in pairs(tMeta) do
             --    sInfo = sInfo .. "\n" .. 'meta.' .. sKey .. ' = ' .. dump(sValue);
             --end; -- loop all entries in meta
@@ -55,7 +55,7 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
             return oItemStack;
         end; -- if no object
         sInfo = sInfo .. "\n" .. 'object:get_luaentity().name: ' .. oObject:get_luaentity().name;
-        sInfo = sInfo .. "\n" .. 'object:getpos(): ' .. minetest.pos_to_string(oObject:getpos());
+        --sInfo = sInfo .. "\n" .. 'object:getpos(): ' .. minetest.pos_to_string(oObject:getpos());
         sInfo = sInfo .. "\n" .. 'object:get_hp(): ' .. oObject:get_hp();
         sInfo = sInfo .. "\n" .. 'object:getvelocity(): ' .. dump(oObject:getvelocity());
         sInfo = sInfo .. "\n" .. 'object:getyaw(): ' .. oObject:getyaw();
