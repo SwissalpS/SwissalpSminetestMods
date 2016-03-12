@@ -63,6 +63,7 @@ function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
                         or 'text' == sKey
                         or 'owner' == sKey
                         or 'doors_owner' == sKey
+                        or 'enabled' == sKey
                         or (nil ~= SssSdsS
                             and (SssSdsS.sMetaKeyGroups == sKey
                                  or SssSdsS.sMetaKeyLeaveOpen == sKey
