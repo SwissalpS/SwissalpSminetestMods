@@ -54,26 +54,17 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
             SwissalpS.info.notifyPlayer(sName, 'Object not found.');
             return oItemStack;
         end; -- if no object
-        print(dump(oObject), dump(oObject:getpos()), oObject:get_hp(), oObject:get_luaentity().name);
-        --[[ getacceleration() — {x=num, y=num, z=num}
-getvelocity() — {x=num, y=num, z=num}
-getyaw() — returns yaw in radians
-get_entity_name() DEPRECATED: Will be removed in a future version
-get_luaentity()
-             getpos() — returns {x=num, y=num, z=num}.
-    get_armor_groups() - Returns {group1=rating, group2=rating, ...})
-
-note.png
-Note: Documented in lua_api.txt but not yet implemented as of version 0.4.4
-
-
-    get_hp() — returns number of hitpoints (2 * number of hearts).
-    get_inventory() — returns the InvRef of the object.
-    get_wielded_item() — returns the wielded item (ItemStack). This is essentially just a pseudonym for object:get_inventory():get_stack(object:get_wield_list(), object:get_wield_index()) so please note the caveats for inventory manipulation (changes will need to be "committed" by calling object:set_wielded_item(modifiedStack) after modifying the stack unless they are done in the context of a callback that implicitly modifies the stack; see minetest.register_node#on_use).
-    get_wield_index() — returns the index of the wielded item
-    get_wield_list() — returns the name of the inventory list the wielded item is in
-    --]]
-        sInfo = sInfo .. '';
+        sInfo = sInfo .. "\n" .. 'object:get_luaentity().name: ' .. oObject:get_luaentity().name;
+        sInfo = sInfo .. "\n" .. 'object:getpos(): ' .. minetest.pos_to_string(oObject:getpos());
+        sInfo = sInfo .. "\n" .. 'object:get_hp(): ' .. oObject:get_hp();
+        sInfo = sInfo .. "\n" .. 'object:getvelocity(): ' .. dump(oObject:getvelocity());
+        sInfo = sInfo .. "\n" .. 'object:getyaw(): ' .. oObject:getyaw();
+        sInfo = sInfo .. "\n" .. 'object:getacceleration(): ' .. dump(oObject:getacceleration());
+        --sInfo = sInfo .. "\n" .. 'object:get_armor_groups(): ' .. dump(oObject:get_armor_groups()); -- not yet implemented Returns {group1=rating, group2=rating, ...})
+        sInfo = sInfo .. "\n" .. 'object:get_inventory(): ' .. dump(oObject:get_inventory());
+        sInfo = sInfo .. "\n" .. 'object:get_wielded_item(): ' .. dump(oObject:get_wielded_item());
+        sInfo = sInfo .. "\n" .. 'object:get_wield_index(): ' .. dump(oObject:get_wield_index());
+        sInfo = sInfo .. "\n" .. 'object:get_wield_list(): ' .. dump(oObject:get_wield_list());
     else
         print('unknown pointed_thing.type detected');
         sInfo = sInfo .. "\n" .. 'Sorry, can not yet help with that.';
