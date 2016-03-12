@@ -61,7 +61,12 @@ function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
                     end; -- if got at least one inventory or not
                 elseif 'infotext' == sKey
                         or 'text' == sKey
-                        or 'owner' == sKey then
+                        or 'owner' == sKey
+                        or 'doors_owner' == sKey
+                        or (nil ~= SssSdsS
+                            and (SssSdsS.sMetaKeyGroups == sKey
+                                 or SssSdsS.sMetaKeyLeaveOpen == sKey
+                                 or SssSdsS.sMetaKeyActive == sKey)) then
                     sInfo = sInfo .. tMeta:get_string(sKey);
                 else
                     sInfo = sInfo .. dump(sValue);
