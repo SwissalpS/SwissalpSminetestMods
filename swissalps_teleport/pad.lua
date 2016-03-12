@@ -100,7 +100,7 @@ function SssStpP.onConstruct(tPos)
 	SssStpP.posToMeta(tPosDefault, tMeta);
 end; -- SssStpP.onConstruct
 
-function SssStpP.onFields(tPos, sForm, tFields, oSender)
+function SssStpP.onFieldsStandard(tPos, sForm, tFields, oSender)
 	local tMeta = minetest.get_meta(tPos);
 	local tTarget = SssStpP.metaToPos(tMeta);
 	local sPlayer = oSender:get_player_name();
@@ -108,6 +108,8 @@ function SssStpP.onFields(tPos, sForm, tFields, oSender)
 		print('KO: invalid player passed');
 		return false;
 	end; -- if invalid player
+	print('via standard: Player, ' .. sPlayer .. ', submitted fields ' .. dump(tFields));
+	SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
 	local sOwner = tMeta:get_string('owner');
 	local isOwner = sPlayer == sOwner;
 	local isAdmin = minetest.check_player_privs(sPlayer, {server = true});
@@ -164,19 +166,20 @@ function SssStpP.onFields(tPos, sForm, tFields, oSender)
 		SwissalpS.info.notifyPlayer(sPlayer, 'advanced button clicked');
 		SssStpP.showFormAdvanced(tPos, sPlayer);
 	end; -- if advanced clicked
-end; -- SssStpP.onFields
+end; -- SssStpP.onFieldsStandard
 
 function SssStpP.onFieldsAdvanced(oPlayer, sForm, tFields)
 	if not tFields then
 		return false;
 	end; -- if no fields
 	if not (1 == string.find(sForm, SssStpP.formAdvanced.name)
-			or 1 == string.find(sForm, SssStpP.formStandard.name)) then
+			--or 1 == string.find(sForm, SssStpP.formStandard.name)
+			) then
 		-- not the form we know of
 		return false;
 	end; -- if not the form we expect
 	local sPlayer = oPlayer:get_player_name();
-	print('Player ' .. sPlayer .. ' submitted fields ' .. dump(tFields));
+	print('via Advanced, Player, ' .. sPlayer .. ', submitted fields ' .. dump(tFields));
 	SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
 	local aParts = string.split(sForm, '|');
 	local sPos = aParts[2];
@@ -242,7 +245,7 @@ SssStpP.defNode = {
     on_construct = SssStpP.onConstruct,
 	after_place_node = SssStpP.afterPlaceNode,
 	on_rightclick = SssStpP.onRightClick,
-    on_receive_fields = SssStpP.onFields,
+    on_receive_fields = SssStpP.onFieldsStandard,
 	can_dig = SssStpP.mayDig,
 };
 
