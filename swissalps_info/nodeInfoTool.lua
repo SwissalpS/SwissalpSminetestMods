@@ -70,7 +70,7 @@ function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
                                  or SssSdsS.sMetaKeyActive == sKey)) then
                     sInfo = sInfo .. tMeta:get_string(sKey);
                 else
-                    sInfo = sInfo .. dump(sValue);
+                    sInfo = sInfo .. tMeta:get_string(sKey);--dump(sValue);
                 end; -- if which key
             end; -- loop all entries in meta
         end; -- if failed to fetch meta
