@@ -59,8 +59,10 @@ function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
                     else
                         sInfo = sInfo .. #mValue .. ' exist(s)';
                     end; -- if got at least one inventory or not
-                elseif 'infotext' == sKey then
-                    sInfo = sInfo .. tMeta:get_string('infotext');
+                elseif 'infotext' == sKey
+                        or 'text' == sKey
+                        or 'owner' == sKey then
+                    sInfo = sInfo .. tMeta:get_string(sKey);
                 else
                     sInfo = sInfo .. dump(sValue);
                 end; -- if which key
