@@ -35,7 +35,13 @@ function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
         if (nil == oNode) or (nil == oNode.name) or ('' == oNode.name) then
             SwissalpS.info.notifyPlayer(sName, 'Node not found.');
         else
+            local tKeys = {};
             for sKey, sValue in pairs(oNode) do
+                table.insert(tKeys, sKey);
+            end; -- loop all entries to node to gather keys
+            table.sort(tKeys);
+            for iKey, sKey in pairs(tKeys) do
+                local sValue = oNode[sKey];
                 sInfo = sInfo .. "\n" .. 'node.' .. sKey .. ' = ' .. dump(sValue);
             end; -- loop all entries in node
         end; -- if failed to fetch node at pos
