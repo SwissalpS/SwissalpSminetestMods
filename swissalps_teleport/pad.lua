@@ -125,15 +125,17 @@ function SssStpP.onFieldsStandard(tPos, sForm, tFields, oSender)
 
 	if nil ~= tFields.sTitle then
 		local sTitle = tMeta:get_string('title');
-		if sTitle ~= tFields.sTitle then
+		local sTitleNew = string.trim(tFields.sTitle);
+		SwissalpS.info.notifyPlayer(sPlayer, 'o: ' .. sTitle .. ' n: ' .. sTitleNew);
+		if sTitle ~= sTitleNew then
 			bNeedsUpdate = true;
-			tMeta:set_string('title', tFields.sTitle);
+			tMeta:set_string('title', sTitleNew);
 		end; -- if changed
 	end; -- if title given
 	if nil ~= tFields.fX then
 		local fVal = tMeta:get_float('x');
 		local fValNew = tonumber(tFields.fX);
-		print(fValNew);
+		SwissalpS.info.notifyPlayer(sPlayer, 'X o: ' .. fVal .. ' n: ' .. fValNew);
 		if fVal ~= fValNew then
 			bNeedsUpdate = true;
 			tMeta:set_float('x', fValNew);
@@ -142,7 +144,7 @@ function SssStpP.onFieldsStandard(tPos, sForm, tFields, oSender)
 	if nil ~= tFields.fY then
 		local fVal = tMeta:get_float('y');
 		local fValNew = tonumber(tFields.fY);
-		print(fValNew);
+		SwissalpS.info.notifyPlayer(sPlayer, 'Y o: ' .. fVal .. ' n: ' .. fValNew);
 		if fVal ~= fValNew then
 			bNeedsUpdate = true;
 			tMeta:set_float('y', fValNew);
@@ -151,13 +153,14 @@ function SssStpP.onFieldsStandard(tPos, sForm, tFields, oSender)
 	if nil ~= tFields.fZ then
 		local fVal = tMeta:get_float('z');
 		local fValNew = tonumber(tFields.fZ);
-		print(fValNew);
+		SwissalpS.info.notifyPlayer(sPlayer, 'Z o: ' .. fVal .. ' n: ' .. fValNew);
 		if fVal ~= fValNew then
 			bNeedsUpdate = true;
 			tMeta:set_float('z', fValNew);
 		end; -- if changed
 	end; -- if Z given
 	if bNeedsUpdate then
+		SwissalpS.info.notifyPlayer(sPlayer, 'need to update infotext');
 	--			infotext="Teleporter is Disabled"
 		--	meta:set_float("enabled", -1)
 		--infotext="Teleporter Offline"
