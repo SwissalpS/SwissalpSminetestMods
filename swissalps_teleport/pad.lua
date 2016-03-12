@@ -99,9 +99,6 @@ function SssStpP.onConstruct(tPos)
 end; -- SssStpP.onConstruct
 
 function SssStpP.onFields(tPos, sForm, tFields, oSender)
-	if not tFields.text then
-		return false;
-	end; -- if no text given
 	local tMeta = minetest.get_meta(tPos);
 	local tTarget = SssStpP.metaToPos(tMeta);
 	local sPlayer = oSender:get_player_name();

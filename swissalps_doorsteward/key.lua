@@ -92,6 +92,7 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 	local sPos = aParts[2];
 	local tPos = minetest.string_to_pos(sPos);
 	local tMeta = minetest.get_meta(tPos);
+	local sKeyActive = SwissalpS.doorsteward.setting.sMetaKeyActive;
 	local sKeyGroups = SwissalpS.doorsteward.setting.sMetaKeyGroups;
 	local sKeyOwner = 'doors_owner';
 
@@ -125,7 +126,6 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 		end; -- if changed
 	end; -- if leave Open given
 	if nil ~= tFields.bStewardActive then
-		local sKeyActive = SwissalpS.doorsteward.setting.sMetaKeyActive;
 		local sActiveNew = tFields.bStewardActive;
 		local sActiveOld = tMeta:get_string(sKeyActive);
 		if sActiveOld ~= sActiveNew then
