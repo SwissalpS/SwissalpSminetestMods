@@ -30,25 +30,47 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
         return oItemStack;
     end;
     local sInfo = 'position: ' .. minetest.pos_to_string(tPos);
-    local oNode = minetest.get_node(tPos);
-    if (nil == oNode) or (nil == oNode.name) or ('' == oNode.name) then
-        SwissalpS.info.notifyPlayer(sName, 'Node not found.');
-    else
-        for sKey, sValue in pairs(oNode) do
-            sInfo = sInfo .. "\n" .. 'node.' .. sKey .. ' = ' .. dump(sValue);
-        end; -- loop all entries in node
-    end; -- if failed to fetch node at pos
-    local tMeta = minetest.get_meta(tPos);
-    if nil == tMeta then
-        SwissalpS.info.notifyPlayer(sName, 'Meta-data not found.');
-    else
-        SwissalpS.info.notifyPlayer(sName, 'Meta-data: ' .. dump(tMeta));
-        --for sKey, sValue in pairs(tMeta) do
-        --    sInfo = sInfo .. "\n" .. 'meta.' .. sKey .. ' = ' .. dump(sValue);
-        --end; -- loop all entries in meta
-    end; -- if failed to fetch meta
-    SwissalpS.info.notifyPlayer(sName, sInfo);
+    if 'node' == oPointedThing.type then
+        local oNode = minetest.get_node(tPos);
+        if (nil == oNode) or (nil == oNode.name) or ('' == oNode.name) then
+            SwissalpS.info.notifyPlayer(sName, 'Node not found.');
+        else
+            for sKey, sValue in pairs(oNode) do
+                sInfo = sInfo .. "\n" .. 'node.' .. sKey .. ' = ' .. dump(sValue);
+            end; -- loop all entries in node
+        end; -- if failed to fetch node at pos
+        local tMeta = minetest.get_meta(tPos);
+        if nil == tMeta then
+            SwissalpS.info.notifyPlayer(sName, 'Meta-data not found.');
+        else
+            SwissalpS.info.notifyPlayer(sName, 'Meta-data: ' .. dump(tMeta));
+            --for sKey, sValue in pairs(tMeta) do
+            --    sInfo = sInfo .. "\n" .. 'meta.' .. sKey .. ' = ' .. dump(sValue);
+            --end; -- loop all entries in meta
+        end; -- if failed to fetch meta
+    elseif 'object' == oPointedThing.type then
+        local oObject = oPointedThing.ref;
+        print(dump(oObject), oObject.name);
+        --[[
+             getpos() — returns {x=num, y=num, z=num}.
+    get_armor_groups() - Returns {group1=rating, group2=rating, ...})
 
+note.png
+Note: Documented in lua_api.txt but not yet implemented as of version 0.4.4
+
+
+    get_hp() — returns number of hitpoints (2 * number of hearts).
+    get_inventory() — returns the InvRef of the object.
+    get_wielded_item() — returns the wielded item (ItemStack). This is essentially just a pseudonym for object:get_inventory():get_stack(object:get_wield_list(), object:get_wield_index()) so please note the caveats for inventory manipulation (changes will need to be "committed" by calling object:set_wielded_item(modifiedStack) after modifying the stack unless they are done in the context of a callback that implicitly modifies the stack; see minetest.register_node#on_use).
+    get_wield_index() — returns the index of the wielded item
+    get_wield_list() — returns the name of the inventory list the wielded item is in
+    --]]
+        sInfo = sInfo .. '';
+    else
+        print('unknown pointed_thing.type detected');
+        sInfo = sInfo .. "\n" .. 'Sorry, can not yet help with that.';
+    end;
+    SwissalpS.info.notifyPlayer(sName, sInfo);
     return oItemStack; -- nothing consumed, nothing changed
 end;
 
