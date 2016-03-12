@@ -45,7 +45,13 @@ function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
         else
             --SwissalpS.info.notifyPlayer(sName, 'Meta-data: ' .. dump(tMeta:to_table()));
             local ttMeta = tMeta:to_table();
+            local tKeys = {};
             for sKey, mValue in pairs(ttMeta.fields) do
+                table.insert(tKeys, sKey);
+            end; -- loop collecting keys
+            table.sort(tKeys);
+            for iKey, sKey in pairs(tKeys) do
+                local mValue = ttMeta.fields[sKey];
                 sInfo = sInfo .. "\n" .. 'meta.' .. sKey .. ' = ';
                 if 'formspec' == sKey then
                     if nil == mValue then
@@ -59,18 +65,8 @@ function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
                     else
                         sInfo = sInfo .. #mValue .. ' exist(s)';
                     end; -- if got at least one inventory or not
-                elseif 'infotext' == sKey
-                        or 'text' == sKey
-                        or 'owner' == sKey
-                        or 'doors_owner' == sKey
-                        or 'enabled' == sKey
-                        or (nil ~= SssSdsS
-                            and (SssSdsS.sMetaKeyGroups == sKey
-                                 or SssSdsS.sMetaKeyLeaveOpen == sKey
-                                 or SssSdsS.sMetaKeyActive == sKey)) then
-                    sInfo = sInfo .. tMeta:get_string(sKey);
                 else
-                    sInfo = sInfo .. tMeta:get_string(sKey);--dump(sValue);
+                    sInfo = sInfo .. tMeta:get_string(sKey);
                 end; -- if which key
             end; -- loop all entries in meta
         end; -- if failed to fetch meta
