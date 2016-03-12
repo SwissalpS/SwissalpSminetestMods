@@ -50,7 +50,7 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
         end; -- if failed to fetch meta
     elseif 'object' == oPointedThing.type then
         local oObject = oPointedThing.ref;
-        print(dump(oObject), oObject:getpos(), oObject:get_armor_groups(), oObject:get_hp());
+        print(dump(oObject), oObject:getpos(), oObject:get_hp());
         --[[
              getpos() — returns {x=num, y=num, z=num}.
     get_armor_groups() - Returns {group1=rating, group2=rating, ...})
