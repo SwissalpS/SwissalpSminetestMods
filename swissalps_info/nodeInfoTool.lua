@@ -19,7 +19,7 @@ SssSiNiT.tool_capabilities = {
     },
 };
 
-function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
+function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
     if (nil == oPlacer or nil == oPointedThing) then
         return oItemStack; -- nothing consumed
     end;
@@ -46,22 +46,23 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
             --SwissalpS.info.notifyPlayer(sName, 'Meta-data: ' .. dump(tMeta:to_table()));
             local ttMeta = tMeta:to_table();
             for sKey, mValue in pairs(ttMeta.fields) do
+                sInfo = sInfo .. "\n" .. 'meta.' .. sKey .. ' = ';
                 if 'formspec' == sKey then
-                    sInfo = sInfo .. "\n" .. 'meta.formspec = ';
                     if nil == mValue then
                         sInfo = sInfo .. 'nil';
                     else
                         sInfo = sInfo .. '<exists>';
                     end; -- if got formspec or not
                 elseif 'inventory' == sKey then
-                    sInfo = sInfo .. "\n" .. 'meta.inventory = ';
                     if nil == mValue then
                         sInfo = sInfo .. 'nil';
                     else
                         sInfo = sInfo .. #mValue .. ' exist(s)';
                     end; -- if got at least one inventory or not
+                elseif 'infotext' == sKey then
+                    sInfo = sInfo .. tMeta:get_string('infotext');
                 else
-                    sInfo = sInfo .. "\n" .. 'meta.' .. sKey .. ' = ' .. dump(sValue);
+                    sInfo = sInfo .. dump(sValue);
                 end; -- if which key
             end; -- loop all entries in meta
         end; -- if failed to fetch meta
@@ -93,7 +94,7 @@ function SssSiNiT.on_place(oItemStack, oPlacer, oPointedThing)
     end;
     SwissalpS.info.notifyPlayer(sName, sInfo);
     return oItemStack; -- nothing consumed, nothing changed
-end;
+end; -- SssSiNiT.onPlace
 
 SssSiNiT.def = {
     description = SssSiNiT.description,
@@ -106,8 +107,8 @@ SssSiNiT.def = {
     tool_capabilities = SssSiNiT.tool_capabilities,
     node_placement_prediction = nil,
 
-    on_place = SssSiNiT.on_place,
-    on_use = SssSiNiT.on_place,
+    on_place = SssSiNiT.onPlace,
+    on_use = SssSiNiT.onPlace,
 };
 
 SssSiNiT.craft = {};
