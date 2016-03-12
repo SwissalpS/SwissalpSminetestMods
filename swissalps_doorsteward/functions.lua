@@ -204,7 +204,7 @@ function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, iCountActiveObject, iCountA
     local bOpen = ('2' == string.sub(sNameDoor, -1));
 	-- collect nearby players
     local iCountPlayers = 0;
-    local tObjects = minetest.env:get_objects_inside_radius(tPos, 2);
+    local tObjects = minetest.get_objects_inside_radius(tPos, 2);
     local sName
     local tNames = {} -- maybe we can use a list of names too
     local tPlayers = {}
@@ -243,10 +243,4 @@ function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, iCountActiveObject, iCountA
 			end; -- loop all nearby players to see if one is allowed to open
         end; -- if got players
     end; -- if open or closed
-    --[[
-    local oMeta = minetest.env:get_meta(tPos)if 0 >= oMeta:get_float('enabled') then
-        print('hohohho')
-        return false
-    end
-    --]]
 end -- SwissalpS.doorsteward.fABM

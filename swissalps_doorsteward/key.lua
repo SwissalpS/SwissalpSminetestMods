@@ -51,7 +51,7 @@ function SssSdsK.showForm(tPos, sPlayer)
 	end;
     local sFormSpec = 'size[9,6]'
 		.. 'label[0,0.2;SwissalpS doorsteward Key Edit: '
-		.. minetest.pos_to_string(tPos) .. ' ' .. oNode.name .. ']';
+		.. minetest.pos_to_string(tPos, 1) .. ' ' .. oNode.name .. ']';
     local sFowner;
     if isSuperUser or isOwner then
 print('isSuperUser or isOwner');
@@ -81,8 +81,10 @@ end; -- SssSdsK.showForm
 function SssSdsK.onFields(oPlayer, sForm, tFields)
 	if not (tFields and 1 == string.find(sForm, SssSdsK.formEdit.name)) then
 		-- not a form we know of
-		return;
+		return false;
 	end; -- if not a form we know of
+	local bOwnerChanged = false;
+	local bGroupsChanged = false;
 	local sPlayer = oPlayer:get_player_name();
 	--print('Player ' .. sPlayer .. ' submitted fields ' .. dump(tFields));
 	--SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
@@ -90,21 +92,24 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 	local sPos = aParts[2];
 	local tPos = minetest.string_to_pos(sPos);
 	local tMeta = minetest.get_meta(tPos);
+	local sKeyGroups = SwissalpS.doorsteward.setting.sMetaKeyGroups;
+	local sKeyOwner = 'doors_owner';
 
 	if nil ~= tFields.doors_owner then
 		local sOwnerNew = string.trim(tFields.doors_owner);
-		local sOwnerOld = tMeta:get_string('doors_owner') or '';
+		local sOwnerOld = tMeta:get_string(sKeyOwner) or '';
 		if sOwnerOld ~= sOwnerNew and '' ~= sOwnerNew then
-			tMeta:set_string('doors_owner', sOwnerNew);
+			bOwnerChanged = true;
+			tMeta:set_string(sKeyOwner, sOwnerNew);
 		end;
 	end; -- if owner set
 	if nil ~= tFields.doors_groups then
-		local sKeyGroups = SwissalpS.doorsteward.setting.sMetaKeyGroups;
 		local sGroupsNewRaw = string.trim(tFields.doors_groups);
 		local sGroupsOld = tMeta:get_string(sKeyGroups) or '';
 		local sGroupsNew = sGroupsNewRaw;
 		--TODO: compare better
 		if sGroupsOld ~= sGroupsNew then
+			bGroupsChanged = true;
 			tMeta:set_string(sKeyGroups, sGroupsNew);
 		end; -- if changed
 	end; -- if groups set
@@ -129,7 +134,39 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 			end; -- clean
 			tMeta:set_string(sKeyActive, sActiveNew);
 		end; -- if changed
-	end;
+	end; -- if got field bStewardActive
+	if bOwnerChanged or bGroupsChanged then
+		-- update info text
+		local sOwner = tMeta:get_string(sKeyOwner) or '';
+		local sGroups = tMeta:get_string(sKeyGroups) or '';
+		local sInfo = '"';
+		if '' ~= sOwner then
+			sInfo = sInfo .. 'Owned by ' .. sOwner .. '. Will open for owner ';
+			if '' ~= sGroups then
+				sInfo = sInfo .. 'and members of any of: '
+						.. sGroups .. '.';
+			else
+				sInfo = sInfo .. 'only.';
+			end; -- if got groups or not
+		else
+			sInfo = sInfo .. 'Will open for anyone. Admin members of these '
+					.. 'groups may change settings: ' .. sGroups .. '.';
+		end; -- if got owner or not
+		if 'false' == tMeta:get_string(sKeyActive) then
+			sInfo = sInfo .. "\n" .. 'SwissalpS doorsteward is not active on this door.';
+		else
+			if 'true' == tMeta:get_string(sKeyLeaveOpen) then
+				sInfo = sInfo .. "\n" .. 'This door stays open.';
+			end; -- if set to stay open
+		end; -- if steward deactivated
+		sInfo = sInfo .. '"';
+		tMeta:set_string('infotext', sInfo);
+		-- also update on top node
+		local tPosTop = {x = tPos.x, y = tPos.y +1, z = tPos.z};
+		local tMetaTop = minetest.get_meta(tPosTop);
+		tMetaTop:set_string('infotext', sInfo);
+		tMetaTop:set_string(sKeyOwner, sOwner);
+	end; -- if owner or groups changed
 end; -- SssSdsK.onFields
 
 function SssSdsK.onUse(oItemStack, oPlacer, oPointedThing)
