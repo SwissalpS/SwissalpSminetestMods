@@ -8,6 +8,8 @@ SssStpP.soundArrive = 'swissalps_teleport_padArrive.ogg';
 SssStpP.soundLeave = 'swissalps_teleport_padLeave.ogg';
 SssStpP.formAdvanced = {};
 SssStpP.formAdvanced.name = 'swissalps_teleport:padAdvanced';
+SssStpP.formStandard = {};
+SssStpP.formStandard.name = 'swissalps_teleport:padStandard';
 
 function SssStpP.posToMeta(tPos, tMeta)
 	if nil == tPos
@@ -90,7 +92,7 @@ function SssStpP.onConstruct(tPos)
 			.. 'field[0.5,3.5;4,1;fZ;Z-coordinate;' .. tPosDefault.z .. ']'
 			.. 'button[0.5,4.5;3,1;buttonAdvanced;Advanced]'
 			.. 'button_exit[3.5,4.5;3,1;buttonClose;Close]';
-	tMeta:set_string('formspec', sFormSpec);
+	--tMeta:set_string('formspec', sFormSpec);
 	tMeta:set_string('infotext', '"Teleport to ' .. sTitleDefault .. '"');
 	tMeta:set_string('text', sPosDefault .. ',' .. sTitleDefault);
 	tMeta:set_string('title', sTitleDefault);
@@ -160,12 +162,16 @@ function SssStpP.onFields(tPos, sForm, tFields, oSender)
 	end; -- if need to update other fields
 	if nil ~= tFields.buttonAdvanced then
 		SwissalpS.info.notifyPlayer(sPlayer, 'advanced button clicked');
-		SssStpP.showForm(tPos, sPlayer);
+		SssStpP.showFormAdvanced(tPos, sPlayer);
 	end; -- if advanced clicked
 end; -- SssStpP.onFields
 
 function SssStpP.onFieldsAdvanced(oPlayer, sForm, tFields)
-	if not (tFields and 1 == string.find(sForm, SssStpP.formAdvanced.name)) then
+	if not tFields then
+		return false;
+	end; -- if no fields
+	if not (1 == string.find(sForm, SssStpP.formAdvanced.name)
+			or 1 == string.find(sForm, SssStpP.formStandard.name)) then
 		-- not the form we know of
 		return false;
 	end; -- if not the form we expect
@@ -178,14 +184,31 @@ function SssStpP.onFieldsAdvanced(oPlayer, sForm, tFields)
 	local tMeta = minetest.get_meta(tPos);
 end; -- SssStpP.onFieldsAdvanced
 
-function SssStpP.showForm(tPos, sPlayer)
+function SssStpP.onRightClick(tPos, oNodePad, oPlayer)
+	-- check authority
+	local sPlayer = oPlayer:get_player_name();
+	local tMeta = minetest.get_meta(tPos);
+	-- show standard form
+	local tTarget = SssStpP.metaToPos(tMeta);
+	local sFormSpec = 'size[6,6]'
+			.. 'field[0.5,0.5;7,1;sTitle;Destination Title;' .. tMeta:get_string('title') .. ']'
+			.. 'field[0.5,1.5;4,1;fX;X-coordinate;' .. tTarget.x .. ']'
+			.. 'field[0.5,2.5;4,1;fY;Y-coordinate;' .. tTarget.y .. ']'
+			.. 'field[0.5,3.5;4,1;fZ;Z-coordinate;' .. tTarget.z .. ']'
+			.. 'button[0.5,4.5;3,1;buttonAdvanced;Advanced]'
+			.. 'button_exit[3.5,4.5;3,1;buttonClose;Close]';
+	local sFormName = SssStpP.formStandard.name .. '|' .. minetest.pos_to_string(tPos);
+	minetest.show_formspec(sPlayer, sFormName, sFormSpec);
+end; -- SssStpP.onRightClick
+
+function SssStpP.showFormAdvanced(tPos, sPlayer)
 	local sFormSpec = 'size[9,9]'
 			.. 'label[0,0.2;SwissalpS teleport Pad Advanced: '
 			.. minetest.pos_to_string(tPos, 1) .. ']'
 			.. 'button_exit[3.5,4.5;3,1;buttonClose;Close]';
 	local sFormName = SssStpP.formAdvanced.name .. '|' .. minetest.pos_to_string(tPos);
     minetest.show_formspec(sPlayer, sFormName, sFormSpec);
-end; -- SssStpP.showForm
+end; -- SssStpP.showFormAdvanced
 
 function SssStpP.mayDig(tPos, oPlayer)
     local tMeta = minetest.get_meta(tPos);
@@ -218,6 +241,7 @@ SssStpP.defNode = {
 	selection_box = {type = 'wallmounted'},
     on_construct = SssStpP.onConstruct,
 	after_place_node = SssStpP.afterPlaceNode,
+	on_rightclick = SssStpP.onRightClick,
     on_receive_fields = SssStpP.onFields,
 	can_dig = SssStpP.mayDig,
 };
