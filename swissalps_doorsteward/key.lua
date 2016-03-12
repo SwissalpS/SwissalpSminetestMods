@@ -58,14 +58,19 @@ print('hasOwner and (isSuperUser or isOwner)');
         sFowner = 'field[1,1.4;5,1;doors_owner;Owner:;' .. sOwner .. ']';
     else
 print('is not owner or admin or has no owner');
-        sFowner = 'label[0,1.4;Owner: ';
+        sFowner = 'label[1,1.2;Owner: ';
         if hasOwner then
             sFowner = sFowner .. sOwner .. ']';
         else
             sFowner = sFowner .. '-none-]';
         end; -- if hase owner at all
     end; -- setup owner
-    local sFgroups = 'field[1,3.8;7,1;doors_groups;Door opens for members of these groups:;' .. sGroups .. ']';
+    local sFgroups;
+	if hasOwner then
+		sFgroups = 'field[1,3.8;7,1;doors_groups;Door opens for members of these groups:;' .. sGroups .. ']';
+	else
+		sFgroups = 'label[1,3.8;Door opens for anyone, if activated.]';
+	end; -- if has owner for group display
     local sFbuttonClose = 'button_exit[4,5;4,1;buttonClose;Close]';
     local sFcheckboxLeaveOpen = 'checkbox[1,2.5;bLeaveOpen;Leave this door open;' .. sLeaveOpen .. ']';
     local sFcheckboxSteward = 'checkbox[1,1.8;bStewardActive;Use Steward on this door;' .. sActive .. ']';
