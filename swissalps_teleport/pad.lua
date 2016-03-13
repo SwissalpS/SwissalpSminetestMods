@@ -196,9 +196,19 @@ function SssStpP.onRightClick(tPos, oNodePad, oPlayer)
 end; -- SssStpP.onRightClick
 
 function SssStpP.showFormAdvanced(tPos, sPlayer)
+	--textlist[X,Y;W,H;name;listelem 1,listelem 2,...,listelem n;selected idx;transparent]
+	--Scrollable itemlist showing arbitrary text elements Name fieldname sent to server on singleclick or doubleclick value is current selected element, with a prefix of CHG: for singleclick and "DBL:" for doubleclick. Use minetest.explode_table_event(string) Listelements can be prepended by #color in hexadecimal format RRGGBB
+	local sTransparent = 'false'; -- 'true';
+	local sListP = '';
+	local sListG = '';
+	local sListC, iIndex = compassgps.bookmark_loop('L', sPlayer);
+	print(sListC);
 	local sFormSpec = 'size[9,9]'
 			.. 'label[0,0.2;SwissalpS teleport Pad Advanced: '
 			.. minetest.pos_to_string(tPos, 1) .. ']'
+			.. 'textlist[0,3.0;9,6;bookmarkListC;' .. sListC .. ';' .. iIndex .. ';' .. sTransparent .. ']'
+			--.. 'textlist[0,3.0;9,6;bookmarkListP;' .. sListP .. ';' .. iIndex .. ';' .. sTransparent .. ']'
+			--.. 'textlist[0,3.0;9,6;bookmarkListG;' .. sListG .. ';' .. iIndex .. ';' .. sTransparent .. ']'
 			.. 'button_exit[3.5,4.5;3,1;buttonClose;Close]';
 	local sFormName = SssStpP.formAdvanced.name .. '|' .. minetest.pos_to_string(tPos);
     minetest.show_formspec(sPlayer, sFormName, sFormSpec);
