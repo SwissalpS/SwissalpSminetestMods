@@ -176,7 +176,7 @@ function SssStpP.onFieldsAdvanced(oPlayer, sForm, tFields)
 		return false;
 	end; -- if no fields
 	if not (1 == string.find(sForm, SssStpP.formAdvanced.name)
-			--or 1 == string.find(sForm, SssStpP.formStandard.name)
+			or 1 == string.find(sForm, SssStpP.formStandard.name)
 			) then
 		-- not the form we know of
 		return false;
