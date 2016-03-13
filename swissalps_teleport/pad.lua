@@ -137,7 +137,6 @@ function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 	if nil ~= tFields.sTitle then
 		local sTitle = tMeta:get_string('title');
 		local sTitleNew = string.trim(tFields.sTitle);
-		SwissalpS.info.notifyPlayer(sPlayer, 'o: ' .. sTitle .. ' n: ' .. sTitleNew);
 		if sTitle ~= sTitleNew then
 			bNeedsUpdate = true;
 			tMeta:set_string('title', sTitleNew);
@@ -168,7 +167,7 @@ function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 		end; -- if changed
 	end; -- if Z given
 	if bNeedsUpdate then
-		SwissalpS.info.notifyPlayer(sPlayer, 'need to update infotext');
+		--SwissalpS.info.notifyPlayer(sPlayer, 'need to update infotext');
 		--infotext="Teleporter is Disabled"
 		--infotext="Teleporter Offline"
 		--tMeta:set_float('enabled', -1);
@@ -178,7 +177,7 @@ function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 						 .. sPos .. '"');
 	end; -- if need to update other fields
 	if nil ~= tFields.buttonAdvanced then
-		SwissalpS.info.notifyPlayer(sPlayer, 'advanced button clicked');
+		--SwissalpS.info.notifyPlayer(sPlayer, 'advanced button clicked');
 		SssStpP.showFormAdvanced(tPos, sPlayer);
 	end; -- if advanced clicked
 	return true;
@@ -193,6 +192,19 @@ end; -- SssStpP.onFieldsAdvanced
 function SssStpP.onRightClick(tPos, oNodePad, oPlayer)
 	-- check authority
 	local sPlayer = oPlayer:get_player_name();
+	SssStpP.showFormStandard(tPos, sPlayer);
+end; -- SssStpP.onRightClick
+
+function SssStpP.showFormAdvanced(tPos, sPlayer)
+	local sFormSpec = 'size[9,9]'
+			.. 'label[0,0.2;SwissalpS teleport Pad Advanced: '
+			.. minetest.pos_to_string(tPos, 1) .. ']'
+			.. 'button_exit[3.5,4.5;3,1;buttonClose;Close]';
+	local sFormName = SssStpP.formAdvanced.name .. '|' .. minetest.pos_to_string(tPos);
+    minetest.show_formspec(sPlayer, sFormName, sFormSpec);
+end; -- SssStpP.showFormAdvanced
+
+function SssStpP.showFormStandard(tPos, sPlayer)
 	local tMeta = minetest.get_meta(tPos);
 	-- show standard form
 	local tTarget = SssStpP.metaToPos(tMeta);
@@ -205,16 +217,7 @@ function SssStpP.onRightClick(tPos, oNodePad, oPlayer)
 			.. 'button_exit[3.5,4.5;2,1;buttonClose;Close]';
 	local sFormName = SssStpP.formStandard.name .. '|' .. minetest.pos_to_string(tPos);
 	minetest.show_formspec(sPlayer, sFormName, sFormSpec);
-end; -- SssStpP.onRightClick
-
-function SssStpP.showFormAdvanced(tPos, sPlayer)
-	local sFormSpec = 'size[9,9]'
-			.. 'label[0,0.2;SwissalpS teleport Pad Advanced: '
-			.. minetest.pos_to_string(tPos, 1) .. ']'
-			.. 'button_exit[3.5,4.5;3,1;buttonClose;Close]';
-	local sFormName = SssStpP.formAdvanced.name .. '|' .. minetest.pos_to_string(tPos);
-    minetest.show_formspec(sPlayer, sFormName, sFormSpec);
-end; -- SssStpP.showFormAdvanced
+end; -- SssStpP.showFormStandard
 
 function SssStpP.mayDig(tPos, oPlayer)
     local tMeta = minetest.get_meta(tPos);
