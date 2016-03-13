@@ -197,10 +197,10 @@ function SssStpP.onRightClick(tPos, oNodePad, oPlayer)
 	-- show standard form
 	local tTarget = SssStpP.metaToPos(tMeta);
 	local sFormSpec = 'size[6,6]'
-			.. 'field[0.5,0.5;3,1;sTitle;Destination Title;' .. tMeta:get_string('title') .. ']'
-			.. 'field[0.5,1.5;1,1;fX;X-coordinate;' .. tTarget.x .. ']'
-			.. 'field[0.5,2.5;1,1;fY;Y-coordinate;' .. tTarget.y .. ']'
-			.. 'field[0.5,3.5;1,1;fZ;Z-coordinate;' .. tTarget.z .. ']'
+			.. 'field[0.5,0.5;4,1;sTitle;Destination Title;' .. tMeta:get_string('title') .. ']'
+			.. 'field[0.5,1.5;2,1;fX;X-coordinate;' .. tTarget.x .. ']'
+			.. 'field[0.5,2.5;2,1;fY;Y-coordinate;' .. tTarget.y .. ']'
+			.. 'field[0.5,3.5;2,1;fZ;Z-coordinate;' .. tTarget.z .. ']'
 			.. 'button[0.5,4.5;2,1;buttonAdvanced;Advanced]'
 			.. 'button_exit[3.5,4.5;2,1;buttonClose;Close]';
 	local sFormName = SssStpP.formStandard.name .. '|' .. minetest.pos_to_string(tPos);
