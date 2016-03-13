@@ -31,12 +31,12 @@ end; -- SssStpP.posToMeta
 function SssStpP.metaToPos(tMeta)
 	if nil == tMeta then
 		print('KO: nil passed as meta in SwissalpS.teleport.pad.metaToPos');
-		return;
+		return {x = 0, y = 0, z = 0};
 	end; -- if nil passed for meta
 	return {
-		x = math.max(0, tMeta:get_float('x')),
-		y = math.max(0, tMeta:get_float('y')),
-		z = math.max(0, tMeta:get_float('z')),
+		x = tMeta:get_float('x'),
+		y = tMeta:get_float('y'),
+		z = tMeta:get_float('z'),
 	};
 end; -- SssStpP.metaToPos
 
@@ -85,8 +85,8 @@ function SssStpP.onConstruct(tPos)
 	local tPosDefault = SssStpS.padDefaultPosition;
 	local sPosDefault = minetest.pos_to_string(tPosDefault, 1);
 	local sTitleDefault = SssStpS.padDefaultTitle;
-	tMeta:set_string('infotext', '"Teleport to ' .. sTitleDefault .. '"');
-	tMeta:set_string('text', sPosDefault .. ',' .. sTitleDefault);
+	tMeta:set_string('infotext', '"Teleport to ' .. sTitleDefault .. ' '
+					 .. sPosDefault .. '"');
 	tMeta:set_string('title', sTitleDefault);
 	tMeta:set_float('enabled', -1);
 	SssStpP.posToMeta(tPosDefault, tMeta);
@@ -133,10 +133,7 @@ function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 			return false;
 		end; -- if not admin
 	end; -- if not owner
-
-	SwissalpS.info.notifyPlayer(sPlayer, 'checking fields...');
 	local bNeedsUpdate = false;
-
 	if nil ~= tFields.sTitle then
 		local sTitle = tMeta:get_string('title');
 		local sTitleNew = string.trim(tFields.sTitle);
@@ -149,7 +146,6 @@ function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 	if nil ~= tFields.fX then
 		local fVal = tMeta:get_float('x');
 		local fValNew = tonumber(tFields.fX);
-		SwissalpS.info.notifyPlayer(sPlayer, 'X o: ' .. fVal .. ' n: ' .. fValNew);
 		if fVal ~= fValNew then
 			bNeedsUpdate = true;
 			tMeta:set_float('x', fValNew);
@@ -158,7 +154,6 @@ function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 	if nil ~= tFields.fY then
 		local fVal = tMeta:get_float('y');
 		local fValNew = tonumber(tFields.fY);
-		SwissalpS.info.notifyPlayer(sPlayer, 'Y o: ' .. fVal .. ' n: ' .. fValNew);
 		if fVal ~= fValNew then
 			bNeedsUpdate = true;
 			tMeta:set_float('y', fValNew);
@@ -167,7 +162,6 @@ function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 	if nil ~= tFields.fZ then
 		local fVal = tMeta:get_float('z');
 		local fValNew = tonumber(tFields.fZ);
-		SwissalpS.info.notifyPlayer(sPlayer, 'Z o: ' .. fVal .. ' n: ' .. fValNew);
 		if fVal ~= fValNew then
 			bNeedsUpdate = true;
 			tMeta:set_float('z', fValNew);
@@ -175,20 +169,19 @@ function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 	end; -- if Z given
 	if bNeedsUpdate then
 		SwissalpS.info.notifyPlayer(sPlayer, 'need to update infotext');
-	--			infotext="Teleporter is Disabled"
-		--	meta:set_float("enabled", -1)
+		--infotext="Teleporter is Disabled"
 		--infotext="Teleporter Offline"
-		local sTitle = tMeta:get_string('title');
-		local sPos = minetest.pos_to_string(SssStpP.metaToPos(tMeta));
-		tMeta:set_string('infotext', '"Teleport to ' .. sTitle .. '"');
-		--tMeta:set_string('text', sPos .. ',' .. sTitle);
-		tMeta:set_string('title', sTitle);
 		--tMeta:set_float('enabled', -1);
+		local sTitle = tMeta:get_string('title');
+		local sPos = minetest.pos_to_string(SssStpP.metaToPos(tMeta), 1);
+		tMeta:set_string('infotext', '"Teleport to ' .. sTitle .. ' '
+						 .. sPos .. '"');
 	end; -- if need to update other fields
 	if nil ~= tFields.buttonAdvanced then
 		SwissalpS.info.notifyPlayer(sPlayer, 'advanced button clicked');
 		SssStpP.showFormAdvanced(tPos, sPlayer);
 	end; -- if advanced clicked
+	return true;
 end; -- SssStpP.onFieldsStandard
 
 function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
