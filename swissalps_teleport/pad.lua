@@ -100,10 +100,32 @@ function SssStpP.onConstruct(tPos)
 	SssStpP.posToMeta(tPosDefault, tMeta);
 end; -- SssStpP.onConstruct
 
-function SssStpP.onFieldsStandard(tPos, sForm, tFields, oSender)
+function SssStpP.onFields(oPlayer, sForm, tFields)
+	if not tFields then
+		return false;
+	end; -- if no fields
+	local iAdvanced = string.find(sForm, SssStpP.formAdvanced.name);
+	local iStandard = string.find(sForm, SssStpP.formStandard.name);
+	if not (1 == iAdvanced or 1 == iStandard) then
+		-- not a form we know of
+		return false;
+	end; -- if not a form we expect
+	local sPlayer = oPlayer:get_player_name();
+	print('Player, ' .. sPlayer .. ', submitted form ' .. sForm);
+	SwissalpS.info.notifyPlayer(sPlayer, sForm);
+	local aParts = string.split(sForm, '|');
+	local sPos = aParts[2];
+	local tPos = minetest.string_to_pos(sPos);
+	if 1 == iStandard then
+		return SssStpP.onFieldsStandard(tPos, tFields, sPlayer);
+	else
+		return SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer);
+	end; -- if standard or advanced
+end; -- SssStpP.onFields
+
+function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 	local tMeta = minetest.get_meta(tPos);
 	local tTarget = SssStpP.metaToPos(tMeta);
-	local sPlayer = oSender:get_player_name();
 	if not sPlayer or '' == sPlayer then
 		print('KO: invalid player passed');
 		return false;
@@ -171,23 +193,10 @@ function SssStpP.onFieldsStandard(tPos, sForm, tFields, oSender)
 	end; -- if advanced clicked
 end; -- SssStpP.onFieldsStandard
 
-function SssStpP.onFieldsAdvanced(oPlayer, sForm, tFields)
-	if not tFields then
-		return false;
-	end; -- if no fields
-	if not (1 == string.find(sForm, SssStpP.formAdvanced.name)
-			or 1 == string.find(sForm, SssStpP.formStandard.name)
-			) then
-		-- not the form we know of
-		return false;
-	end; -- if not the form we expect
-	local sPlayer = oPlayer:get_player_name();
-	print('via Advanced, Player, ' .. sPlayer .. ', submitted fields ' .. dump(tFields));
-	SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
-	local aParts = string.split(sForm, '|');
-	local sPos = aParts[2];
-	local tPos = minetest.string_to_pos(sPos);
+function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	local tMeta = minetest.get_meta(tPos);
+	print('Player, ' .. sPlayer .. ', submitted fields ' .. dump(tFields));
+	SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
 end; -- SssStpP.onFieldsAdvanced
 
 function SssStpP.onRightClick(tPos, oNodePad, oPlayer)
@@ -266,4 +275,4 @@ minetest.register_node(SssStpP.name, SssStpP.defNode);
 
 minetest.register_abm(SssStpP.defABM);
 
-minetest.register_on_player_receive_fields(SssStpP.onFieldsAdvanced);
+minetest.register_on_player_receive_fields(SssStpP.onFields);
