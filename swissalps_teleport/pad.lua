@@ -85,14 +85,6 @@ function SssStpP.onConstruct(tPos)
 	local tPosDefault = SssStpS.padDefaultPosition;
 	local sPosDefault = minetest.pos_to_string(tPosDefault, 1);
 	local sTitleDefault = SssStpS.padDefaultTitle;
-	local sFormSpec = 'size[6,6]'
-			.. 'field[0.5,0.5;7,1;sTitle;Destination Title;' .. sTitleDefault .. ']'
-			.. 'field[0.5,1.5;4,1;fX;X-coordinate;' .. tPosDefault.x .. ']'
-			.. 'field[0.5,2.5;4,1;fY;Y-coordinate;' .. tPosDefault.y .. ']'
-			.. 'field[0.5,3.5;4,1;fZ;Z-coordinate;' .. tPosDefault.z .. ']'
-			.. 'button[0.5,4.5;3,1;buttonAdvanced;Advanced]'
-			.. 'button_exit[3.5,4.5;3,1;buttonClose;Close]';
-	--tMeta:set_string('formspec', sFormSpec);
 	tMeta:set_string('infotext', '"Teleport to ' .. sTitleDefault .. '"');
 	tMeta:set_string('text', sPosDefault .. ',' .. sTitleDefault);
 	tMeta:set_string('title', sTitleDefault);
@@ -186,6 +178,12 @@ function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 	--			infotext="Teleporter is Disabled"
 		--	meta:set_float("enabled", -1)
 		--infotext="Teleporter Offline"
+		local sTitle = tMeta:get_string('title');
+		local sPos = minetest.pos_to_string(SssStpP.metaToPos(tMeta));
+		tMeta:set_string('infotext', '"Teleport to ' .. sTitle .. '"');
+		--tMeta:set_string('text', sPos .. ',' .. sTitle);
+		tMeta:set_string('title', sTitle);
+		--tMeta:set_float('enabled', -1);
 	end; -- if need to update other fields
 	if nil ~= tFields.buttonAdvanced then
 		SwissalpS.info.notifyPlayer(sPlayer, 'advanced button clicked');
