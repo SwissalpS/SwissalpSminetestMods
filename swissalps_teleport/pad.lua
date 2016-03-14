@@ -405,10 +405,11 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	if bApplySelected then
 		local sTitle; -- = '';
 		local tTarget; -- = {x = 0, y = 0, z = 0};
+		local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1);
 		if 1 == iIndexDropDown then
 			-- bookmark from SwissalpS Teleport
 			local tAll = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
-			local tBookmark = tAll[SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1)];
+			local tBookmark = tAll[iIndex];
 			if nil == tBookmark then
 				SwissalpS.index.notifyPlayer(sPlayer, 'Sorry, something went wrong. Close dialog and try again.');
 				tFields.quit = 'true';
@@ -418,6 +419,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		elseif bHasCompassGPS and 2 == iIndexDropDown then
 			-- bookmark from CompassGPS
 			tTarget = textlist_bkmrks[sPlayer][iIndex];
+			print(dump(tTarget));
 			--sTitle = compassgps.bookmark_name_string(tTarget);
 		else
 			-- custom settings
