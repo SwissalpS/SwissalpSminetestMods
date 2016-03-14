@@ -493,7 +493,7 @@ end; -- SssStpP.onRightClick
 function SssStpP.showFormAdvanced(tPos, sPlayer)
 	if false == SssStpP.cacheGet(sPlayer, 'bHaveReadFromMeta', false) then
 		-- read pad settings to cache
-		SssStpP.cacheSet(sPlayer, 'bHaveReadFromMeta', true);
+		SssStpP.cachePut(sPlayer, 'bHaveReadFromMeta', true);
 	end; -- if not yet initialized cache
 	local bShowSpecial = false;
 	local iIndex;
