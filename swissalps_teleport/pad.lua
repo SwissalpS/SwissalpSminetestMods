@@ -10,6 +10,8 @@ SssStpP.formAdvanced = {};
 SssStpP.formAdvanced.name = 'swissalps_teleport:padAdvanced';
 SssStpP.formStandard = {};
 SssStpP.formStandard.name = 'swissalps_teleport:padStandard';
+SssStpP.formAdvanced.sDropDownCustomTypeValues = 'Random Bookmark,Random From List,Random New Destination';
+SssStpP.formAdvanced.tDropDownCustomTypeValues = string.split(SssStpP.formAdvanced.sDropDownCustomTypeValues, ',');
 SssStpP.cacheStore = {};
 SssStpP.bHasCompassGPS = nil ~= minetest.get_modpath('compassgps');
 
@@ -79,6 +81,27 @@ function SssStpP.hasCustomPrivs(sPlayer)
 	end; -- if server admin
 	return minetest.check_player_privs(sPlayer, {SwissalpS_teleport_Random = true});
 end; -- SssStpP.hasCustomPrivs
+
+function SssStpP.formIndexDropDown(sPlayer)
+	local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexDropDown', 1);
+	local tValues = string.split(SssStpP.formDropDownValues(sPlayer), ',');
+	if iIndex > #tValues or 0 >= iIndex then
+		print('adjusting drop-down-index');
+		iIndex = 1;
+		SssStpP.cachePut(sPlayer, 'iIndexDropDown', iIndex);
+	end; -- if invalid dropdown index
+	return iIndex;
+end; -- SssStpP.indexDropDown
+
+function SssStpP.formIndexDropDownCustomType(sPlayer)
+	local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexDropDownCustomType', 1);
+	if iIndex > #SssStpP.formAdvanced.tDropDownCustomTypeValues or 0 >= iIndex then
+		print('adjusting drop-down-index for custom type');
+		iIndex = 1;
+		SssStpP.cachePut(sPlayer, 'iIndexDropDownCustomType', iIndex);
+	end; -- if invalid dropdown index
+	return iIndex;
+end; -- SssStpP.formIndexDropDownCustomType
 
 SssStpP.craft = {};
 SssStpP.craft.recipe = {
@@ -234,40 +257,17 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	print('via advanced: Player, ' .. sPlayer .. ', submitted fields ' .. dump(tFields));
 	SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
 	local bApplySelected = false;
-	local bHasCompassGPS = SssStpP.hasCompassGPS;
+	local bHasCompassGPS = SssStpP.bHasCompassGPS;
 	local bHasCustomPrivs = SssStpP.hasCustomPrivs(sPlayer);
 	local bIsShowingCGPS = false;
-	local sDropDownValues = SssStpP.formDropDownValues(sPlayer);
-	'SwissalpS Teleport Bookmarks';
-	if bHasCompassGPS then
-		sDropDownValues = sDropDownValues .. ',Compass GPS Bookmarks';
-	end;
-	if bHasCustomPrivs then
-		sDropDownValues = sDropDownValues .. ',Custom Settings';
-	end;
-	local tDropDownValues = string.split(sDropDownValues, ',');
-	local sDropDownCustomTypeValues = 'Random Bookmark,Random From List,Random New Destination';
-	local tDropDownCustomTypeValues = string.split(sDropDownCustomTypeValues, ',');
+	local tDropDownValues = string.split(SssStpP.formDropDownValues(sPlayer), ',');
+	local tDropDownCustomTypeValues = SssStpP.tDropDownCustomTypeValues;
 	local bAddToB = false;
 	local bRemoveFromB = false;
 	local bResend = true;
-	local bShowSpecial = false;
-	local iIndex;
-	local iIndexDropDown = SssStpP.cacheGet(sPlayer, 'iIndexDropDown', 1);
-	if iIndexDropDown > #tDropDownValues then
-		print('adjusting drop-down-index');
-		iIndexDropDown = 1;
-		SssStpP.cachePut(sPlayer, 'iIndexDropDown', iIndexDropDown);
-	end; -- if invalid dropdown index
-	local iIndexDropDownCustomType = SssStpP.cacheGet(sPlayer, 'iIndexDropDownCustomType', 1);
-	if iIndexDropDownCustomType > #tDropDownCustomTypeValues then
-		print('adjusting drop-down-index for custom type');
-		iIndexDropDownCustomType = 1;
-		SssStpP.cachePut(sPlayer, 'iIndexDropDownCustomType', iIndexDropDownCustomType);
-	end; -- if invalid dropdown index
-	local sButtonSwitchList = '';
-	local sTransparent = 'false'; --'true'; --
-	local sList = 'one,two,three';
+	local iIndexDropDown = SssStpP.formIndexDropDown(sPlayer);
+	local iIndexDropDownCustomType = SssStpP.formIndexDropDownCustomType(sPlayer);
+	local sList = '';
 	if nil ~= tFields.bookmarkList then
 		local tAction = minetest.explode_textlist_event(tFields.bookmarkList);
 		SssStpP.cachePut(sPlayer, 'iIndexBookmark', tAction.index);
@@ -345,22 +345,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 			--print('switched to index ' .. iIndexDropDown);
 		end; -- if changed
 	end; -- if switched source
-	-- which list? which buttons to show?
-	if 1 == iIndexDropDown then
-		sList = SssStpP.list4formspec(sPlayer);
-	elseif bHasCompassGPS and 2 == iIndexDropDown then
-		sList, iIndex = compassgps.bookmark_loop('L', sPlayer);
-		bIsShowingCGPS = true;
-	else
-		-- show special settings
-		bShowSpecial = true;
-		if 'true' == SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') then
-			sList, iIndex = compassgps.bookmark_loop('L', sPlayer);
-		else
-			sList = SssStpP.list4formspec(sPlayer);
-		end; -- which list to prepare
-	end;
-	iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1);
+
 	if bAddToB then
 		-- add selected in list A to list B
 		print('supposed to add selected bookmark to list B');
@@ -372,7 +357,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	if bApplySelected then
 		local sTitle = '';
 		local tTarget = {x = 0, y = 0, z = 0};
-		if bIsShowingCGPS then
+		if true then
 			--tTarget = textlist_bkmrks[sPlayer][iIndex];
 			--sTitle = compassgps.bookmark_name_string(tTarget);
 		else
@@ -386,7 +371,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		bResend = false;
 	end; -- if quit
 	if not bResend then
-		return;
+		return true;
 	end; -- if not resend form
 	SssStpP.showFormAdvanced(tPos, sPlayer);
 end; -- SssStpP.onFieldsAdvanced
@@ -401,10 +386,30 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 	if false == SssStpP.cacheGet(sPlayer, 'bHaveReadFromMeta', false) then
 		-- read pad settings to cache
 	end; -- if not yet initialized cache
-	if SssStpP.hasCustomPrivs(sPlayer) then
-		--
-	end; -- if has random priv
-	sButtonSwitchList = 'dropdown[0.5,1;8,1;dropDownSwitch;'
+	local bShowSpecial = false;
+	local iIndex;
+	local iIndexDropDown = SssStpP.formIndexDropDown(sPlayer);
+	local iIndexDropDownCustomType = SssStpP.formIndexDropDownCustomType(sPlayer);
+	local sDropDownValues = SssStpP.formDropDownValues(sPlayer);
+	local sDropDownCustomTypeValues = SssStpP.formAdvanced.sDropDownCustomTypeValues;
+	local sList;
+	local sTransparent = 'false'; --'true'; --
+	-- which list?
+	if 1 == iIndexDropDown then
+		sList = SssStpP.list4formspec(sPlayer);
+	elseif SssStpP.bHasCompassGPS and 2 == iIndexDropDown then
+		sList, iIndex = compassgps.bookmark_loop('L', sPlayer);
+	else
+		-- show special settings
+		bShowSpecial = true;
+		if 'true' == SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') then
+			sList, iIndex = compassgps.bookmark_loop('L', sPlayer);
+		else
+			sList = SssStpP.list4formspec(sPlayer);
+		end; -- which list to prepare
+	end; -- which list?
+	iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1);
+	local sButtonSwitchList = 'dropdown[0.5,1;8,1;dropDownSwitch;'
 			.. sDropDownValues ..';' .. iIndexDropDown .. ']';
 	local sFormSpec = 'size[9,9]'
 			.. 'label[0,0.2;SwissalpS teleport Pad Advanced: '
@@ -415,15 +420,11 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 		sFormSpec = sFormSpec
 			.. 'dropdown[0.5,2;8,1;dropDownCustomType;'
 			.. sDropDownCustomTypeValues ..';' .. iIndexDropDownCustomType .. ']';
-		if 0 == iIndexDropDownCustomType then
-			-- Standard needs no extra fields
-			sFormSpec = sFormSpec
-				.. 'label[1,3;No additional settings for Standard Type]';
-		elseif 1 == iIndexDropDownCustomType then
+		if 1 == iIndexDropDownCustomType then
 			-- Random Bookmark
 			-- checkbox from CGPS
 			local sCheckbox = '';
-			if bHasCompassGPS then
+			if SssStpP.bHasCompassGPS then
 				sCheckbox = 'checkbox[1,4;checkboxC2useCGPS;'
 					.. 'Use Bookmarks of Compass GPS mod;'
 					.. SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') .. ']';
@@ -434,7 +435,7 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 		elseif 2 == iIndexDropDownCustomType then
 			-- Random from list
 			-- not yet coded
-			if bHasCompassGPS then
+			if SssStpP.bHasCompassGPS then
 				sCheckbox = 'checkbox[3.1,3.8;checkboxC2useCGPS;Use Compass GPS;'
 					.. SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') .. ']';
 			end; -- if has cgps
@@ -497,30 +498,6 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 	minetest.show_formspec(sPlayer, sFormName, sFormSpec);
 	--textlist[X,Y;W,H;name;listelem 1,listelem 2,...,listelem n;selected idx;transparent]
 	--Scrollable itemlist showing arbitrary text elements Name fieldname sent to server on singleclick or doubleclick value is current selected element, with a prefix of CHG: for singleclick and "DBL:" for doubleclick. Use minetest.explode_table_event(string) Listelements can be prepended by #color in hexadecimal format RRGGBB
-	local bHasCompassGPS = nil ~= minetest.get_modpath('compassgps');
-	local bIsShowingCGPS = SssStpP.cacheGet(sPlayer, 'isShowingCGPS', false);
-	local iIndex;
-	local sButtonCompassGPS = '';
-	local sButtonSssSteleport = '';
-	local sTransparent = 'false'; -- 'true';
-	local sList = '';
-	if bHasCompassGPS then
-		if bIsShowingCGPS then
-			sList, iIndex = compassgps.bookmark_loop('L', sPlayer);
-		else
-			-- not showing GPS list
-		end;
-	end;
-	print(sListC);
-	local sFormSpec = 'size[9,9]'
-			.. 'label[0,0.2;SwissalpS teleport Pad Advanced: '
-			.. minetest.pos_to_string(tPos, 1) .. ']'
-			.. 'textlist[0,3.0;9,6;bookmarkListC;' .. sList .. ';' .. iIndex .. ';' .. sTransparent .. ']'
-			--.. 'textlist[0,3.0;9,6;bookmarkListP;' .. sListP .. ';' .. iIndex .. ';' .. sTransparent .. ']'
-			--.. 'textlist[0,3.0;9,6;bookmarkListG;' .. sListG .. ';' .. iIndex .. ';' .. sTransparent .. ']'
-			.. 'button_exit[3.5,4.5;3,1;buttonClose;Close]';
-	local sFormName = SssStpP.formAdvanced.name .. '|' .. minetest.pos_to_string(tPos);
-    minetest.show_formspec(sPlayer, sFormName, sFormSpec);
 end; -- SssStpP.showFormAdvanced
 
 function SssStpP.showFormStandard(tPos, sPlayer)
