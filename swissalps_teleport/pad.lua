@@ -428,6 +428,10 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		table.remove(aListB, iIndex);
 		sListB = table.implodeStrings(aListB, ',');
 		SssStpP.cachePut(sPlayer, 'sListB', sListB);
+		if iIndex > #aListB then
+			iIndex = #aListB;
+			SssStpP.cachePut(sPlayer, 'iIndexBookmarkB', iIndex);
+		end; -- if removed last item
 	end; -- if remove from list B
 	if bApplySelected then
 		local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1);
