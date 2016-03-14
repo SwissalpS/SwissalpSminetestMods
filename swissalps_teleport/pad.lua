@@ -82,6 +82,9 @@ function SssStpP.formListString(sPlayer)
 	local iPrefixLength = string.len(sPrefix);
 	local iCount = 0;
 	local sOut = '';
+	if true then
+		return sOut;
+	end;
 	local sSlot;
 	local tAllSlots = {};
 	-- get all the player's slots
