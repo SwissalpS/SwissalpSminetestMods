@@ -71,7 +71,7 @@ function SssStpP.formDropDownValues(sPlayer)
 	if SssStpP.bHasCompassGPS then
 		sDropDownValues = sDropDownValues .. ',Compass GPS Bookmarks';
 	end;
-	if bHasCustomPrivs then
+	if SssStpP.hasCustomPrivs(sPlayer) then
 		sDropDownValues = sDropDownValues .. ',Custom Settings';
 	end;
 	return sDropDownValues;
