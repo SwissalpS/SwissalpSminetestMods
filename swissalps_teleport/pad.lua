@@ -411,7 +411,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 			end;
 			tTarget = tBookmark.position;
 		end; -- if compassGPS or SwissalpS Teleport
-		local sTarget = gsub(minetest.pos_to_string(tTarget), ',', '|');
+		local sTarget = string.gsub(minetest.pos_to_string(tTarget), ',', '|');
 		sListB = SssStpP.cacheGet(sPlayer, 'sListB', '');
 		if 0 == #sListB then
 			sListB = sTarget;
