@@ -3,17 +3,18 @@ SwissalpS.teleport.pad = {};
 SssStpP = SwissalpS.teleport.pad;
 SssStpP.name = 'swissalps_teleport:pad';
 SssStpP.description = 'SwissalpS Teleport Pad. Right-click it to configure.';
+
+SssStpP.bHasCompassGPS = nil ~= minetest.get_modpath('compassgps');
+SssStpP.cacheStore = {};
 SssStpP.inventoryImage = 'swissalps_teleport_pad.png';
-SssStpP.soundArrive = 'swissalps_teleport_padArrive';
-SssStpP.soundLeave = 'swissalps_teleport_padLeave';
 SssStpP.formAdvanced = {};
 SssStpP.formAdvanced.name = 'swissalps_teleport:padAdvanced';
-SssStpP.formStandard = {};
-SssStpP.formStandard.name = 'swissalps_teleport:padStandard';
 SssStpP.formAdvanced.sDropDownCustomTypeValues = 'Random Bookmark,Random From List,Random New Destination';
 SssStpP.formAdvanced.tDropDownCustomTypeValues = string.split(SssStpP.formAdvanced.sDropDownCustomTypeValues, ',');
-SssStpP.cacheStore = {};
-SssStpP.bHasCompassGPS = nil ~= minetest.get_modpath('compassgps');
+SssStpP.formStandard = {};
+SssStpP.formStandard.name = 'swissalps_teleport:padStandard';
+SssStpP.soundArrive = 'swissalps_teleport_padArrive';
+SssStpP.soundLeave = 'swissalps_teleport_padLeave';
 
 function SssStpP.cacheDel(sPlayer)
 	SssStpP.cacheStore[sPlayer] = nil;
