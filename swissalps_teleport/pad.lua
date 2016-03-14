@@ -305,7 +305,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	local bHasCustomPrivs = SssStpP.hasCustomPrivs(sPlayer);
 	local bIsShowingCGPS = false;
 	local tDropDownValues = string.split(SssStpP.formDropDownValues(sPlayer), ',');
-	local tDropDownCustomTypeValues = SssStpP.tDropDownCustomTypeValues;
+	local tDropDownCustomTypeValues = SssStpP.formAdvanced.tDropDownCustomTypeValues;
 	local bAddToB = false;
 	local bRemoveFromB = false;
 	local bResend = true;
