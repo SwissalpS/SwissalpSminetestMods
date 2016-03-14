@@ -28,6 +28,24 @@ if nil == math.round then
 	end; -- math.round
 end; -- if function not set
 
+if '(0.1,0.1,0.1)' ~= minecraft.pos_to_string({x = 0.1111, y = 0.1111, z = 0.111}, 1) then
+	local outdatedPosToString = minecraft.pos_to_string;
+	function minecraft.pos_to_string(tPos, iDigits)
+		if nil == tPos then
+			return '(nil)';
+		end; -- if no pos given
+		local fX = tPos.x or 0;
+		local fY = tPos.y or 0;
+		local fZ = tPos.z or 0;
+		if nil == iDigits then
+			return '(' .. fX .. ',' .. fY .. ',' .. fZ .. ')';
+		end; -- if no didgits given
+		return '('	.. string.format('%.' .. iDigits .. 'f', fX) .. ','
+					.. string.format('%.' .. iDigits .. 'f', fY) .. ','
+					.. string.format('%.' .. iDigits .. 'f', fZ) .. ')';
+	end; -- minecraft.pos_to_string
+end; -- if still old version of minecraft.pos_to_string
+
 if nil == table.containsString then
 	function table.containsString(tHayStack, sNeedle)
 		assert('table' == type(tHayStack), 'argument 1 must be of type table');
