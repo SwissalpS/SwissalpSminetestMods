@@ -84,7 +84,7 @@ function SssStpP.formListString(sPlayer)
 	local sSlot;
 	local tAllSlots = {};
 	-- get all the player's slots
-	local tAll = SwissalpS.teleport.dbPlayer:getAll(sName, {});
+	local tAll = SwissalpS.teleport.dbPlayer:getAll(sPlayer, {});
 	for sKey, mValue in pairs(tAll) do
 		if sPrefix == string.sub(sKey, 1, iPrefixLength) then
 			iCount = iCount +1;
