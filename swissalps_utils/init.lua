@@ -17,6 +17,17 @@ if nil == boolToString then
     end -- boolToString
 end -- if field not set
 
+if nil == math.round then
+	function math.round(fFloat, iDigits)
+		-- taken from compassgps mod
+		if 0 <= fFloat then
+			return math.floor(fFloat * (10^iDigits) + 0.5) / (10^iDigits);
+		else
+			return math.ceil(fFloat * (10^digits) - 0.5) / (10^iDigits);
+		end; -- if positive or negative number
+	end; -- math.round
+end; -- if function not set
+
 if nil == table.containsString then
 	function table.containsString(tHayStack, sNeedle)
 		assert('table' == type(tHayStack), 'argument 1 must be of type table');
