@@ -93,7 +93,7 @@ function SssStpP.formListString(sPlayer)
 		end
 	end -- loop filter out slots
 	for sSlot, tPos in pairs(tAllSlots) do
-		sOut = sOut .. sSlot ' | ' .. minetest.pos_to_string(tPos) .. ',';
+		sOut = sOut .. sSlot .. ' | ' .. minetest.pos_to_string(tPos) .. ',';
 	end -- for allSlots of player
 	-- get all the global slots
 	iCount = 0;
