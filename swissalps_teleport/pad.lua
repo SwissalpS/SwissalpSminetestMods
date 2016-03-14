@@ -94,7 +94,7 @@ function SssStpP.formListString(sPlayer)
 	end -- loop filter out slots
 	for sSlot, tPos in pairs(tAllSlots) do
 		sOut = sOut .. sSlot .. ' | '
-				.. string.gsub(minetest.pos_to_string(tPos), ',', ' ') .. ',';
+				.. string.gsub(minetest.pos_to_string(tPos, 1), ',', ' ') .. ',';
 	end -- for allSlots of player
 	-- get all the global slots
 	iCount = 0;
@@ -110,7 +110,7 @@ function SssStpP.formListString(sPlayer)
 	end -- loop filter out slots
 	for sSlot, tPos in pairs(tAllSlots) do
 		sOut = sOut .. sSlot .. ' | '
-				.. string.gsub(minetest.pos_to_string(tPos), ',', ' ') .. ',';
+				.. string.gsub(minetest.pos_to_string(tPos, 1), ',', ' ') .. ',';
 	end; -- for allSlots of player
 	if 0 < #sOut then
 		sOut = string.sub(sOut, 1, -2);
