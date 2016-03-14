@@ -116,7 +116,7 @@ function SssStpP.formListString(sPlayer)
 		sOut = sOut .. '*' .. sSlot .. ' '
 				.. string.gsub(minetest.pos_to_string(tPos, 1), ',', ' ') .. ',';
 	end; -- for allSlots of player
-	SssStpS.cachePut(sPlayer, 'listSssStp', tAllCache);
+	SssStpP.cachePut(sPlayer, 'listSssStp', tAllCache);
 	if 0 < #sOut then
 		sOut = string.sub(sOut, 1, -2);
 	end; -- if need to remove trailing comma
