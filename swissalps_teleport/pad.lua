@@ -437,7 +437,7 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 	local sTransparent = 'false'; --'true'; --
 	-- which list?
 	if 1 == iIndexDropDown then
-		sList = SssStpP.list4formspec(sPlayer);
+		sList = SssStpP.formListString(sPlayer);
 	elseif SssStpP.bHasCompassGPS and 2 == iIndexDropDown then
 		sList, iIndex = compassgps.bookmark_loop('L', sPlayer);
 	else
