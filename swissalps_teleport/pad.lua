@@ -403,13 +403,14 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		print('supposed to remove selected bookmark from list B');
 	end; -- if remove from list B
 	if bApplySelected then
-		local sTitle; -- = '';
-		local tTarget; -- = {x = 0, y = 0, z = 0};
 		local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1);
+		local sTitle; -- = '';
+		local tBookmark;
+		local tTarget; -- = {x = 0, y = 0, z = 0};
 		if 1 == iIndexDropDown then
 			-- bookmark from SwissalpS Teleport
 			local tAll = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
-			local tBookmark = tAll[iIndex];
+			tBookmark = tAll[iIndex];
 			if nil == tBookmark then
 				SwissalpS.index.notifyPlayer(sPlayer, 'Sorry, something went wrong. Close dialog and try again.');
 				tFields.quit = 'true';
@@ -418,9 +419,9 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 			tTarget = tBookmark.position;
 		elseif bHasCompassGPS and 2 == iIndexDropDown then
 			-- bookmark from CompassGPS
-			tTarget = textlist_bkmrks[sPlayer][iIndex];
-			print(dump(tTarget));
-			--sTitle = compassgps.bookmark_name_string(tTarget);
+			tBookmark = textlist_bkmrks[sPlayer][iIndex];
+			sTitle = tBookmark.bkmrkname;
+			tTarget = {x = tBookmark.x, y = tBookmark.y, z = tBookmark.z};
 		else
 			-- custom settings
 
