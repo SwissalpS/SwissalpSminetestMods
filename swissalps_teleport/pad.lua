@@ -76,6 +76,46 @@ function SssStpP.formDropDownValues(sPlayer)
 	return sDropDownValues;
 end; -- SssStpP.formDropDownValues
 
+function SssStpP.formListString(sPlayer)
+	local sPrefix = SssStpS.db_prefix_slot;
+	local iPrefixLength = string.len(sPrefix);
+	local iCount = 0;
+	local sOut;
+	local sSlot;
+	local tAllSlots = {};
+	-- get all the player's slots
+	local tAll = SwissalpS.teleport.dbPlayer:getAll(sName, {});
+	for sKey, mValue in pairs(tAll) do
+		if sPrefix == string.sub(sKey, 1, iPrefixLength) then
+			iCount = iCount +1;
+			sSlot = string.sub(sKey, iPrefixLength +1);
+			tAllSlots[sSlot] = mValue;
+		end
+	end -- loop filter out slots
+	for sSlot, tPos in pairs(tAllSlots) do
+		sOut = sOut .. sSlot ' | ' .. minetest.pos_to_string(tPos) .. ',';
+	end -- for allSlots of player
+	-- get all the global slots
+	iCount = 0;
+	tAllSlots = {};
+	tAll = SwissalpS.teleport.dbPlayer:getAll(
+			SssStpS.db_global_player_name, {});
+	for sKey, mValue in pairs(tAll) do
+		if sPrefix == string.sub(sKey, 1, iPrefixLength) then
+			iCount = iCount +1;
+			sSlot = string.sub(sKey, iPrefixLength +1);
+			tAllSlots[sSlot] = mValue;
+		end
+	end -- loop filter out slots
+	for sSlot, tPos in pairs(tAllSlots) do
+		sOut = sOut .. sSlot .. ' | ' .. minetest.pos_to_string(tPos) .. ',';
+	end; -- for allSlots of player
+	if 0 < #sOut then
+		sOut = string.sub(sOut, 1, -2);
+	end; -- if need to remove trailing comma
+	return sOut;
+end; -- SssStpS.formListString
+
 function SssStpP.hasCustomPrivs(sPlayer)
 	if minetest.check_player_privs(sPlayer, {server = true}) then
 		return true;
@@ -406,7 +446,7 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 		if 'true' == SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') then
 			sList, iIndex = compassgps.bookmark_loop('L', sPlayer);
 		else
-			sList = SssStpP.list4formspec(sPlayer);
+			sList = SssStpP.formListString(sPlayer);
 		end; -- which list to prepare
 	end; -- which list?
 	iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1);
