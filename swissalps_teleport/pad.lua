@@ -95,6 +95,7 @@ function SssStpP.formListString(sPlayer)
 		end
 	end -- loop filter out slots
 	for sSlot, tPos in pairs(tAllSlots) do
+		print(type(tPos), dump(tPos));
 		sPos = minetest.pos_to_string(tPos, 1);
 		sOut = sOut .. sSlot .. ' ' .. string.gsub(sPos, ',', ' ') .. ',';
 	end -- for allSlots of player
