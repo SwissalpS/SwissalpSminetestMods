@@ -425,11 +425,8 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmarkB', 1);
 		sListB = SssStpP.cacheGet(sPlayer, 'sListB', '');
 		local aListB = string.split(sListB, ',');
-		print(type(iIndex), dump(aListB));
 		table.remove(aListB, iIndex);
-		print(dump(aListB));
 		sListB = table.implodeStrings(aListB, ',');
-		print('listB after:', sListB);
 		SssStpP.cachePut(sPlayer, 'sListB', sListB);
 	end; -- if remove from list B
 	if bApplySelected then

@@ -76,6 +76,7 @@ if nil == table.implodeStrings then
 		local iLength = string.len(sDelimiter);
 		if 0 < iLength and iLength < string.len(sOut) then
 			local iLast = -1 * (iLength +1);
+			print(iLast, sOut);
 			sOut = string.sub(sOut, 1, iLast);
 		end; -- if delimiter has length and is shorter than sOut
 	end; -- table.implodeStrings
