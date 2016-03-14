@@ -83,7 +83,6 @@ function SssStpP.formListString(sPlayer)
 	local iCount = 0;
 	local sOut = '';
 	local sSlot;
-	local sPos;
 	local tAllSlots = {};
 	-- get all the player's slots
 	local tAll = SwissalpS.teleport.dbPlayer:getAll(sPlayer, {});
@@ -96,8 +95,8 @@ function SssStpP.formListString(sPlayer)
 	end -- loop filter out slots
 	for sSlot, tPos in pairs(tAllSlots) do
 		print(type(tPos), dump(tPos));
-		sPos = core.pos_to_string(tPos, 1);
-		sOut = sOut .. sSlot .. ' ' .. string.gsub(sPos, ',', ' ') .. ',';
+		sOut = sOut .. sSlot .. ' '
+				.. string.gsub(minetest.pos_to_string(tPos, 1), ',', ' ') .. ',';
 	end -- for allSlots of player
 	-- get all the global slots
 	iCount = 0;
