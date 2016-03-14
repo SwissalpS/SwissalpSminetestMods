@@ -72,6 +72,7 @@ if nil == table.implodeStrings then
 			end; -- if value is string
 		end; -- loop all values
 		-- drop the last delimiter
+	print(sOut)
 		local iLength = string.len(sDelimiter);
 		if 0 < iLength and iLength < string.len(sOut) then
 			local iLast = -1 * (iLength +1);
