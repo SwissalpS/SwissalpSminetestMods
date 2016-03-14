@@ -84,6 +84,7 @@ function SssStpP.formListString(sPlayer)
 	local sOut = '';
 	local sSlot;
 	local tAllSlots = {};
+	local tAllCache = {};
 	-- get all the player's slots
 	local tAll = SwissalpS.teleport.dbPlayer:getAll(sPlayer, {});
 	for sKey, mValue in pairs(tAll) do
@@ -94,7 +95,7 @@ function SssStpP.formListString(sPlayer)
 		end
 	end -- loop filter out slots
 	for sSlot, tPos in pairs(tAllSlots) do
-		print(type(tPos), dump(tPos));
+		table.insert(tAllCache, {position = tPos, title = sSlot});
 		sOut = sOut .. sSlot .. ' '
 				.. string.gsub(minetest.pos_to_string(tPos, 1), ',', ' ') .. ',';
 	end -- for allSlots of player
@@ -111,9 +112,11 @@ function SssStpP.formListString(sPlayer)
 		end
 	end -- loop filter out slots
 	for sSlot, tPos in pairs(tAllSlots) do
+		table.insert(tAllCache, {position = tPos, title = sSlot});
 		sOut = sOut .. '*' .. sSlot .. ' '
 				.. string.gsub(minetest.pos_to_string(tPos, 1), ',', ' ') .. ',';
 	end; -- for allSlots of player
+	SssStpS.cachePut(sPlayer, 'listSssStp', tAllCache);
 	if 0 < #sOut then
 		sOut = string.sub(sOut, 1, -2);
 	end; -- if need to remove trailing comma
@@ -400,20 +403,31 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		print('supposed to remove selected bookmark from list B');
 	end; -- if remove from list B
 	if bApplySelected then
-		local sTitle = '';
-		local tTarget = {x = 0, y = 0, z = 0};
-		if true then
-			--tTarget = textlist_bkmrks[sPlayer][iIndex];
+		local sTitle; -- = '';
+		local tTarget; -- = {x = 0, y = 0, z = 0};
+		if 1 == iIndexDropDown then
+			-- bookmark from SwissalpS Teleport
+			local tAll = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
+			tTarget = tAll[SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1)];
+			if nil == tTarget then
+				SwissalpS.index.notifyPlayer(sPlayer, 'Sorry, something went wrong. Close dialog and try again.');
+				tFields.quit = 'true';
+			end;
+
+		elseif bHasCompassGPS and 2 == iIndexDropDown then
+			-- bookmark from CompassGPS
+			tTarget = textlist_bkmrks[sPlayer][iIndex];
 			--sTitle = compassgps.bookmark_name_string(tTarget);
 		else
-			--
+			-- custom settings
 
 		end; -- if index of internal or compass GPS
-		print('supposed to apply selected bookmark now');
+		print('supposed to apply selected bookmark now', dump(tTarget), dump(sTitle));
 
 	end; -- if apply selected bookmark
 	if 'true' == tFields.quit then
 		bResend = false;
+		SssStpP.cacheDel(sPlayer);
 	end; -- if quit
 	if not bResend then
 		return true;
