@@ -449,6 +449,8 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 		bShowSpecial = true;
 		if 'true' == SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') then
 			sList, iIndex = compassgps.bookmark_loop('L', sPlayer);
+			sList = string.gsub(sList, '*admin*:', '');
+
 		else
 			sList = SssStpP.formListString(sPlayer);
 		end; -- which list to prepare
