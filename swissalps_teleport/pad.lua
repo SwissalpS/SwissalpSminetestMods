@@ -73,6 +73,7 @@ function SssStpP.formDropDownValues(sPlayer)
 	if bHasCustomPrivs then
 		sDropDownValues = sDropDownValues .. ',Custom Settings';
 	end;
+	return sDropDownValues;
 end; -- SssStpP.formDropDownValues
 
 function SssStpP.hasCustomPrivs(sPlayer)
