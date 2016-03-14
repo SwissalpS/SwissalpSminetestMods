@@ -78,6 +78,7 @@ if nil == table.implodeStrings then
 			sOut = string.sub(sOut, 1, iLast);
 		end; -- if delimiter has length and is shorter than sOut
 	end; -- table.implodeStrings
+	return sOut;
 end; -- if field not set
 
 SwissalpS.info.timerDiffLog(SwissalpS.utils);
