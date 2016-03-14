@@ -408,12 +408,13 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		if 1 == iIndexDropDown then
 			-- bookmark from SwissalpS Teleport
 			local tAll = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
-			tTarget = tAll[SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1)];
-			if nil == tTarget then
+			local tBookmark = tAll[SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1)];
+			if nil == tBookmark then
 				SwissalpS.index.notifyPlayer(sPlayer, 'Sorry, something went wrong. Close dialog and try again.');
 				tFields.quit = 'true';
 			end;
-
+			sTitle = tBookmark.title;
+			tTarget = tBookmark.position;
 		elseif bHasCompassGPS and 2 == iIndexDropDown then
 			-- bookmark from CompassGPS
 			tTarget = textlist_bkmrks[sPlayer][iIndex];
