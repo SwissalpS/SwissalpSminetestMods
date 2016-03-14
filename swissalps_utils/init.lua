@@ -72,15 +72,13 @@ if nil == table.implodeStrings then
 			end; -- if value is string
 		end; -- loop all values
 		-- drop the last delimiter
-	print(sOut)
 		local iLength = string.len(sDelimiter);
 		if 0 < iLength and iLength < string.len(sOut) then
 			local iLast = -1 * (iLength +1);
-			print(iLast, sOut);
 			sOut = string.sub(sOut, 1, iLast);
 		end; -- if delimiter has length and is shorter than sOut
+		return sOut;
 	end; -- table.implodeStrings
-	return sOut;
 end; -- if field not set
 
 SwissalpS.info.timerDiffLog(SwissalpS.utils);
