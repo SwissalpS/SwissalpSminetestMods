@@ -43,15 +43,16 @@ function SssStpP.posToMeta(tPos, tMeta)
 		or nil == tPos.y
 		or nil == tPos.z then
 		print('KO: invalid position passed to SwissalpS.teleport.pad.posToMeta');
-		return;
+		return false;
 	end; -- if invalid position passed
 	if nil == tMeta then
 		print('KO: nil passed as meta in SwissalpS.teleport.pad.posToMeta');
-		return;
+		return false;
 	end; -- if nil passed for meta
 	tMeta:set_float('x', tPos.x);
 	tMeta:set_float('y', tPos.y);
 	tMeta:set_float('z', tPos.z);
+	return true;
 end; -- SssStpP.posToMeta
 
 function SssStpP.metaToPos(tMeta)
@@ -282,10 +283,7 @@ function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 		--infotext="Teleporter is Disabled"
 		--infotext="Teleporter Offline"
 		--tMeta:set_float('enabled', -1);
-		local sTitle = tMeta:get_string('title');
-		local sPos = minetest.pos_to_string(SssStpP.metaToPos(tMeta), 1);
-		tMeta:set_string('infotext', '"Teleport to ' .. sTitle .. ' '
-						 .. sPos .. '"');
+		SssStpP.updateInfotext(tMeta);
 	end; -- if need to update other fields
 	if nil ~= tFields.buttonAdvanced then
 		--SwissalpS.info.notifyPlayer(sPlayer, 'advanced button clicked');
@@ -307,7 +305,6 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	local bApplySelected = false;
 	local bHasCompassGPS = SssStpP.bHasCompassGPS;
 	local bHasCustomPrivs = SssStpP.hasCustomPrivs(sPlayer);
-	local bIsShowingCGPS = false;
 	local tDropDownValues = string.split(SssStpP.formDropDownValues(sPlayer), ',');
 	local tDropDownCustomTypeValues = SssStpP.formAdvanced.tDropDownCustomTypeValues;
 	local bAddToB = false;
@@ -316,6 +313,9 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	local iIndexDropDown = SssStpP.formIndexDropDown(sPlayer);
 	local iIndexDropDownCustomType = SssStpP.formIndexDropDownCustomType(sPlayer);
 	local sList = '';
+	local sListB;
+	local sTitle;
+	local tBookmark;
 	if nil ~= tFields.bookmarkList then
 		local tAction = minetest.explode_textlist_event(tFields.bookmarkList);
 		SssStpP.cachePut(sPlayer, 'iIndexBookmark', tAction.index);
@@ -396,17 +396,42 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 
 	if bAddToB then
 		-- add selected in list A to list B
-		print('supposed to add selected bookmark to list B');
+		local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1);
+		if 'true' == SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') then
+			-- list A is compassGPS
+			tBookmark = textlist_bkmrks[sPlayer][iIndex];
+			tTarget = {x = tBookmark.x, y = tBookmark.y, z = tBookmark.z};
+		else
+			-- list A is SwissalpS Teleport
+			local tAll = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
+			tBookmark = tAll[iIndex];
+			if nil == tBookmark then
+				SwissalpS.index.notifyPlayer(sPlayer, 'Sorry, something went wrong. Close dialog and try again.');
+				tFields.quit = 'true';
+			end;
+			tTarget = tBookmark.position;
+		end; -- if compassGPS or SwissalpS Teleport
+		local sTarget = gsub(minetest.pos_to_string(tTarget), ',', '|');
+		sListB = SssStpP.cacheGet(sPlayer, 'sListB', '');
+		if 0 == #sListB then
+			sListB = sTarget;
+		else
+			sListB = sListB .. ',' .. sTarget;
+		end; -- if first or consecutive
+		SssStpP.cachePut(sPlayer, 'sListB', sListB);
 	end; -- if add to list B
 	if bRemoveFromB then
 		-- remove selected in list B
-		print('supposed to remove selected bookmark from list B');
+		local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmarkB', 1);
+		sListB = SssStpP.cacheGet(sPlayer, 'sListB', '');
+		local aListB = string.split(sListB, ',');
+		aListB[iIndex] = nil;
+		sListB = table.implodeStrings(aListB, ',');
+		SssStpP.cachePut(sPlayer, 'sListB', sListB);
 	end; -- if remove from list B
 	if bApplySelected then
 		local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1);
-		local sTitle; -- = '';
-		local tBookmark;
-		local tTarget; -- = {x = 0, y = 0, z = 0};
+		local iCustomType = 0;
 		if 1 == iIndexDropDown then
 			-- bookmark from SwissalpS Teleport
 			local tAll = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
@@ -424,10 +449,30 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 			tTarget = {x = tBookmark.x, y = tBookmark.y, z = tBookmark.z};
 		else
 			-- custom settings
-
+			iCustomType = iIndexDropDownCustomType;
+			if 1 == iIndexDropDownCustomType then
+				-- random from players bookmarks
+				-- possibly compassgps bookmarks
+				if 'true' == SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') then
+					sTitle = 'random place from your CompassGPS bookmarks.';
+					tMeta:set_bool('bUseCGPS', true);
+				else
+					sTitle = 'random place from your SwissalpS Teleport bookmarks.';
+					tMeta:set_bool('bUseCGPS', false);
+				end; -- if use compassGPS or not
+			elseif 2 == iIndexDropDownCustomType then
+				-- random from list of bookmarks
+				sTitle = 'random place from list';
+			elseif 3 == iIndexDropDownCustomType then
+				-- random new place
+				sTitle = 'random new place';
+			end; -- if switch custom type
 		end; -- if index of internal or compass GPS
 		print('supposed to apply selected bookmark now', dump(tTarget), dump(sTitle));
-
+		SssStpP.posToMeta(tTarget, tMeta);
+		tMeta:set_string('title', sTitle);
+		tMeta:set_float('customType', iCustomType);
+		SssStpP.updateInfotext(tMeta);
 	end; -- if apply selected bookmark
 	if 'true' == tFields.quit then
 		bResend = false;
@@ -448,6 +493,7 @@ end; -- SssStpP.onRightClick
 function SssStpP.showFormAdvanced(tPos, sPlayer)
 	if false == SssStpP.cacheGet(sPlayer, 'bHaveReadFromMeta', false) then
 		-- read pad settings to cache
+		SssStpP.cacheSet(sPlayer, 'bHaveReadFromMeta', true);
 	end; -- if not yet initialized cache
 	local bShowSpecial = false;
 	local iIndex;
@@ -597,6 +643,17 @@ function SssStpP.afterPlaceNode(tPos, oPlayer)
 	tMeta:set_string('owner', sPlayer);
 	tMeta:set_float('enabled', 1);
 end; -- SssStpP.afterPlaceNode
+
+function SssStpP.updateInfotext(tMeta)
+	local sTitle = tMeta:get_string('title');
+	local iCustom = tMeta:get_float('customType') or 0;
+	local sPos = '';
+	if 0 < iCustom then
+		sPos = minetest.pos_to_string(SssStpP.metaToPos(tMeta), 1);
+	end; -- if show static position
+	tMeta:set_string('infotext', '"Teleport to ' .. sTitle .. ' '
+					 .. sPos .. '"');
+end; -- SssStpP.updateInfotext
 
 SssStpP.defNode = {
 	tile_images = {SssStpP.inventoryImage},
