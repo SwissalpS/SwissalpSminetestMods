@@ -463,10 +463,10 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 				-- possibly compassgps bookmarks
 				if 'true' == SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') then
 					sTitle = 'random place from your CompassGPS bookmarks.';
-					tMeta:set_bool('bUseCGPS', true);
+					tMeta:set_string('bUseCGPS', 'true');
 				else
 					sTitle = 'random place from your SwissalpS Teleport bookmarks.';
-					tMeta:set_bool('bUseCGPS', false);
+					tMeta:set_string('bUseCGPS', 'false');
 				end; -- if use compassGPS or not
 			elseif 2 == iIndexDropDownCustomType then
 				-- random from list of bookmarks
@@ -499,10 +499,10 @@ function SssStpP.onRightClick(tPos, oNodePad, oPlayer)
 	-- check authority
 	local sPlayer = oPlayer:get_player_name();
 	local tMeta = minetest.get_meta(tPos);
-	if 0 < (tMeta:get_float('typeBase', 0) or 0) then
-		SssStpP.showFormStandard(tPos, sPlayer);
-	else
+	if 0 < (tMeta:get_float('typeCustom', 0) or 0) then
 		SssStpP.showFormAdvanced(tPos, sPlayer);
+	else
+		SssStpP.showFormStandard(tPos, sPlayer);
 	end; -- if standard or advanced type
 end; -- SssStpP.onRightClick
 
