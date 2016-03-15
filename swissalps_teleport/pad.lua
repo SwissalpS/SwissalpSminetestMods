@@ -72,12 +72,12 @@ function SssStpP.fABM(tPos, oNodePad, iCountActiveObject, iCountActiveObjectWide
 		return;
 	end; -- if not enabled at all
     local tObjects = minetest.get_objects_inside_radius(tPos, 1);
-	local tTarget = SssStpP.metaToPos(tMeta);
 	local sName;
     for iKey, oPlayer in pairs(tObjects) do
-        sName = oPlayer:get_player_name();
-        if nil ~= sName then
+        sPlayer = oPlayer:get_player_name();
+        if nil ~= sPlayer then
 			minetest.sound_play(SssStpP.soundLeave, {pos = tPos, gain = 1.0, max_hear_distance = 10});
+			local tTarget = SssStpP.targetForPlayer(tPos, sPlayer); --SssStpP.metaToPos(tMeta);
 			oPlayer:moveto(tTarget, false);
 			minetest.sound_play(SssStpP.soundArrive, {pos = tTarget, gain = 1.0, max_hear_distance = 10});
         end; -- if is a player
@@ -463,10 +463,8 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 				-- possibly compassgps bookmarks
 				if 'true' == SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') then
 					sTitle = 'random place from your CompassGPS bookmarks.';
-					tMeta:set_string('bUseCGPS', 'true');
 				else
 					sTitle = 'random place from your SwissalpS Teleport bookmarks.';
-					tMeta:set_string('bUseCGPS', 'false');
 				end; -- if use compassGPS or not
 			elseif 2 == iIndexDropDownCustomType then
 				-- random from list of bookmarks
@@ -523,6 +521,12 @@ function SssStpP.posToMeta(tPos, tMeta)
 	tMeta:set_float('z', tPos.z);
 	return true;
 end; -- SssStpP.posToMeta
+
+function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
+	local tMeta = minetest.get_meta(tPos);
+	-- TODO:
+	return tPos;
+end; -- SssStpP.randomNewPlaceForPlayer
 
 function SssStpP.showFormAdvanced(tPos, sPlayer)
 	if false == SssStpP.cacheGet(sPlayer, 'bHaveReadFromMeta', false) then
@@ -661,15 +665,61 @@ function SssStpP.showFormStandard(tPos, sPlayer)
 	local tTarget = SssStpP.metaToPos(tMeta);
 	local sButtonAdvanced = '';
 	local sFormSpec = 'size[6,6]'
-			.. 'field[0.5,0.5;5,1;sTitle;Destination Title;' .. tMeta:get_string('title') .. ']'
-			.. 'field[0.5,1.5;5,1;fX;X-coordinate;' .. tTarget.x .. ']'
-			.. 'field[0.5,2.5;5,1;fY;Y-coordinate;' .. tTarget.y .. ']'
-			.. 'field[0.5,3.5;5,1;fZ;Z-coordinate;' .. tTarget.z .. ']'
+			.. 'field[0.5,0.5;6,1;sTitle;Destination Title;' .. tMeta:get_string('title') .. ']'
+			.. 'field[0.5,1.5;6,1;fX;X-coordinate;' .. tTarget.x .. ']'
+			.. 'field[0.5,2.5;6,1;fY;Y-coordinate;' .. tTarget.y .. ']'
+			.. 'field[0.5,3.5;6,1;fZ;Z-coordinate;' .. tTarget.z .. ']'
 			.. 'button[0.5,4.5;2,1;buttonAdvanced;Advanced]'
 			.. 'button_exit[3.5,4.5;2,1;buttonClose;Close]';
 	local sFormName = SssStpP.formStandard.name .. '|' .. minetest.pos_to_string(tPos);
 	minetest.show_formspec(sPlayer, sFormName, sFormSpec);
 end; -- SssStpP.showFormStandard
+
+function SssStpP.targetForPlayer(tPos, sPlayer)
+	local tMeta = minetest.get_meta(tPos);
+	local iTypeCustom = tMeta:get_float('typeCustom') or 0;
+	-- is a special randomized target
+	if 1 == iTypeCustom then
+		-- random from players bookmarks
+		-- possibly compassgps bookmarks
+		if SssStpP.bHasCompassGPS and 'true' == (tMeta:get_string('useCGPSbookmarks') or 'false') then
+			-- get a random location from compassgps bookmarks
+			local aList = textlist_bkmrks[sPlayer];
+			local iMax = #aList;
+			if 0 < iMax then
+				local iIndex = math.random(1, iMax);
+				local tBookmark = aList[iIndex];
+				return {x = tBookmark.x, y = tBookmark.y, z = tBookmark.z};
+			end; -- if got any at all
+		else
+			-- get from SwissalpS Teleport bookmarks
+			-- build table
+			SssStpP.formListString(sPlayer);
+			local aList = SssStpP.cacheGet('listSssStp', {});
+			local iMax = #aList;
+			if 0 < iMax then
+				local iIndex = math.random(1, iMax);
+				local tBookmark = aList[iIndex];
+				return tBookmark.position;
+			end; -- if got any at all
+		end; -- if CGPS or SssStp
+	elseif 2 == iTypeCustom then
+		-- random from list of bookmarks
+		local sList = tMeta:get_string('sListCustom') or '';
+		local aList = string.split(sList, ',');
+		local iMax = #aList;
+		if 0 < iMax then
+			local iIndex = math.random(1, iMax);
+			local sTarget = string.gsub(aList[iIndex], '|', ',');
+			return minetest.string_to_pos(sTarget);
+		end; -- if something in list at all
+	elseif 3 == iTypeCustom then
+		-- random new place
+		return SssStpP.randomNewPlaceForPlayer(tPos, sPlayer);
+	end; -- if switch type
+	-- fallback to standard
+	return SssStpP.metaToPos(tMeta);
+end; -- SssStpP.targetForPlayer
 
 function SssStpP.updateInfotext(tMeta)
 	local sTitle = tMeta:get_string('title');
@@ -677,7 +727,6 @@ function SssStpP.updateInfotext(tMeta)
 	local sPos = '';
 	if 1 > iCustom then
 		sPos = minetest.pos_to_string(SssStpP.metaToPos(tMeta), 1);
-		print(sPos, iCustom, dump(tMeta:get_string('sListCustom')));
 	end; -- if show static position
 	tMeta:set_string('infotext', '"Teleport to ' .. sTitle .. ' '
 					 .. sPos .. '"');
