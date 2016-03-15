@@ -16,6 +16,35 @@ SssStpP.formStandard.name = 'swissalps_teleport:padStandard';
 SssStpP.soundArrive = 'swissalps_teleport_padArrive';
 SssStpP.soundLeave = 'swissalps_teleport_padLeave';
 
+SssStpP.craft = {};
+SssStpP.craft.recipe = {
+    {'default:wood', 'default:wood', 'default:wood'},
+    {'default:wood', 'default:mese', 'default:wood'},
+    {'default:wood', 'default:glass', 'default:wood'},
+};
+SssStpP.craft.recipe2 = {
+    {'moreores:copper_ingot', 'mesecons_powerplant:power_plant', 'moreores:copper_ingot'},
+    {'moreores:copper_ingot', 'moreores:gold_block', 'moreores:copper_ingot'},
+    {'moreores:copper_ingot', 'default:glass', 'moreores:copper_ingot'}
+};
+
+SssStpP.craft.def = {
+    output = SssStpP.name,
+    recipe = SssStpP.craft.recipe,
+};
+
+SssStpP.craft.def2 = {
+    output = SssStpP.name,
+    recipe = SssStpP.craft.recipe2,
+};
+
+function SssStpP.afterPlaceNode(tPos, oPlayer)
+    local tMeta = minetest.get_meta(tPos);
+    local sPlayer = oPlayer:get_player_name();
+	tMeta:set_string('owner', sPlayer);
+	tMeta:set_float('enabled', 1);
+end; -- SssStpP.afterPlaceNode
+
 function SssStpP.cacheDel(sPlayer)
 	SssStpP.cacheStore[sPlayer] = nil;
 end; -- SssStpP.cacheDel
@@ -37,35 +66,23 @@ function SssStpP.cachePut(sPlayer, sKey, mValue)
 	db[sPlayer][sKey] = mValue;
 end; -- SssStpP.cachePut
 
-function SssStpP.posToMeta(tPos, tMeta)
-	if nil == tPos
-		or nil == tPos.x
-		or nil == tPos.y
-		or nil == tPos.z then
-		print('KO: invalid position passed to SwissalpS.teleport.pad.posToMeta');
-		return false;
-	end; -- if invalid position passed
-	if nil == tMeta then
-		print('KO: nil passed as meta in SwissalpS.teleport.pad.posToMeta');
-		return false;
-	end; -- if nil passed for meta
-	tMeta:set_float('x', tPos.x);
-	tMeta:set_float('y', tPos.y);
-	tMeta:set_float('z', tPos.z);
-	return true;
-end; -- SssStpP.posToMeta
-
-function SssStpP.metaToPos(tMeta)
-	if nil == tMeta then
-		print('KO: nil passed as meta in SwissalpS.teleport.pad.metaToPos');
-		return {x = 0, y = 0, z = 0};
-	end; -- if nil passed for meta
-	return {
-		x = tMeta:get_float('x'),
-		y = tMeta:get_float('y'),
-		z = tMeta:get_float('z'),
-	};
-end; -- SssStpP.metaToPos
+function SssStpP.fABM(tPos, oNodePad, iCountActiveObject, iCountActiveObjectWider)
+	local tMeta = minetest.get_meta(tPos);
+	if 1 > tMeta:get_float('enabled') then
+		return;
+	end; -- if not enabled at all
+    local tObjects = minetest.get_objects_inside_radius(tPos, 1);
+	local tTarget = SssStpP.metaToPos(tMeta);
+	local sName;
+    for iKey, oPlayer in pairs(tObjects) do
+        sName = oPlayer:get_player_name();
+        if nil ~= sName then
+			minetest.sound_play(SssStpP.soundLeave, {pos = tPos, gain = 1.0, max_hear_distance = 10});
+			oPlayer:moveto(tTarget, false);
+			minetest.sound_play(SssStpP.soundArrive, {pos = tTarget, gain = 1.0, max_hear_distance = 10});
+        end; -- if is a player
+    end; -- loop all objects in radius
+end -- SssStpP.fABM
 
 function SssStpP.formDropDownValues(sPlayer)
 	local sDropDownValues = 'SwissalpS Teleport Bookmarks';
@@ -124,13 +141,6 @@ function SssStpP.formListString(sPlayer)
 	return sOut;
 end; -- SssStpS.formListString
 
-function SssStpP.hasCustomPrivs(sPlayer)
-	if minetest.check_player_privs(sPlayer, {server = true}) then
-		return true;
-	end; -- if server admin
-	return minetest.check_player_privs(sPlayer, {SwissalpS_teleport_Random = true});
-end; -- SssStpP.hasCustomPrivs
-
 function SssStpP.formIndexDropDown(sPlayer)
 	local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexDropDown', 1);
 	local tValues = string.split(SssStpP.formDropDownValues(sPlayer), ',');
@@ -152,45 +162,35 @@ function SssStpP.formIndexDropDownCustomType(sPlayer)
 	return iIndex;
 end; -- SssStpP.formIndexDropDownCustomType
 
-SssStpP.craft = {};
-SssStpP.craft.recipe = {
-    {'default:wood', 'default:wood', 'default:wood'},
-    {'default:wood', 'default:mese', 'default:wood'},
-    {'default:wood', 'default:glass', 'default:wood'},
-};
-SssStpP.craft.recipe2 = {
-    {'moreores:copper_ingot', 'mesecons_powerplant:power_plant', 'moreores:copper_ingot'},
-    {'moreores:copper_ingot', 'moreores:gold_block', 'moreores:copper_ingot'},
-    {'moreores:copper_ingot', 'default:glass', 'moreores:copper_ingot'}
-};
+function SssStpP.hasCustomPrivs(sPlayer)
+	if minetest.check_player_privs(sPlayer, {server = true}) then
+		return true;
+	end; -- if server admin
+	return minetest.check_player_privs(sPlayer, {SwissalpS_teleport_Random = true});
+end; -- SssStpP.hasCustomPrivs
 
-SssStpP.craft.def = {
-    output = SssStpP.name,
-    recipe = SssStpP.craft.recipe,
-};
+function SssStpP.mayDig(tPos, oPlayer)
+    local tMeta = minetest.get_meta(tPos);
+    local sPlayer = oPlayer:get_player_name();
+	local isOwner = sPlayer == tMeta:get_string('owner');
+	local isAdmin = minetest.check_player_privs(sPlayer, {server = true});
+    if isOwner or isAdmin then
+        return true;
+    end; -- if may remove
+    return false;
+end; -- SssStpP.mayDig
 
-SssStpP.craft.def2 = {
-    output = SssStpP.name,
-    recipe = SssStpP.craft.recipe2,
-};
-
-function SssStpP.fABM(tPos, oNodePad, iCountActiveObject, iCountActiveObjectWider)
-	local tMeta = minetest.get_meta(tPos);
-	if 1 > tMeta:get_float('enabled') then
-		return;
-	end; -- if not enabled at all
-    local tObjects = minetest.get_objects_inside_radius(tPos, 1);
-	local tTarget = SssStpP.metaToPos(tMeta);
-	local sName;
-    for iKey, oPlayer in pairs(tObjects) do
-        sName = oPlayer:get_player_name();
-        if nil ~= sName then
-			minetest.sound_play(SssStpP.soundLeave, {pos = tPos, gain = 1.0, max_hear_distance = 10});
-			oPlayer:moveto(tTarget, false);
-			minetest.sound_play(SssStpP.soundArrive, {pos = tTarget, gain = 1.0, max_hear_distance = 10});
-        end; -- if is a player
-    end; -- loop all objects in radius
-end -- SssStpP.fABM
+function SssStpP.metaToPos(tMeta)
+	if nil == tMeta then
+		print('KO: nil passed as meta in SwissalpS.teleport.pad.metaToPos');
+		return {x = 0, y = 0, z = 0};
+	end; -- if nil passed for meta
+	return {
+		x = tMeta:get_float('x'),
+		y = tMeta:get_float('y'),
+		z = tMeta:get_float('z'),
+	};
+end; -- SssStpP.metaToPos
 
 function SssStpP.onConstruct(tPos)
 	local tMeta = minetest.get_meta(tPos);
@@ -501,6 +501,24 @@ function SssStpP.onRightClick(tPos, oNodePad, oPlayer)
 	SssStpP.showFormStandard(tPos, sPlayer);
 end; -- SssStpP.onRightClick
 
+function SssStpP.posToMeta(tPos, tMeta)
+	if nil == tPos
+		or nil == tPos.x
+		or nil == tPos.y
+		or nil == tPos.z then
+		print('KO: invalid position passed to SwissalpS.teleport.pad.posToMeta');
+		return false;
+	end; -- if invalid position passed
+	if nil == tMeta then
+		print('KO: nil passed as meta in SwissalpS.teleport.pad.posToMeta');
+		return false;
+	end; -- if nil passed for meta
+	tMeta:set_float('x', tPos.x);
+	tMeta:set_float('y', tPos.y);
+	tMeta:set_float('z', tPos.z);
+	return true;
+end; -- SssStpP.posToMeta
+
 function SssStpP.showFormAdvanced(tPos, sPlayer)
 	if false == SssStpP.cacheGet(sPlayer, 'bHaveReadFromMeta', false) then
 		local tMeta = minetest.get_meta(tPos);
@@ -648,23 +666,6 @@ function SssStpP.showFormStandard(tPos, sPlayer)
 	minetest.show_formspec(sPlayer, sFormName, sFormSpec);
 end; -- SssStpP.showFormStandard
 
-function SssStpP.mayDig(tPos, oPlayer)
-    local tMeta = minetest.get_meta(tPos);
-    local sPlayer = oPlayer:get_player_name();
-	local isOwner = sPlayer == tMeta:get_string('owner');
-	local isAdmin = minetest.check_player_privs(sPlayer, {server = true});
-    if isOwner or isAdmin then
-        return true;
-    end; -- if may remove
-    return false;
-end; -- SssStpP.mayDig
-function SssStpP.afterPlaceNode(tPos, oPlayer)
-    local tMeta = minetest.get_meta(tPos);
-    local sPlayer = oPlayer:get_player_name();
-	tMeta:set_string('owner', sPlayer);
-	tMeta:set_float('enabled', 1);
-end; -- SssStpP.afterPlaceNode
-
 function SssStpP.updateInfotext(tMeta)
 	local sTitle = tMeta:get_string('title');
 	local iCustom = tMeta:get_float('customType') or 0;
@@ -704,9 +705,6 @@ SssStpP.defABM = {
 
 minetest.register_craft(SssStpP.craft.def);
 minetest.register_craft(SssStpP.craft.def2);
-
 minetest.register_node(SssStpP.name, SssStpP.defNode);
-
 minetest.register_abm(SssStpP.defABM);
-
 minetest.register_on_player_receive_fields(SssStpP.onFields);
