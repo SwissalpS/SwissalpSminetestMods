@@ -479,11 +479,11 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		print('supposed to apply selected bookmark now', dump(tTarget), dump(sTitle));
 		SssStpP.posToMeta(tTarget, tMeta);
 		tMeta:set_string('title', sTitle);
-		SssStpP.updateInfotext(tMeta);
 		tMeta:set_float('typeBase', iTypeBase);
 		tMeta:set_float('typeCustom', iTypeCustom);
 		tMeta:set_string('useCGPSbookmarks', SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false'));
 		tMeta:set_string('sListCustom', SssStpP.cacheGet(sPlayer, 'sListB', ''));
+		SssStpP.updateInfotext(tMeta);
 	end; -- if apply selected bookmark
 	if 'true' == tFields.quit then
 		bResend = false;
@@ -675,7 +675,7 @@ function SssStpP.updateInfotext(tMeta)
 	local sTitle = tMeta:get_string('title');
 	local iCustom = tMeta:get_float('typeCustom') or 0;
 	local sPos = '';
-	if 0 < iCustom then
+	if 1 > iCustom then
 		sPos = minetest.pos_to_string(SssStpP.metaToPos(tMeta), 1);
 		print(sPos, iCustom, dump(tMeta:get_string('sListCustom')));
 	end; -- if show static position
