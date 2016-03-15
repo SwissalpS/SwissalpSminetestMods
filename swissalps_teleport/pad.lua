@@ -435,9 +435,11 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	end; -- if remove from list B
 	if bApplySelected then
 		local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1);
-		local iCustomType = 0;
+		local iTypeCustom = 0;
+		local iTypeBase = 0;
 		if 1 == iIndexDropDown then
 			-- bookmark from SwissalpS Teleport
+			iTypeBase = 1;
 			local tAll = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
 			tBookmark = tAll[iIndex];
 			if nil == tBookmark then
@@ -448,12 +450,14 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 			tTarget = tBookmark.position;
 		elseif bHasCompassGPS and 2 == iIndexDropDown then
 			-- bookmark from CompassGPS
+			iTypeBase = 2;
 			tBookmark = textlist_bkmrks[sPlayer][iIndex];
 			sTitle = tBookmark.bkmrkname;
 			tTarget = {x = tBookmark.x, y = tBookmark.y, z = tBookmark.z};
 		else
 			-- custom settings
-			iCustomType = iIndexDropDownCustomType;
+			iTypeBase = 3;
+			iTypeCustom = iIndexDropDownCustomType;
 			if 1 == iIndexDropDownCustomType then
 				-- random from players bookmarks
 				-- possibly compassgps bookmarks
@@ -475,8 +479,11 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		print('supposed to apply selected bookmark now', dump(tTarget), dump(sTitle));
 		SssStpP.posToMeta(tTarget, tMeta);
 		tMeta:set_string('title', sTitle);
-		tMeta:set_float('customType', iCustomType);
 		SssStpP.updateInfotext(tMeta);
+		tMeta:set_float('typeBase', iTypeBase);
+		tMeta:set_float('typeCustom', iTypeCustom);
+		tMeta:set_string('useCGPSbookmarks', SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false'));
+		tMeta:set_string('sListCustom', SssStpP.cacheGet(sPlayer, 'sListB', ''));
 	end; -- if apply selected bookmark
 	if 'true' == tFields.quit then
 		bResend = false;
@@ -496,8 +503,18 @@ end; -- SssStpP.onRightClick
 
 function SssStpP.showFormAdvanced(tPos, sPlayer)
 	if false == SssStpP.cacheGet(sPlayer, 'bHaveReadFromMeta', false) then
+		local tMeta = minetest.get_meta(tPos);
 		-- read pad settings to cache
 		SssStpP.cachePut(sPlayer, 'bHaveReadFromMeta', true);
+		local fType = tMeta:get_float('typeBase') or 0;
+		if not SssStpP.bHasCompassGPS and 2 < fType then
+			fType = fType -1;
+		end; -- if no compassGPS
+		SssStpP.cachePut(sPlayer, 'iIndexDropDown', fType);
+		local fCustomType = tMeta:get_float('typeCustom') or 0;
+		SssStpP.cachePut(sPlayer, 'iIndexDropDownCustomType', fCustomType);
+		SssStpP.cachePut(sPlayer, 'bC2useCGPS', tMeta:get_string('useCGPSbookmarks') or 'false');
+		SssStpP.cachePut(sPlayer, 'sListB', tMeta:get_string('sListCustom') or '');
 	end; -- if not yet initialized cache
 	local bShowSpecial = false;
 	local iIndex;
