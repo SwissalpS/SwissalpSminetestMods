@@ -498,7 +498,12 @@ end; -- SssStpP.onFieldsAdvanced
 function SssStpP.onRightClick(tPos, oNodePad, oPlayer)
 	-- check authority
 	local sPlayer = oPlayer:get_player_name();
-	SssStpP.showFormStandard(tPos, sPlayer);
+	local tMeta = minetest.get_meta(tPos);
+	if 0 < (tMeta:get_float('typeBase', 0) or 0) then
+		SssStpP.showFormStandard(tPos, sPlayer);
+	else
+		SssStpP.showFormAdvanced(tPos, sPlayer);
+	end; -- if standard or advanced type
 end; -- SssStpP.onRightClick
 
 function SssStpP.posToMeta(tPos, tMeta)
