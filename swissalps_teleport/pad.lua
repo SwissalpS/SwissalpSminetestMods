@@ -695,7 +695,7 @@ function SssStpP.targetForPlayer(tPos, sPlayer)
 			-- get from SwissalpS Teleport bookmarks
 			-- build table
 			SssStpP.formListString(sPlayer);
-			local aList = SssStpP.cacheGet('listSssStp', {});
+			local aList = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
 			local iMax = #aList;
 			if 0 < iMax then
 				local iIndex = math.random(1, iMax);
