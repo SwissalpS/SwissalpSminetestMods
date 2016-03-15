@@ -677,6 +677,7 @@ function SssStpP.updateInfotext(tMeta)
 	local sPos = '';
 	if 0 < iCustom then
 		sPos = minetest.pos_to_string(SssStpP.metaToPos(tMeta), 1);
+		print(sPos, iCustom, dump(tMeta:get_string('sListCustom')));
 	end; -- if show static position
 	tMeta:set_string('infotext', '"Teleport to ' .. sTitle .. ' '
 					 .. sPos .. '"');
