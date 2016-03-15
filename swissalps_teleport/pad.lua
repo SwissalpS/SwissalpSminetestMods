@@ -673,7 +673,7 @@ end; -- SssStpP.showFormStandard
 
 function SssStpP.updateInfotext(tMeta)
 	local sTitle = tMeta:get_string('title');
-	local iCustom = tMeta:get_float('customType') or 0;
+	local iCustom = tMeta:get_float('typeCustom') or 0;
 	local sPos = '';
 	if 0 < iCustom then
 		sPos = minetest.pos_to_string(SssStpP.metaToPos(tMeta), 1);
