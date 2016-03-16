@@ -78,8 +78,9 @@ function SssStpP.fABM(tPos, oNodePad, iCountActiveObject, iCountActiveObjectWide
         if nil ~= sPlayer then
 			minetest.sound_play(SssStpP.soundLeave, {pos = tPos, gain = 1.0, max_hear_distance = 10});
 			local tTarget = SssStpP.targetForPlayer(tPos, sPlayer); --SssStpP.metaToPos(tMeta);
-			oPlayer:moveto(tTarget, false);
-			minetest.sound_play(SssStpP.soundArrive, {pos = tTarget, gain = 1.0, max_hear_distance = 10});
+			SwissalpS.info.notifyPlayer(sPlayer, 'Teleporting you to ' .. tTarget.title);
+			oPlayer:moveto(tTarget.position, false);
+			minetest.sound_play(SssStpP.soundArrive, {pos = tTarget.position, gain = 1.0, max_hear_distance = 10});
         end; -- if is a player
     end; -- loop all objects in radius
 end -- SssStpP.fABM
@@ -313,7 +314,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	local iIndexDropDown = SssStpP.formIndexDropDown(sPlayer);
 	local iIndexDropDownCustomType = SssStpP.formIndexDropDownCustomType(sPlayer);
 	local sList = '';
-	local sListB;
+	local sListCustom;
 	local sTitle;
 	local tBookmark;
 	if nil ~= tFields.bookmarkList then
@@ -352,15 +353,15 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		bRemoveFromB = true;
 	end; -- if remove button pressed
 	if nil ~= tFields.checkboxC2useCGPS then
-		SssStpP.cachePut(sPlayer, 'bC2useCGPS', tFields.checkboxC2useCGPS);
+		SssStpP.cachePut(sPlayer, 'useCGPSbookmarks', tFields.checkboxC2useCGPS);
 	end; -- if checkbox state changed
-	if nil ~= tFields.checkboxC4buildPlatformOrHole then
-		SssStpP.cachePut(sPlayer, 'bC4buildPlatformOrHole',
-						 tFields.checkboxC4buildPlatformOrHole);
+	if nil ~= tFields.checkboxBuildPlatformOrHole then
+		SssStpP.cachePut(sPlayer, 'buildPlatformOrHole',
+						 tFields.checkboxBuildPlatformOrHole);
 	end; -- if checkbox value changed
-	if nil ~= tFields.checkboxC4relativeValues then
-		SssStpP.cachePut(sPlayer, 'bC4relativeValues',
-						 tFields.checkboxC4relativeValues);
+	if nil ~= tFields.checkboxUseRelativeValues then
+		SssStpP.cachePut(sPlayer, 'useRelativeValues',
+						 tFields.checkboxUseRelativeValues);
 	end; -- if checkbox value changed
 	if nil ~= tFields.dropDownCustomType then
 		if tDropDownCustomTypeValues[iIndexDropDownCustomType] ~= tFields.dropDownCustomType then
@@ -397,7 +398,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	if bAddToB then
 		-- add selected in list A to list B
 		local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmark', 1);
-		if 'true' == SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') then
+		if 'true' == SssStpP.cacheGet(sPlayer, 'useCGPSbookmarks', 'false') then
 			-- list A is compassGPS
 			tBookmark = textlist_bkmrks[sPlayer][iIndex];
 			tTarget = {x = tBookmark.x, y = tBookmark.y, z = tBookmark.z};
@@ -412,22 +413,22 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 			tTarget = tBookmark.position;
 		end; -- if compassGPS or SwissalpS Teleport
 		local sTarget = string.gsub(minetest.pos_to_string(tTarget), ',', '|');
-		sListB = SssStpP.cacheGet(sPlayer, 'sListB', '');
-		if 0 == #sListB then
-			sListB = sTarget;
+		sListCustom = SssStpP.cacheGet(sPlayer, 'sListCustom', '');
+		if 0 == #sListCustom then
+			sListCustom = sTarget;
 		else
-			sListB = sListB .. ',' .. sTarget;
+			sListCustom = sListCustom .. ',' .. sTarget;
 		end; -- if first or consecutive
-		SssStpP.cachePut(sPlayer, 'sListB', sListB);
+		SssStpP.cachePut(sPlayer, 'sListCustom', sListCustom);
 	end; -- if add to list B
 	if bRemoveFromB then
 		-- remove selected in list B
 		local iIndex = SssStpP.cacheGet(sPlayer, 'iIndexBookmarkB', 1);
-		sListB = SssStpP.cacheGet(sPlayer, 'sListB', '');
-		local aListB = string.split(sListB, ',');
+		sListCustom = SssStpP.cacheGet(sPlayer, 'sListCustom', '');
+		local aListB = string.split(sListCustom, ',');
 		table.remove(aListB, iIndex);
-		sListB = table.implodeStrings(aListB, ',');
-		SssStpP.cachePut(sPlayer, 'sListB', sListB);
+		sListCustom = table.implodeStrings(aListB, ',');
+		SssStpP.cachePut(sPlayer, 'sListCustom', sListCustom);
 		if iIndex > #aListB then
 			iIndex = #aListB;
 			SssStpP.cachePut(sPlayer, 'iIndexBookmarkB', iIndex);
@@ -461,7 +462,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 			if 1 == iIndexDropDownCustomType then
 				-- random from players bookmarks
 				-- possibly compassgps bookmarks
-				if 'true' == SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') then
+				if 'true' == SssStpP.cacheGet(sPlayer, 'useCGPSbookmarks', 'false') then
 					sTitle = 'random place from your CompassGPS bookmarks.';
 				else
 					sTitle = 'random place from your SwissalpS Teleport bookmarks.';
@@ -472,6 +473,14 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 			elseif 3 == iIndexDropDownCustomType then
 				-- random new place
 				sTitle = 'random new place';
+				tMeta:set_string('buildPlatformOrHole',
+								 SssStpP.cacheGet(sPlayer, 'buildPlatformOrHole', 'true'));
+				tMeta:set_string('useRelativeValues',
+								 SssStpP.cacheGet(sPlayer, 'useRelativeValues', 'false'));
+				tMeta:set_float('fHeightMin', tFields.fieldHeightMin);
+				tMeta:set_float('fHeightMax', tFields.fieldHeightMax);
+				tMeta:set_float('fRadiusMax', tFields.fieldRadiusMax);
+				tMeta:set_float('fRadiusMin', tFields.fieldRaduisMin);
 			end; -- if switch custom type
 		end; -- if index of internal or compass GPS
 		print('supposed to apply selected bookmark now', dump(tTarget), dump(sTitle));
@@ -479,8 +488,10 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		tMeta:set_string('title', sTitle);
 		tMeta:set_float('typeBase', iTypeBase);
 		tMeta:set_float('typeCustom', iTypeCustom);
-		tMeta:set_string('useCGPSbookmarks', SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false'));
-		tMeta:set_string('sListCustom', SssStpP.cacheGet(sPlayer, 'sListB', ''));
+		tMeta:set_string('useCGPSbookmarks',
+						 SssStpP.cacheGet(sPlayer, 'useCGPSbookmarks', 'false'));
+		tMeta:set_string('sListCustom',
+						 SssStpP.cacheGet(sPlayer, 'sListCustom', ''));
 		SssStpP.updateInfotext(tMeta);
 	end; -- if apply selected bookmark
 	if 'true' == tFields.quit then
@@ -529,10 +540,10 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 end; -- SssStpP.randomNewPlaceForPlayer
 
 function SssStpP.showFormAdvanced(tPos, sPlayer)
-	if false == SssStpP.cacheGet(sPlayer, 'bHaveReadFromMeta', false) then
+	if false == SssStpP.cacheGet(sPlayer, 'haveReadFromMeta', false) then
 		local tMeta = minetest.get_meta(tPos);
 		-- read pad settings to cache
-		SssStpP.cachePut(sPlayer, 'bHaveReadFromMeta', true);
+		SssStpP.cachePut(sPlayer, 'haveReadFromMeta', true);
 		local fType = tMeta:get_float('typeBase') or 0;
 		if not SssStpP.bHasCompassGPS and 2 < fType then
 			fType = fType -1;
@@ -540,8 +551,20 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 		SssStpP.cachePut(sPlayer, 'iIndexDropDown', fType);
 		local fCustomType = tMeta:get_float('typeCustom') or 0;
 		SssStpP.cachePut(sPlayer, 'iIndexDropDownCustomType', fCustomType);
-		SssStpP.cachePut(sPlayer, 'bC2useCGPS', tMeta:get_string('useCGPSbookmarks') or 'false');
-		SssStpP.cachePut(sPlayer, 'sListB', tMeta:get_string('sListCustom') or '');
+		local sTmp = tMeta:get_string('useCGPSbookmarks');
+		if '' == sTmp then sTmp = 'false'; end;
+		SssStpP.cachePut(sPlayer, 'useCGPSbookmarks', sTmp);
+		SssStpP.cachePut(sPlayer, 'sListCustom', tMeta:get_string('sListCustom'));
+		sTmp = tMeta:get_string('buildPlatformOrHole');
+		if '' == sTmp then sTmp = 'true'; end;
+		SssStpP.cachePut(sPlayer, 'buildPlatformOrHole', sTmp);
+		sTmp = tMeta:get_string('useRelativeValues');
+		if '' == sTmp then sTmp = 'false'; end;
+		SssStpP.cachePut(sPlayer, 'useRelativeValues', sTmp);
+		SssStpP.cachePut(sPlayer, 'fHeightMin', tMeta:get_float('fHeightMin'));
+		SssStpP.cachePut(sPlayer, 'fHeightMax', tMeta:get_float('fHeightMax'));
+		SssStpP.cachePut(sPlayer, 'fRadiusMax', tMeta:get_float('fRadiusMax'));
+		SssStpP.cachePut(sPlayer, 'fRadiusMin', tMeta:get_float('fRadiusMin'));
 	end; -- if not yet initialized cache
 	local bShowSpecial = false;
 	local iIndex;
@@ -559,7 +582,7 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 	else
 		-- show special settings
 		bShowSpecial = true;
-		if 'true' == SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') then
+		if 'true' == SssStpP.cacheGet(sPlayer, 'useCGPSbookmarks', 'false') then
 			sList, iIndex = compassgps.bookmark_loop('L', sPlayer);
 			sList = string.gsub(sList, '%*admin%*%:' .. sPlayer .. '> ', 'a:');
 			sList = string.gsub(sList, '%*shared%*%:[^>]+> ', 's:');
@@ -586,7 +609,7 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 			if SssStpP.bHasCompassGPS then
 				sCheckbox = 'checkbox[1,4;checkboxC2useCGPS;'
 					.. 'Use Bookmarks of Compass GPS mod;'
-					.. SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') .. ']';
+					.. SssStpP.cacheGet(sPlayer, 'useCGPSbookmarks', 'false') .. ']';
 			end; -- if has compass mod
 			sFormSpec = sFormSpec
 				.. 'label[1,3;Uses a random location from bookmarks on usage.]'
@@ -596,7 +619,7 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 			-- not yet coded
 			if SssStpP.bHasCompassGPS then
 				sCheckbox = 'checkbox[3.1,3.8;checkboxC2useCGPS;Use Compass GPS;'
-					.. SssStpP.cacheGet(sPlayer, 'bC2useCGPS', 'false') .. ']';
+					.. SssStpP.cacheGet(sPlayer, 'useCGPSbookmarks', 'false') .. ']';
 			end; -- if has cgps
 			sFormSpec = sFormSpec
 				.. 'label[1,3;Uses a random location from list provided below right.]'
@@ -606,30 +629,30 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 				.. 'textlist[0,3.5;3,4.5;bookmarkListA;' .. sList .. ';'
 				.. iIndex .. ';' .. sTransparent .. ']'
 				.. 'textlist[6,3.5;3,4.5;bookmarkListB;'
-				.. SssStpP.cacheGet(sPlayer, 'sListB', '') .. ';'
+				.. SssStpP.cacheGet(sPlayer, 'sListCustom', '') .. ';'
 				.. iIndex .. ';' .. sTransparent .. ']';
 		elseif 3 == iIndexDropDownCustomType then
 			-- Random new location
 			local sCheckboxBuildPlatformOrHole = 'checkbox[2.1,3.4;'
-					.. 'checkboxC4buildPlatformOrHole;'
+					.. 'checkboxBuildPlatformOrHole;'
 					.. 'Build a platform or dig a hole;'
-					.. SssStpP.cacheGet(sPlayer, 'bC4buildPlatformOrHole', 'true')
+					.. SssStpP.cacheGet(sPlayer, 'buildPlatformOrHole', 'true')
 					.. ']';
 			local sCheckboxValuesRelativeToPad = 'checkbox[1,7.4;'
-					.. 'checkboxC4relativeValues;'
+					.. 'checkboxUseRelativeValues;'
 					.. 'Regard values as offset from teleport pad;'
-					.. SssStpP.cacheGet(sPlayer, 'bC4relativeValues', 'false')
+					.. SssStpP.cacheGet(sPlayer, 'useRelativeValues', 'false')
 					.. ']';
 			local sFieldHeightMin = 'field[1,4.8;3,1;fieldHeightMin;min height;'
-					.. SssStpP.cacheGet(sPlayer, 'iHeightMin', 0) .. ']';
+					.. SssStpP.cacheGet(sPlayer, 'fHeightMin', 0) .. ']';
 			local sFieldHeightMax = 'field[5,4.8;3,1;fieldHeightMax;max height;'
-					.. SssStpP.cacheGet(sPlayer, 'iHeightMax', 200) .. ']';
+					.. SssStpP.cacheGet(sPlayer, 'fHeightMax', 200) .. ']';
 			local sFieldRadiusToNeighbourMax = 'field[1,6.5;3,1;fieldRadiusMax;max radius;'
-					.. SssStpP.cacheGet(sPlayer, 'iRadiusMax', 700) .. ']';
+					.. SssStpP.cacheGet(sPlayer, 'fRadiusMax', 700) .. ']';
 			local sFieldRadiusToNeighbourMin = 'field[5,6.5;3,1;fieldRaduisMin;min radius;'
-					.. SssStpP.cacheGet(sPlayer, 'iRadiusMin', 700) .. ']';
+					.. SssStpP.cacheGet(sPlayer, 'fRadiusMin', 700) .. ']';
 			local sLabelRadius = 'label[1,7;';
-			if 'true' == SssStpP.cacheGet(sPlayer, 'bC4relativeValues', 'false') then
+			if 'true' == SssStpP.cacheGet(sPlayer, 'useRelativeValues', 'false') then
 				sLabelRadius = sLabelRadius .. 'Radius from pad.';
 			else
 				sLabelRadius = sLabelRadius .. 'Radius from protected areas.';
@@ -677,48 +700,63 @@ end; -- SssStpP.showFormStandard
 
 function SssStpP.targetForPlayer(tPos, sPlayer)
 	local tMeta = minetest.get_meta(tPos);
+	local aList;
+	local iIndex;
+	local iMax;
 	local iTypeCustom = tMeta:get_float('typeCustom') or 0;
+	local sTitle;
+	local tBookmark;
+	local tTarget;
 	-- is a special randomized target
 	if 1 == iTypeCustom then
 		-- random from players bookmarks
 		-- possibly compassgps bookmarks
 		if SssStpP.bHasCompassGPS and 'true' == (tMeta:get_string('useCGPSbookmarks') or 'false') then
 			-- get a random location from compassgps bookmarks
-			local aList = textlist_bkmrks[sPlayer];
-			local iMax = #aList;
+			aList = textlist_bkmrks[sPlayer];
+			iMax = #aList;
 			if 0 < iMax then
-				local iIndex = math.random(1, iMax);
-				local tBookmark = aList[iIndex];
-				return {x = tBookmark.x, y = tBookmark.y, z = tBookmark.z};
+				iIndex = math.random(1, iMax);
+				tBookmark = aList[iIndex];
+				return {position = {x = tBookmark.x, y = tBookmark.y, z = tBookmark.z}, title = tBookmark.bkmrkname };
 			end; -- if got any at all
 		else
 			-- get from SwissalpS Teleport bookmarks
 			-- build table
 			SssStpP.formListString(sPlayer);
-			local aList = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
-			local iMax = #aList;
+			aList = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
+			iMax = #aList;
 			if 0 < iMax then
-				local iIndex = math.random(1, iMax);
-				local tBookmark = aList[iIndex];
-				return tBookmark.position;
+				iIndex = math.random(1, iMax);
+				tBookmark = aList[iIndex];
+				return tBookmark;
 			end; -- if got any at all
 		end; -- if CGPS or SssStp
 	elseif 2 == iTypeCustom then
 		-- random from list of bookmarks
-		local sList = tMeta:get_string('sListCustom') or '';
-		local aList = string.split(sList, ',');
-		local iMax = #aList;
+		sList = tMeta:get_string('sListCustom') or '';
+		aList = string.split(sList, ',');
+		iMax = #aList;
 		if 0 < iMax then
-			local iIndex = math.random(1, iMax);
-			local sTarget = string.gsub(aList[iIndex], '|', ',');
-			return minetest.string_to_pos(sTarget);
+			iIndex = math.random(1, iMax);
+			sTarget = string.gsub(aList[iIndex], '|', ',');
+			tTarget = minetest.string_to_pos(sTarget);
+			sTitle = minetest.pos_to_string(tTarget, 1);
+			return {position = tTarget, title = sTitle};
 		end; -- if something in list at all
 	elseif 3 == iTypeCustom then
 		-- random new place
-		return SssStpP.randomNewPlaceForPlayer(tPos, sPlayer);
+		tTarget = SssStpP.randomNewPlaceForPlayer(tPos, sPlayer);
+		sTitle = minetest.pos_to_string(tTarget, 1);
+		return {position = tTarget, title = sTitle};
 	end; -- if switch type
 	-- fallback to standard
-	return SssStpP.metaToPos(tMeta);
+	tTarget = SssStpP.metaToPos(tMeta);
+	sTitle = tMeta:get_string('title');
+	if '' == sTitle then
+		sTitle = minetest.pos_to_string(tTarget, 1);
+	end; -- if empty title
+	return {position = tTarget, title = sTitle};
 end; -- SssStpP.targetForPlayer
 
 function SssStpP.updateInfotext(tMeta)
