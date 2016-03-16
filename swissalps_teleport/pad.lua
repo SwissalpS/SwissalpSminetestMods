@@ -38,7 +38,8 @@ SssStpP.craft.def2 = {
     recipe = SssStpP.craft.recipe2,
 };
 
---local sPathMod = minetest.get_modpath(minetest.get_current_modname()) .. DIR_DELIM;
+
+local sPathMod = minetest.get_modpath(minetest.get_current_modname()) .. DIR_DELIM;
 dofile(sPathMod .. 'padFunctions.lua');
 
 SssStpP.defNode = {
