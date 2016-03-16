@@ -317,6 +317,34 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	local sListCustom;
 	local sTitle;
 	local tBookmark;
+	if nil ~= tFields.fieldHeightMax then
+		local fVal = SssStpP.cacheGet(sPlayer, 'fHeightMax', 0);
+		local fValNew = tonumber(tFields.fieldHeightMax);
+		if fVal ~= fValNew then
+			SssStpP.cachePut(sPlayer, 'fHeightMax', fValNew);
+		end; -- if changed
+	end; -- if max height given
+	if nil ~= tFields.fieldHeightMin then
+		local fVal = SssStpP.cacheGet(sPlayer, 'fHeightMin', 0);
+		local fValNew = tonumber(tFields.fieldHeightMin);
+		if fVal ~= fValNew then
+			SssStpP.cachePut(sPlayer, 'fHeightMin', fValNew);
+		end; -- if changed
+	end; -- if min height given
+	if nil ~= tFields.fieldRadiusMax then
+		local fVal = SssStpP.cacheGet(sPlayer, 'fRadiusMax', 0);
+		local fValNew = tonumber(tFields.fieldRadiusMax);
+		if fVal ~= fValNew then
+			SssStpP.cachePut(sPlayer, 'fRadiusMax', fValNew);
+		end; -- if changed
+	end; -- if max radius given
+	if nil ~= tFields.fieldRadiusMin then
+		local fVal = SssStpP.cacheGet(sPlayer, 'fRadiusMin', 0);
+		local fValNew = tonumber(tFields.fieldRadiusMin);
+		if fVal ~= fValNew then
+			SssStpP.cachePut(sPlayer, 'fRadiusMin', fValNew);
+		end; -- if changed
+	end; -- if min radius given
 	if nil ~= tFields.bookmarkList then
 		local tAction = minetest.explode_textlist_event(tFields.bookmarkList);
 		SssStpP.cachePut(sPlayer, 'iIndexBookmark', tAction.index);
@@ -477,10 +505,10 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 								 SssStpP.cacheGet(sPlayer, 'buildPlatformOrHole', 'true'));
 				tMeta:set_string('useRelativeValues',
 								 SssStpP.cacheGet(sPlayer, 'useRelativeValues', 'false'));
-				tMeta:set_float('fHeightMin', tFields.fieldHeightMin);
-				tMeta:set_float('fHeightMax', tFields.fieldHeightMax);
-				tMeta:set_float('fRadiusMax', tFields.fieldRadiusMax);
-				tMeta:set_float('fRadiusMin', tFields.fieldRaduisMin);
+				tMeta:set_float('fHeightMin', SssStpP.cacheGet(sPlayer, 'fHeightMin', 0));
+				tMeta:set_float('fHeightMax', SssStpP.cacheGet(sPlayer, 'fHeightMax', 0));
+				tMeta:set_float('fRadiusMax', SssStpP.cacheGet(sPlayer, 'fRadiusMax', 0));
+				tMeta:set_float('fRadiusMin', SssStpP.cacheGet(sPlayer, 'fRadiusMin', 0));
 			end; -- if switch custom type
 		end; -- if index of internal or compass GPS
 		print('supposed to apply selected bookmark now', dump(tTarget), dump(sTitle));
