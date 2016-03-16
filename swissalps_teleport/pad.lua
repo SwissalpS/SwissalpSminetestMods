@@ -163,6 +163,15 @@ function SssStpP.formIndexDropDownCustomType(sPlayer)
 	return iIndex;
 end; -- SssStpP.formIndexDropDownCustomType
 
+function SssStpP.getValidNodeAt(tPos)
+	local tNode = minetest.get_node(tPos);
+	if 'ignore' == tNode.name then
+		minetest.get_voxel_manip():read_from_map(tPos, tPos);
+		tNode = minetest.get_node(tPos);
+	end; -- if not yet generated area
+	return tNode;
+end; -- SssStpP.getValidNodeAt
+
 function SssStpP.hasCustomPrivs(sPlayer)
 	if minetest.check_player_privs(sPlayer, {server = true}) then
 		return true;
@@ -561,7 +570,27 @@ function SssStpP.posToMeta(tPos, tMeta)
 end; -- SssStpP.posToMeta
 
 function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
+	-- read settings from pad
 	local tMeta = minetest.get_meta(tPos);
+	local fHeightMax = tMeta:get_float('fHeightMax');
+	local fHeightMin = tMeta:get_float('fHeightMin');
+	local fRadiusMax = tMeta:get_float('fRadiusMax');
+	local fRadiusMin = tMeta:get_float('fRadiusMin');
+	local bBuildPoH = tMeta:get_string('buildPlatformOrHole');
+	if '' == bBuildPoH then bBuildPoH = 'true'; end;
+	bBuildPoH = 'true' == bBuildPoH;
+	local bRelative = tMeta:get_string('useRelativeValues');
+	if '' == bRelative then bRelative = 'false'; end;
+	bRelative = 'true' == bRelative;
+	local fYMax;
+	local fYMin;
+	if bRelative then
+		fYMax = tPos.y + fHeightMax;
+		fYMin = tPos.y + fHeightMin;
+	else
+		fYMax = fHeightMax;
+		fYMin = fHeightMin;
+	end; -- if relative to pad
 	-- TODO:
 	return {x = tPos.x, y = tPos.y + 2, z = tPos.z};
 end; -- SssStpP.randomNewPlaceForPlayer
