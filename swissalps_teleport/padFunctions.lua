@@ -125,8 +125,8 @@ function SssStpP.formIndexDropDownCustomType(sPlayer)
 end; -- SssStpP.formIndexDropDownCustomType
 
 function SssStpP.getValidNodeAt(tPos)
-	local tNode = minetest.get_node(tPos);
-	if 'ignore' == tNode.name then
+	local tNode = minetest.get_node_or_nil(tPos);
+	if nil == tNode then
 		minetest.get_voxel_manip():read_from_map(tPos, tPos);
 		tNode = minetest.get_node(tPos);
 	end; -- if not yet generated area
