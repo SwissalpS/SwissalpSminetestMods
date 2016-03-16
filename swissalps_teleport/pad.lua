@@ -235,8 +235,8 @@ function SssStpP.onFieldsStandard(tPos, tFields, sPlayer)
 		print('KO: invalid player passed');
 		return false;
 	end; -- if invalid player
-	print('via standard: Player, ' .. sPlayer .. ', submitted fields ' .. dump(tFields));
-	SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
+	--print('via standard: Player, ' .. sPlayer .. ', submitted fields ' .. dump(tFields));
+	--SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
 	local sOwner = tMeta:get_string('owner');
 	local isOwner = sPlayer == sOwner;
 	local isAdmin = minetest.check_player_privs(sPlayer, {server = true});
@@ -301,8 +301,8 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 		print('KO: invalid player passed');
 		return false;
 	end; -- if invalid player
-	print('via advanced: Player, ' .. sPlayer .. ', submitted fields ' .. dump(tFields));
-	SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
+	--print('via advanced: Player, ' .. sPlayer .. ', submitted fields ' .. dump(tFields));
+	--SwissalpS.info.notifyPlayer(sPlayer, dump(tFields));
 	local bApplySelected = false;
 	local bHasCompassGPS = SssStpP.bHasCompassGPS;
 	local bHasCustomPrivs = SssStpP.hasCustomPrivs(sPlayer);
@@ -511,7 +511,6 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 				tMeta:set_float('fRadiusMin', SssStpP.cacheGet(sPlayer, 'fRadiusMin', 0));
 			end; -- if switch custom type
 		end; -- if index of internal or compass GPS
-		print('supposed to apply selected bookmark now', dump(tTarget), dump(sTitle));
 		SssStpP.posToMeta(tTarget, tMeta);
 		tMeta:set_string('title', sTitle);
 		tMeta:set_float('typeBase', iTypeBase);
@@ -564,7 +563,7 @@ end; -- SssStpP.posToMeta
 function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 	local tMeta = minetest.get_meta(tPos);
 	-- TODO:
-	return tPos;
+	return {x = tPos.x, y = tPos.y + 2, z = tPos.z};
 end; -- SssStpP.randomNewPlaceForPlayer
 
 function SssStpP.showFormAdvanced(tPos, sPlayer)
