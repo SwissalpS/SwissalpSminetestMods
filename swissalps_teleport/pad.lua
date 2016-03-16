@@ -647,10 +647,10 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 					.. SssStpP.cacheGet(sPlayer, 'fHeightMin', 0) .. ']';
 			local sFieldHeightMax = 'field[5,4.8;3,1;fieldHeightMax;max height;'
 					.. SssStpP.cacheGet(sPlayer, 'fHeightMax', 200) .. ']';
-			local sFieldRadiusToNeighbourMax = 'field[1,6.5;3,1;fieldRadiusMax;max radius;'
-					.. SssStpP.cacheGet(sPlayer, 'fRadiusMax', 700) .. ']';
-			local sFieldRadiusToNeighbourMin = 'field[5,6.5;3,1;fieldRaduisMin;min radius;'
+			local sFieldRadiusToNeighbourMin = 'field[1,6.5;3,1;fieldRaduisMin;min radius;'
 					.. SssStpP.cacheGet(sPlayer, 'fRadiusMin', 700) .. ']';
+			local sFieldRadiusToNeighbourMax = 'field[5,6.5;3,1;fieldRadiusMax;max radius;'
+					.. SssStpP.cacheGet(sPlayer, 'fRadiusMax', 700) .. ']';
 			local sLabelRadius = 'label[1,7;';
 			if 'true' == SssStpP.cacheGet(sPlayer, 'useRelativeValues', 'false') then
 				sLabelRadius = sLabelRadius .. 'Radius from pad.';
