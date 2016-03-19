@@ -37,12 +37,12 @@ function SssStpP.fABM(tPos, oNodePad, iCountActiveObject, iCountActiveObjectWide
     for iKey, oPlayer in pairs(tObjects) do
         sPlayer = oPlayer:get_player_name();
         if nil ~= sPlayer then
-			minetest.sound_play(SssStpP.soundLeave, {pos = tPos, gain = 1.0, max_hear_distance = 10});
 			local tTarget = SssStpP.targetForPlayer(tPos, sPlayer);
 			if nil == tTarget then
 				SwissalpS.info.notifyPlayer(sPlayer, 'Sorry, either this variant of the SwissalpS-teleport-pad has not been completely coded or the world is over-populated. Tell the admin to search for free spots and optimize code to find them.');
 				return;
 			end; -- if no target found
+			minetest.sound_play(SssStpP.soundLeave, {pos = tPos, gain = 1.0, max_hear_distance = 10});
 			SwissalpS.info.notifyPlayer(sPlayer, 'Teleporting you to ' .. tTarget.title);
 			oPlayer:moveto(tTarget.position, false);
 			minetest.sound_play(SssStpP.soundArrive, {pos = tTarget.position, gain = 1.0, max_hear_distance = 10});
