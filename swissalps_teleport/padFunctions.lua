@@ -668,7 +668,7 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 							tCtarget.z = tTarget.z + iCz;
 							for iCy = 0, iRadiusHoleMax do
 								tCtarget.y = tTarget.y + iCy;
-								iDistanceMax = vector.distance(tTarget, tCtarget);
+								iDistance = vector.distance(tTarget, tCtarget);
 								if (iDistance <= iRadiusHoleMax)
 										and (iDistance >= iRadiusHole) then
 									minetest.set_node(tCtarget, {name = sHomeBlock});
