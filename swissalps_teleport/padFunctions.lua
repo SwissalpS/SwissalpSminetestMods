@@ -879,7 +879,8 @@ function SssStpP.targetForPlayer(tPos, sPlayer)
 			if 0 < iMax then
 				iIndex = math.random(1, iMax);
 				tBookmark = aList[iIndex];
-				return {position = {x = tBookmark.x, y = tBookmark.y, z = tBookmark.z}, title = tBookmark.bkmrkname };
+				return {position = vector.new(tBookmark.x, tBookmark.y, tBookmark.z),
+						title = tBookmark.bkmrkname };
 			end; -- if got any at all
 		else
 			-- get from SwissalpS Teleport bookmarks
