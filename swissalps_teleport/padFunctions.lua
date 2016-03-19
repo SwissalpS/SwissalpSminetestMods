@@ -1,4 +1,30 @@
 
+function SssStpP.addHomeBookmarkForPlayer(tPos, sPlayer)
+	local sTitle = '_home_';
+	local sPrefix = SssStpS.db_prefix_slot;
+	local tPos = SwissalpS.teleport.dbPlayer:get(
+			sPlayer, sPrefix .. sTitle, nil);
+	if nil ~= tPos then
+		sTitle = 'home';
+		local iCount = 0;
+		while nil ~= SwissalpS.teleport.dbPlayer:get(
+					sPlayer, sPrefix .. sTitle, nil) do
+			sTitle = 'home' .. iCount;
+			iCount = iCount +1;
+		end; -- loop until a free slot is found
+	end; -- if _home_ is already taken
+	SwissalpS.teleport.dbPlayer:set(sPlayer, sPrefix .. sTitle, tPos);
+	SwissalpS.info.notifyPlayer(sPlayer, 'Set slot (' .. sTitle
+								.. ') in your bookmarks to: '
+								.. minetest.pos_to_string(tPos, 1));
+	if SssStpP.bHasCompassGPS then
+		compassgps.set_bookmark(sPlayer, sTitle, 'P', tPos);
+		SwissalpS.info.notifyPlayer(sPlayer, 'Also set a bookmark with same '
+									.. 'name to your CompassGPS list.');
+	end; -- if got compassgps
+	return sTitle;
+end; -- SssStpP.addHomeBookmarkForPlayer
+
 function SssStpP.afterPlaceNode(tPos, oPlayer)
     local tMeta = minetest.get_meta(tPos);
     local sPlayer = oPlayer:get_player_name();
@@ -913,7 +939,7 @@ function SssStpP.targetForPlayer(tPos, sPlayer)
 		if nil == tTarget then
 			return nil;
 		end; -- if no target returned
-		sTitle = minetest.pos_to_string(tTarget, 1);
+		sTitle = SssStpP.addHomeBookmarkForPlayer(tTarget, sPlayer);
 		return {position = tTarget, title = sTitle};
 	end; -- if switch type
 	-- fallback to standard
