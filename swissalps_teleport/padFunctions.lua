@@ -807,7 +807,7 @@ function SssStpP.showFormAdvanced(tPos, sPlayer)
 					.. SssStpP.cacheGet(sPlayer, 'fHeightMin', 0) .. ']';
 			local sFieldHeightMax = 'field[5,4.8;3,1;fieldHeightMax;max height;'
 					.. SssStpP.cacheGet(sPlayer, 'fHeightMax', 200) .. ']';
-			local sFieldRadiusToNeighbourMin = 'field[1,6.5;3,1;fieldRaduisMin;min radius;'
+			local sFieldRadiusToNeighbourMin = 'field[1,6.5;3,1;fieldRadiusMin;min radius;'
 					.. SssStpP.cacheGet(sPlayer, 'fRadiusMin', 700) .. ']';
 			local sFieldRadiusToNeighbourMax = 'field[5,6.5;3,1;fieldRadiusMax;max radius;'
 					.. SssStpP.cacheGet(sPlayer, 'fRadiusMax', 700) .. ']';
