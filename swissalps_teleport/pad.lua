@@ -7,6 +7,9 @@ SssStpP.description = 'SwissalpS Teleport Pad. Right-click it to configure.';
 SssStpP.bHasCompassGPS = nil ~= minetest.get_modpath('compassgps');
 SssStpP.cacheStore = {};
 SssStpP.inventoryImage = 'swissalps_teleport_pad.png';
+SssStpP.iMaxCoordinate = 30912; -- official −30912 to 30927; -- e.g. xmin = -65536; xmax = 65536;
+SssStpP.iMinRadiusFromSpawn = 1000;
+SssStpP.iRadiusHole = 5; -- will add 3 for thick walls and one more for ledge
 SssStpP.formAdvanced = {};
 SssStpP.formAdvanced.name = 'swissalps_teleport:padAdvanced';
 SssStpP.formAdvanced.sDropDownCustomTypeValues = 'Random Bookmark,Random From List,Random New Destination';
