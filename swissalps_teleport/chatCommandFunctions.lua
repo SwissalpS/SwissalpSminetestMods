@@ -1,4 +1,4 @@
- 
+
 function SwissalpS.teleport.cc_goHome(sName)
 	local sPrefix = SssStpS.db_prefix_slot;
 	local oPlayer = minetest.get_player_by_name(sName);
@@ -8,7 +8,7 @@ function SwissalpS.teleport.cc_goHome(sName)
 			SssStpS.default_homePos);
 	oPlayer:setpos(tPos);
 	SwissalpS.info.notifyPlayer(sName, 'Moved you home');
-end -- SwissalpS.teleport.cc_goHome
+end; -- SwissalpS.teleport.cc_goHome
 
 function SwissalpS.teleport.cc_goHomeGlobal(sName)
 	local sPrefix = SssStpS.db_prefix_slot;
@@ -19,21 +19,21 @@ function SwissalpS.teleport.cc_goHomeGlobal(sName)
 			SssStpS.default_homePos);
 	oPlayer:setpos(tPos);
 	SwissalpS.info.notifyPlayer(sName, 'Moved you to global home');
-end -- SwissalpS.teleport.cc_goHomeGlobal
+end; -- SwissalpS.teleport.cc_goHomeGlobal
 
 function SwissalpS.teleport.cc_goToSlot(sName, sSlot)
 	local sPrefix = SssStpS.db_prefix_slot;
 	local tPos = SwissalpS.teleport.dbPlayer:get(
-			sName, sPrefix .. sSlot, 'nothing')
+			sName, sPrefix .. sSlot, 'nothing');
 	if 'nothing' == tPos then
 		SwissalpS.info.notifyPlayer(sName, 'no saved slot: ' .. sSlot);
 		return;
-	end
+	end;
 	local oPlayer = minetest.get_player_by_name(sName);
 	oPlayer:setpos(tPos);
 	SwissalpS.info.notifyPlayer(sName, 'Moved you to: '
-			.. minetest.pos_to_string(tPos))
-end -- SwissalpS.teleport.cc_goToSlot
+			.. minetest.pos_to_string(tPos));
+end; -- SwissalpS.teleport.cc_goToSlot
 
 function SwissalpS.teleport.cc_goToSlotGlobal(sName, sSlot)
 	local sPrefix = SssStpS.db_prefix_slot;
@@ -48,14 +48,14 @@ function SwissalpS.teleport.cc_goToSlotGlobal(sName, sSlot)
 	oPlayer:setpos(tPos);
 	SwissalpS.info.notifyPlayer(sName, 'Moved you to: '
 			.. minetest.pos_to_string(tPos));
-end -- SwissalpS.teleport.cc_goToSlotGlobal
+end; -- SwissalpS.teleport.cc_goToSlotGlobal
 
 function SwissalpS.teleport.cc_help(sName)
 	local sHelp = '-tph/-tphome -tpsh/-tpsethome -tp <slot>'
 			.. ' -tps/-tpset <slot> -tpl -tpgh/-tpghome'
 			.. ' -tpgsh/-tpgsethome -tpg <slot> -tpgs/-tpgset <slot>';
 	SwissalpS.info.notifyPlayer(sName, sHelp);
-end -- SwissalpS.teleport.cc_help
+end; -- SwissalpS.teleport.cc_help
 
 function SwissalpS.teleport.cc_listSlots(sName)
 	local sPrefix = SssStpS.db_prefix_slot;
@@ -116,7 +116,7 @@ function SwissalpS.teleport.cc_saveSlot(sName, sSlot)
 	SwissalpS.teleport.dbPlayer:set(sName, sPrefix .. sSlot, tPos);
 	SwissalpS.info.notifyPlayer(sName, 'set slot (' .. sSlot .. ') to: '
 			.. minetest.pos_to_string(tPos));
-end -- SwissalpS.teleport.cc_saveSlot
+end; -- SwissalpS.teleport.cc_saveSlot
 
 function SwissalpS.teleport.cc_saveSlotGlobal(sName, sSlot)
 	local sPrefix = SssStpS.db_prefix_slot;
@@ -127,8 +127,8 @@ function SwissalpS.teleport.cc_saveSlotGlobal(sName, sSlot)
 			sPrefix .. sSlot,
 			tPos);
 	SwissalpS.info.notifyPlayer(sName, 'set global slot (' .. sSlot .. ') to: '
-			.. minetest.pos_to_string(tPos))
-end -- SwissalpS.teleport.cc_saveSlotGlobal
+			.. minetest.pos_to_string(tPos));
+end; -- SwissalpS.teleport.cc_saveSlotGlobal
 
 function SwissalpS.teleport.cc_setHome(sName)
 	local sPrefix = SssStpS.db_prefix_slot;
@@ -137,7 +137,7 @@ function SwissalpS.teleport.cc_setHome(sName)
 	SwissalpS.teleport.dbPlayer:set(sName, sPrefix .. '_home_', tPos);
 	SwissalpS.info.notifyPlayer(sName, 'set your home to: '
 			.. minetest.pos_to_string(tPos));
-end -- SwissalpS.teleport.cc_setHome
+end; -- SwissalpS.teleport.cc_setHome
 
 function SwissalpS.teleport.cc_setHomeGlobal(sName)
 	local sPrefix = SssStpS.db_prefix_slot;
@@ -149,4 +149,4 @@ function SwissalpS.teleport.cc_setHomeGlobal(sName)
 			tPos);
 	SwissalpS.info.notifyPlayer(sName, 'set global home to: '
 			.. minetest.pos_to_string(oPos));
-end -- SwissalpS.teleport.cc_setHomeGlobal
+end; -- SwissalpS.teleport.cc_setHomeGlobal
