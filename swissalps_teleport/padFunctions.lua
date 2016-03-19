@@ -556,6 +556,7 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 	local iMaxTries = 3000; -- when to give up
 	local iRadiusAroundStaticSpawn = SssStpP.iMinRadiusFromSpawn;
 	local iRadiusHole = 5;
+	local iStep = 3;
 	local iX;
 	local iY;
 	local iZ;
@@ -595,11 +596,12 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 			end;
 			-- check cube/sphere around position
 			print('checking surroundings of candidate');
+			SwissalpS.info.notifyPlayer(sPlayer, 'checking surroundings of candidate...');
 			local bViolationFound = false;
-			for iCx = -fRadiusMax, fRadiusMax do
+			for iCx = -fRadiusMax, fRadiusMax, iStep do
 				print('deltaX = ', iCx);
-				for iCz = -fRadiusMax, fRadiusMax do
-					for iCy = -fRadiusMax, fRadiusMax do
+				for iCz = -fRadiusMax, fRadiusMax, iStep do
+					for iCy = -fRadiusMax, fRadiusMax, iStep do
 						local tCtarget = vector.new(
 													tTarget.x + iCx,
 													tTarget.y + iCy,
@@ -624,6 +626,7 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 			end; -- loop X
 			if not bViolationFound then
 				print('OK, found a spot at ' .. minetest.pos_to_string(tTarget, 1));
+				SwissalpS.info.notifyPlayer(sPlayer, 'OK, found a spot. Building a cocoon for you.');
 				if bBuildPoH then
 					-- build Platform or make hole/dome
 					-- first make a hole
@@ -903,6 +906,7 @@ function SssStpP.targetForPlayer(tPos, sPlayer)
 		end; -- if something in list at all
 	elseif 3 == iTypeCustom then
 		-- random new place
+		SwissalpS.info.notifyPlayer(sPlayer, 'This may take several minutes, depending on how full the world is. Please do not interact or you may not arrive.');
 		tTarget = SssStpP.randomNewPlaceForPlayer(tPos, sPlayer);
 		if nil == tTarget then
 			return nil;
