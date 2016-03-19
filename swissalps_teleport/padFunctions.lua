@@ -567,26 +567,34 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 	if bRelative then
 		fYMax = tPos.y + fHeightMax;
 		fYMin = tPos.y + fHeightMin;
+		print('randomNewPlaceForPlayer with relative radi - not yet coded');
+		return nil;
 		--TODO:
 	else
 		fYMax = fHeightMax;
 		fYMin = fHeightMin;
+		print('randomNewPlaceForPlayer with standard radi');
 		repeat
 			iCountTries = iCountTries +1;
+			print('outermost repeat tries: ', iCountTries);
 			repeat
 				iCountTries = iCountTries +1;
+				print('second layer repeat tries:', iCountTries);
 				iX = math.random(-iMax, iMax);
 				iY = math.random(fYMin, fYMax);
 				iZ = math.random(-iMax, iMax);
-				tTarget = {x = iX, y = iY, z = iZ};
+				tTarget = vector.new(iX, iY, iZ);
+				print('trying ' .. minetest.pos_to_string(tTarget, 1));
 				tNode = SssStpP.getValidNodeAt(tTarget);
 			until ((not minetest.is_protected(tTarget, sPlayer))
 					and (iRadiusAroundStaticSpawn < vector.distance(tPosStaticSpawn, tTarget)))
 					or (iMaxTries < iCountTries);
 			if iMaxTries < iCountTries then
+				print('tried ' .. iCountTries .. 'times and gave up.');
 				return nil;
 			end;
 			-- check cube/sphere around position
+			print('checking surroundings of candidate');
 			local bViolationFound = false;
 			for iCx = -fRadiusMax, fRadiusMax do
 				for iCz = -fRadiusMax, fRadiusMax do
@@ -614,9 +622,11 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 				if bViolationFound then break; end;
 			end; -- loop X
 			if not bViolationFound then
+				print('OK, found a spot at ' .. minetest.pos_to_string(tTarget, 1));
 				if bBuildPoH then
 					-- build Platform or make hole/dome
 					-- first make a hole
+					print('OK, making air');
 					local iRadiusHoleMax = iRadiusHole + 4;
 					local tCtarget = vector.new(tTarget);
 					for iCx = -iRadiusHoleMax, iRadiusHoleMax do
@@ -635,6 +645,7 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 						end; -- loop z
 					end; -- loop x
 					-- make sure we can stand -> create a floor and ledge
+					print('OK, making floor');
 					tCtarget = vector.new(tTarget);
 					for iCx = -iRadiusHoleMax, iRadiusHoleMax do
 						tCtarget.x = tTarget.x + iCx;
@@ -646,6 +657,7 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 						end; -- loop z
 					end; -- loop x
 					-- build a dome over target
+					print('OK, making dome');
 					iRadiusHoleMax = iRadiusHole + 3;
 					local iDistance = 0;
 					tCtarget = vector.new(tTarget);
@@ -666,17 +678,21 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 					bIsUseable = true;
 				else
 					-- do not build platform or make hole
+					print('Sorry, without hole/platform is not yet coded');
 					return nil;
 				end; -- if build/dig or not
 			end; -- if no violation found
 		until bIsUseable or (iMaxTries < iCountTries);
 		if iMaxTries < iCountTries then
+			print('tried ' .. iCountTries .. 'times and gave up.');
 			return nil;
 		end; -- if maxed out
+		-- raise target by one so player can arrive
+		tTarget.y = tTarget.y +1;
 		return tTarget;
 	end; -- if relative to pad
 	-- TODO:
-	return {x = tPos.x, y = tPos.y + 2, z = tPos.z};
+	return vector.new(tPos);
 end; -- SssStpP.randomNewPlaceForPlayer
 
 function SssStpP.showFormAdvanced(tPos, sPlayer)
