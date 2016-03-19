@@ -597,6 +597,7 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 			print('checking surroundings of candidate');
 			local bViolationFound = false;
 			for iCx = -fRadiusMax, fRadiusMax do
+				print('deltaX = ', iCx);
 				for iCz = -fRadiusMax, fRadiusMax do
 					for iCy = -fRadiusMax, fRadiusMax do
 						local tCtarget = vector.new(
@@ -636,7 +637,7 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 							for iCy = 0, iRadiusHoleMax do
 								tCtarget.y = tTarget.y + iCy;
 								if vector.distance(tCtarget, tTarget) <= iRadiusHoleMax then
-									local tCnode = minetest.get_node(tCtarget);
+									local tCnode = SssStpP.getValidNodeAt(tCtarget);
 									if 'air' ~= tCnode.name then
 										minetest.set_node(tCtarget, {name = 'air'});
 									end;
@@ -669,7 +670,7 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 								tCtarget.y = tTarget.y + iCy;
 								iDistanceMax = vector.distance(tTarget, tCtarget);
 								if (iDistance <= iRadiusHoleMax)
-									and (iDistance > iRadiusHole) then
+										and (iDistance >= iRadiusHole) then
 									minetest.set_node(tCtarget, {name = sHomeBlock});
 								end; -- if inside hole radius
 							end; -- loop y
