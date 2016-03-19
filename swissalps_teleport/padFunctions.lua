@@ -601,125 +601,132 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 		fYMax = fHeightMax;
 		fYMin = fHeightMin;
 		print('randomNewPlaceForPlayer with standard radi');
-		repeat
-			iCountTries = iCountTries +1;
-			print('outermost repeat tries: ', iCountTries);
+		if 0 > fRadiusMin then
+			-- don't use minimum radius to protected areas
 			repeat
 				iCountTries = iCountTries +1;
-				print('second layer repeat tries:', iCountTries);
-				iX = math.random(-iMax, iMax);
-				iY = math.random(fYMin, fYMax);
-				iZ = math.random(-iMax, iMax);
-				tTarget = vector.new(iX, iY, iZ);
-				print('trying ' .. minetest.pos_to_string(tTarget, 1));
-				tNode = SssStpP.getValidNodeAt(tTarget);
-			until ((not minetest.is_protected(tTarget, sPlayer))
-					and (iRadiusAroundStaticSpawn < vector.distance(tPosStaticSpawn, tTarget)))
-					or (iMaxTries < iCountTries);
+				print('outermost repeat tries: ', iCountTries);
+				repeat
+					iCountTries = iCountTries +1;
+					print('second layer repeat tries:', iCountTries);
+					iX = math.random(-iMax, iMax);
+					iY = math.random(fYMin, fYMax);
+					iZ = math.random(-iMax, iMax);
+					tTarget = vector.new(iX, iY, iZ);
+					print('trying ' .. minetest.pos_to_string(tTarget, 1));
+					tNode = SssStpP.getValidNodeAt(tTarget);
+				until ((not minetest.is_protected(tTarget, sPlayer))
+						and (iRadiusAroundStaticSpawn < vector.distance(tPosStaticSpawn, tTarget)))
+						or (iMaxTries < iCountTries);
+				if iMaxTries < iCountTries then
+					print('tried ' .. iCountTries .. 'times and gave up.');
+					return nil;
+				end;
+				-- check cube/sphere around position
+				print('checking surroundings of candidate');
+				SwissalpS.info.notifyPlayer(sPlayer, 'checking surroundings of candidate...');
+				local bViolationFound = false;
+				for iCx = -fRadiusMax, fRadiusMax, iStep do
+					print('deltaX = ', iCx);
+					for iCz = -fRadiusMax, fRadiusMax, iStep do
+						for iCy = -fRadiusMax, fRadiusMax, iStep do
+							local tCtarget = vector.new(
+														tTarget.x + iCx,
+														tTarget.y + iCy,
+														tTarget.z + iCz);
+							if minetest.is_protected(tCtarget, sPlayer) then
+								bViolationFound = true;
+								break;
+							end;
+							--local tCnode = SssStpP.getValidNodeAt(tCtarget);
+							--local sCname = tCnode.name;
+							--if string.find(sCname, 'water')
+							--	or string.find(sCname 'lava')
+							--	or string.find(sCname, 'ignore') -- should never happen, but jic
+							--	or string.find(sCname, 'fire') then
+							--	bViolationFound = true;
+							--	break;
+							--end; -- if invalid node type
+						end; -- loop Y
+						if bViolationFound then break; end;
+					end; -- loop Z
+					if bViolationFound then break; end;
+				end; -- loop X
+				if not bViolationFound then
+					print('OK, found a spot at ' .. minetest.pos_to_string(tTarget, 1));
+					SwissalpS.info.notifyPlayer(sPlayer, 'OK, found a spot. Building a cocoon for you.');
+					if bBuildPoH then
+						-- build Platform or make hole/dome
+						-- first make a hole
+						print('OK, making air');
+						local iRadiusHoleMax = iRadiusHole + 4;
+						local tCtarget = vector.new(tTarget);
+						for iCx = -iRadiusHoleMax, iRadiusHoleMax do
+							tCtarget.x = tTarget.x + iCx;
+							for iCz = -iRadiusHoleMax, iRadiusHoleMax do
+								tCtarget.z = tTarget.z + iCz;
+								for iCy = 0, iRadiusHoleMax do
+									tCtarget.y = tTarget.y + iCy;
+									if vector.distance(tCtarget, tTarget) <= iRadiusHoleMax then
+										local tCnode = SssStpP.getValidNodeAt(tCtarget);
+										if 'air' ~= tCnode.name then
+											minetest.set_node(tCtarget, {name = 'air'});
+										end;
+									end; -- if inside hole radius
+								end; -- loop y
+							end; -- loop z
+						end; -- loop x
+						-- make sure we can stand -> create a floor and ledge
+						print('OK, making floor');
+						tCtarget = vector.new(tTarget);
+						for iCx = -iRadiusHoleMax, iRadiusHoleMax do
+							tCtarget.x = tTarget.x + iCx;
+							for iCz = -iRadiusHoleMax, iRadiusHoleMax do
+								tCtarget.z = tTarget.z + iCz;
+								if vector.distance(tCtarget, tTarget) <= iRadiusHoleMax then
+									minetest.set_node(tCtarget, {name = sHomeBlock});
+								end; -- if inside hole radius
+							end; -- loop z
+						end; -- loop x
+						-- build a dome over target
+						print('OK, making dome');
+						iRadiusHoleMax = iRadiusHole + 3;
+						local iDistance = 0;
+						tCtarget = vector.new(tTarget);
+						for iCx = -iRadiusHoleMax, iRadiusHoleMax do
+							tCtarget.x = tTarget.x + iCx;
+							for iCz = -iRadiusHoleMax, iRadiusHoleMax do
+								tCtarget.z = tTarget.z + iCz;
+								for iCy = 0, iRadiusHoleMax do
+									tCtarget.y = tTarget.y + iCy;
+									iDistance = vector.distance(tTarget, tCtarget);
+									if (iDistance <= iRadiusHoleMax)
+											and (iDistance >= iRadiusHole) then
+										minetest.set_node(tCtarget, {name = sHomeBlock});
+									end; -- if inside hole radius
+								end; -- loop y
+							end; -- loop z
+						end; -- loop x
+						bIsUseable = true;
+					else
+						-- do not build platform or make hole
+						print('Sorry, without hole/platform is not yet coded');
+						return nil;
+					end; -- if build/dig or not
+				end; -- if no violation found
+			until bIsUseable or (iMaxTries < iCountTries);
 			if iMaxTries < iCountTries then
 				print('tried ' .. iCountTries .. 'times and gave up.');
 				return nil;
-			end;
-			-- check cube/sphere around position
-			print('checking surroundings of candidate');
-			SwissalpS.info.notifyPlayer(sPlayer, 'checking surroundings of candidate...');
-			local bViolationFound = false;
-			for iCx = -fRadiusMax, fRadiusMax, iStep do
-				print('deltaX = ', iCx);
-				for iCz = -fRadiusMax, fRadiusMax, iStep do
-					for iCy = -fRadiusMax, fRadiusMax, iStep do
-						local tCtarget = vector.new(
-													tTarget.x + iCx,
-													tTarget.y + iCy,
-													tTarget.z + iCz);
-						if minetest.is_protected(tCtarget, sPlayer) then
-							bViolationFound = true;
-							break;
-						end;
-						--local tCnode = SssStpP.getValidNodeAt(tCtarget);
-						--local sCname = tCnode.name;
-						--if string.find(sCname, 'water')
-						--	or string.find(sCname 'lava')
-						--	or string.find(sCname, 'ignore') -- should never happen, but jic
-						--	or string.find(sCname, 'fire') then
-						--	bViolationFound = true;
-						--	break;
-						--end; -- if invalid node type
-					end; -- loop Y
-					if bViolationFound then break; end;
-				end; -- loop Z
-				if bViolationFound then break; end;
-			end; -- loop X
-			if not bViolationFound then
-				print('OK, found a spot at ' .. minetest.pos_to_string(tTarget, 1));
-				SwissalpS.info.notifyPlayer(sPlayer, 'OK, found a spot. Building a cocoon for you.');
-				if bBuildPoH then
-					-- build Platform or make hole/dome
-					-- first make a hole
-					print('OK, making air');
-					local iRadiusHoleMax = iRadiusHole + 4;
-					local tCtarget = vector.new(tTarget);
-					for iCx = -iRadiusHoleMax, iRadiusHoleMax do
-						tCtarget.x = tTarget.x + iCx;
-						for iCz = -iRadiusHoleMax, iRadiusHoleMax do
-							tCtarget.z = tTarget.z + iCz;
-							for iCy = 0, iRadiusHoleMax do
-								tCtarget.y = tTarget.y + iCy;
-								if vector.distance(tCtarget, tTarget) <= iRadiusHoleMax then
-									local tCnode = SssStpP.getValidNodeAt(tCtarget);
-									if 'air' ~= tCnode.name then
-										minetest.set_node(tCtarget, {name = 'air'});
-									end;
-								end; -- if inside hole radius
-							end; -- loop y
-						end; -- loop z
-					end; -- loop x
-					-- make sure we can stand -> create a floor and ledge
-					print('OK, making floor');
-					tCtarget = vector.new(tTarget);
-					for iCx = -iRadiusHoleMax, iRadiusHoleMax do
-						tCtarget.x = tTarget.x + iCx;
-						for iCz = -iRadiusHoleMax, iRadiusHoleMax do
-							tCtarget.z = tTarget.z + iCz;
-							if vector.distance(tCtarget, tTarget) <= iRadiusHoleMax then
-								minetest.set_node(tCtarget, {name = sHomeBlock});
-							end; -- if inside hole radius
-						end; -- loop z
-					end; -- loop x
-					-- build a dome over target
-					print('OK, making dome');
-					iRadiusHoleMax = iRadiusHole + 3;
-					local iDistance = 0;
-					tCtarget = vector.new(tTarget);
-					for iCx = -iRadiusHoleMax, iRadiusHoleMax do
-						tCtarget.x = tTarget.x + iCx;
-						for iCz = -iRadiusHoleMax, iRadiusHoleMax do
-							tCtarget.z = tTarget.z + iCz;
-							for iCy = 0, iRadiusHoleMax do
-								tCtarget.y = tTarget.y + iCy;
-								iDistance = vector.distance(tTarget, tCtarget);
-								if (iDistance <= iRadiusHoleMax)
-										and (iDistance >= iRadiusHole) then
-									minetest.set_node(tCtarget, {name = sHomeBlock});
-								end; -- if inside hole radius
-							end; -- loop y
-						end; -- loop z
-					end; -- loop x
-					bIsUseable = true;
-				else
-					-- do not build platform or make hole
-					print('Sorry, without hole/platform is not yet coded');
-					return nil;
-				end; -- if build/dig or not
-			end; -- if no violation found
-		until bIsUseable or (iMaxTries < iCountTries);
-		if iMaxTries < iCountTries then
-			print('tried ' .. iCountTries .. 'times and gave up.');
+			end; -- if maxed out
+			-- raise target by one so player can arrive
+			tTarget.y = tTarget.y +1;
+			return tTarget;
+		else
+			-- min raduis must be respected
+			print('Sorry, not yet coded with min radius to protected.');
 			return nil;
-		end; -- if maxed out
-		-- raise target by one so player can arrive
-		tTarget.y = tTarget.y +1;
-		return tTarget;
+		end; -- if min radius
 	end; -- if relative to pad
 	-- TODO:
 	return vector.new(tPos);
