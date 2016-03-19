@@ -871,7 +871,8 @@ function SssStpP.targetForPlayer(tPos, sPlayer)
 	if 1 == iTypeCustom then
 		-- random from players bookmarks
 		-- possibly compassgps bookmarks
-		if SssStpP.bHasCompassGPS and 'true' == (tMeta:get_string('useCGPSbookmarks') or 'false') then
+		if SssStpP.bHasCompassGPS
+				and 'true' == (tMeta:get_string('useCGPSbookmarks') or 'false') then
 			-- get a random location from compassgps bookmarks
 			aList = textlist_bkmrks[sPlayer];
 			iMax = #aList;
