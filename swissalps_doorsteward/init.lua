@@ -7,7 +7,10 @@ SwissalpS.doorsteward = {
 }
 SwissalpS.info.timerStart(SwissalpS.doorsteward);
 
-minetest.register_privilege('SwissalpS_doorsteward_Global', 'May change any door.');
+SwissalpS.doorsteward.sPrivGlobal = 'SwissalpS_doorsteward_Global';
+SwissalpS.doorsteward.sPrivGlobalDescription = 'May change any door.';
+minetest.register_privilege(SwissalpS.doorsteward.sPrivGlobal,
+							SwissalpS.doorsteward.sPrivGlobalDescription);
 
 local sPathMod = minetest.get_modpath(minetest.get_current_modname()) .. DIR_DELIM;
 dofile(sPathMod .. 'settings.lua');

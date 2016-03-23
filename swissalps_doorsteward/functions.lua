@@ -15,7 +15,8 @@ function SwissalpS.doorsteward.mayChange(tPos, sPlayer)
 	if sPlayer and minetest.check_player_privs(sPlayer, {server = true}) then
 		return true;
 	end; -- admin may change anything
-	if sPlayer and minetest.check_player_privs(sPlayer, {SwissalpS_doorsteward_Global = true}) then
+	if sPlayer and minetest.check_player_privs(sPlayer,
+							{[SwissalpS.doorsteward.sPrivGlobal] = true}) then
 		return true;
 	end; -- global doorsteward admin may change any door
 	-- owner may always change his doors
