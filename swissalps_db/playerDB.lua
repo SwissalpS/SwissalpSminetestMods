@@ -1,3 +1,9 @@
+-- This is a Libary for minetest mods
+-- author: addi <addi at king-arhtur dot eu>
+-- for doku see : https://project.king-arthur.eu/projects/db/wiki
+-- license: LGPL v3
+-- SwissalpS could not get in touch with author, so here we
+-- have bound it in to SwissalpS repo and modified to our liking
 
 SwissalpS = SwissalpS or {}
 SwissalpS.db = SwissalpS.db or {}
@@ -57,7 +63,7 @@ function SwissalpS.db.playerDB.new(strategies)
 	self.storage = {};
 	self:load()
 	print(sMethod .. "instance of playerDB created")
-	
+
 	-- return initialized playerDB object
 	return self
 
@@ -68,7 +74,7 @@ function SwissalpS.db.playerDB:save()
 
 	-- save by strategy
 	if self.strategies.fs then
-		local output = io.open(self.file, 'w')	
+		local output = io.open(self.file, 'w')
 		if "json" == self.strategies.fs.form then
 			output:write(minetest.write_json(self.storage, true))
 		elseif "minetest" == self.strategies.fs.form then
@@ -91,7 +97,7 @@ end -- SwissalpS.db.playerDB:save
 
 function SwissalpS.db.playerDB:load()
 	local sMethod = "mod:SwissalpS.db.playerDB:load: "
-	
+
 	-- load by strategy
 	if self.strategies.fs then
 		print(sMethod .. "loading playerDB from file" .. self.file)
@@ -132,8 +138,8 @@ function SwissalpS.db.playerDB.stringifyPlayer(player)
 		return player
 	end
 
-	return player:get_player_name()	
-	
+	return player:get_player_name()
+
 end -- SwissalpS.db.playerDB.stringifyPlayer
 
 function SwissalpS.db.playerDB:set(player, key, value)
@@ -201,9 +207,9 @@ function SwissalpS.db.playerDB:get(player, key, default)
 
 	-- if value exists for key, return value
 	if self.storage[player] and self.storage[player][key] then
-		return self.storage[player][key]	
+		return self.storage[player][key]
 	end
-	
+
 	--print(sMethod .. "nothing found, returning default")
 
 	-- otherwise return supplied default value
@@ -224,13 +230,12 @@ function SwissalpS.db.playerDB:getAll(player, default)
 
 	-- return storage if it exists
 	if self.storage[player] then
-		return self.storage[player]	
+		return self.storage[player]
 	end
-	
+
 	--print(sMethod .. "nothing found, returning default")
 
 	-- otherwise return supplied default value
 	return default
 
 end -- SwissalpS.db.playerDB:getAll
-

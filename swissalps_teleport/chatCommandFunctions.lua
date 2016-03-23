@@ -1,3 +1,5 @@
+-- Minetest mod: swissalps_teleport
+-- See LICENSE.txt and README.txt for licensing and other information.
 
 function SwissalpS.teleport.cc_goHome(sName)
 	local sPrefix = SssStpS.db_prefix_slot;

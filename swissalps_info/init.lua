@@ -1,4 +1,5 @@
---local path = minetest.get_modpath(minetest.get_current_modname())
+-- Minetest mod: swissalps_info
+-- See LICENSE.txt and README.txt for licensing and other information.
 
 SwissalpS = SwissalpS or {}
 SwissalpS.info = {

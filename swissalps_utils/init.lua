@@ -1,3 +1,5 @@
+-- Minetest mod: swissalps_utils
+-- See LICENSE.txt and README.txt for licensing and other information.
 
 SwissalpS = SwissalpS or {};
 SwissalpS.utils = {

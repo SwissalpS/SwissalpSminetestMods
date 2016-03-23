@@ -1,3 +1,10 @@
+-- This is a Libary for minetest mods
+-- author: addi <addi at king-arhtur dot eu>
+-- for doku see : https://project.king-arthur.eu/projects/db/wiki
+-- license: LGPL v3
+-- SwissalpS could not get in touch with author, so here we
+-- have bound it in to SwissalpS repo and modified to our liking
+
 SwissalpS.db.DB = {}
 SwissalpS.db.DB.__index = SwissalpS.db.DB
 setmetatable(SwissalpS.db.DB, {
@@ -35,7 +42,7 @@ function SwissalpS.db.DB.new(strategies)
 	if self.strategies.sqlite then
 		print(sMethod .. SwissalpS.db.playerDB.errorStrings.notReadySQLite)
 	end
-	
+
 	self.storage = {}
 	self:load()
 	print(sMethod .. "instance of DB created")
@@ -47,7 +54,7 @@ end -- SwissalpS.db.DB.new
 function SwissalpS.db.DB:save()
 	local sMethod = "mod:SwissalpS.db.DB:save: "
 	if self.strategies.fs then
-		local output = io.open(self.file,'w')	
+		local output = io.open(self.file,'w')
 		if "json" == self.strategies.fs.form then
 			output:write(minetest.write_json(self.storage,true))
 		elseif "minetest" == self.strategies.fs.form then
@@ -121,11 +128,11 @@ function SwissalpS.db.DB:get(key, default)
 	assert("string" == tD or "number" == tD or "table" == tD or "boolean" == tD, sMethod .. "param 2, default," .. playerDB.errorStrings.paramDefault)
 
 	if self.storage[key] then
-		return self.storage[key]	
+		return self.storage[key]
 	end
-	
+
 	--print(sMethod .. "nothing found, returning default")
-	
+
 	return default
 
 end -- SwissalpS.db.DB:get
@@ -137,12 +144,11 @@ function SwissalpS.db.DB:getAll(default)
 
 
 	if self.storage then
-		return self.storage	
+		return self.storage
 	end
-	
+
 	--print(sMethod .. "nothing found, returning default")
-	
+
 	return default
 
 end -- DB:getAll
-

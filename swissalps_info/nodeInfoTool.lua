@@ -1,3 +1,5 @@
+-- Minetest mod: swissalps_info
+-- See LICENSE.txt and README.txt for licensing and other information.
 
 SwissalpS.info.nodeInfoTool = {};
 SssSiNiT = SwissalpS.info.nodeInfoTool;

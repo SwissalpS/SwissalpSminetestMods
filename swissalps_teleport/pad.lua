@@ -1,3 +1,5 @@
+-- Minetest mod: swissalps_teleport
+-- See LICENSE.txt and README.txt for licensing and other information.
 
 SwissalpS.teleport.pad = {};
 SssStpP = SwissalpS.teleport.pad;

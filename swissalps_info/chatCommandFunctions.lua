@@ -1,3 +1,6 @@
+-- Minetest mod: swissalps_info
+-- See LICENSE.txt and README.txt for licensing and other information.
+
 function SwissalpS.info.cc_listAvailableBlocks(sName, sModName)
 	if '' ~= sModName then
 		sModName = sModName .. ':'

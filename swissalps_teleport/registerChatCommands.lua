@@ -1,3 +1,5 @@
+-- Minetest mod: swissalps_teleport
+-- See LICENSE.txt and README.txt for licensing and other information.
 
 minetest.register_chatcommand('-tp', {
 	params = 'slot',
@@ -110,4 +112,3 @@ minetest.register_chatcommand('-tpsh', {
 	privs = {},
 	func = SwissalpS.teleport.cc_setHome,
 })
-

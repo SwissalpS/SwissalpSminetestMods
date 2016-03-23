@@ -1,3 +1,5 @@
+-- Minetest mod: swissalps_doorsteward
+-- See LICENSE.txt and README.txt for licensing and other information.
 
 function SwissalpS.doorsteward.groupsOfPos(tPos)
 	local tMeta = minetest.get_meta(tPos);

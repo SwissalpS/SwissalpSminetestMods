@@ -1,3 +1,6 @@
+-- Minetest mod: swissalps_info
+-- See LICENSE.txt and README.txt for licensing and other information.
+
 minetest.register_chatcommand('-ilab', {
 	params = '[restrict_to_mod]',
 	description = 'List all available nodes',

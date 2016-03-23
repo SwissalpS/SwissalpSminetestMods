@@ -1,3 +1,6 @@
+-- Minetest mod: swissalps_doorsteward
+-- See LICENSE.txt and README.txt for licensing and other information.
+
 function SwissalpS.doorsteward.cc_addPlayersToGroups(sName, sPlayers, sGroups)
 	local aPlayersRaw = string.split(sPlayers, ',');
 	local aPlayers = {};

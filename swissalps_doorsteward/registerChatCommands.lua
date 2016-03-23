@@ -1,3 +1,6 @@
+-- Minetest mod: swissalps_doorsteward
+-- See LICENSE.txt and README.txt for licensing and other information.
+
 minetest.register_chatcommand('-dsa', {
 	params = '<Player1[,Player2..,PlayerN]> <addToGroup1[,addToGroup2..,addToGroupN]>',
 	description = 'Add Player(s) to Group(s)',

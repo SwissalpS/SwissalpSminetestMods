@@ -1,3 +1,5 @@
+-- Minetest mod: swissalps_teleport
+-- See LICENSE.txt and README.txt for licensing and other information.
 
 function SssStpP.addHomeBookmarkForPlayer(tPos, sPlayer)
 	local sTitle = '_home_';
