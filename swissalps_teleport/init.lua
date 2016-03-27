@@ -1,13 +1,13 @@
 -- Minetest mod: swissalps_teleport
 -- See LICENSE.txt and README.txt for licensing and other information.
 
-SwissalpS = SwissalpS or {}
+SwissalpS = SwissalpS or {};
 SwissalpS.teleport = {
     version = 0.1,
     sSwissalpSmodTag = 'mod_teleport',
     sSwissalpSmodTitle = 'teleport',
-}
-SwissalpS.info.timerStart(SwissalpS.teleport)
+};
+SwissalpS.info.timerStart(SwissalpS.teleport);
 
 SssStp = SwissalpS.teleport;
 -- setup player db

@@ -799,7 +799,7 @@ print('tried ' .. iCountTries .. 'times and gave up.');
 		tTarget.y = tTarget.y +1;
 		return tTarget;
 	end; -- if relative to pad
-	-- TODO:
+	-- TODO: not sure if we should add a teleport pad to the new area or if this should be handled by game logic
 	return vector.new(tPos);
 end; -- SssStpP.randomNewPlaceForPlayer
 
