@@ -4,7 +4,8 @@
 SwissalpS.info.nodeInfoTool = {};
 SssSiNiT = SwissalpS.info.nodeInfoTool;
 SssSiNiT.name = 'swissalps_info:node_info_tool';
-SssSiNiT.description = 'SwissalpS node info tool. Left-click with it to get information about the node you clicked on.';
+SssSiNiT.description = 'SwissalpS node info tool. Left-click with it to get '
+                    .. 'information about the node you clicked on.';
 SssSiNiT.inventory_image = 'swissalps_info_nodeInfoTool.png';
 SssSiNiT.wield_image = '';
 SssSiNiT.wield_scale = {x = 1, y = 1, z = 1};
@@ -25,17 +26,17 @@ function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
     if (nil == oPlacer or nil == oPointedThing) then
         return oItemStack; -- nothing consumed
     end;
-    local sName = oPlacer:get_player_name();
+    local sPlayer = oPlacer:get_player_name();
     local tPos  = minetest.get_pointed_thing_position(oPointedThing, false); -- not above
     if ((nil == tPos) or (nil == tPos.x)) then
-        SwissalpS.info.notifyPlayer(sName, 'Position not found.');
+        SwissalpS.info.notifyPlayer(sPlayer, 'Position not found.');
         return oItemStack;
     end;
     local sInfo = 'Position: ' .. minetest.pos_to_string(tPos, 2);
     if 'node' == oPointedThing.type then
         local oNode = minetest.get_node(tPos);
         if (nil == oNode) or (nil == oNode.name) or ('' == oNode.name) then
-            SwissalpS.info.notifyPlayer(sName, 'Node not found.');
+            SwissalpS.info.notifyPlayer(sPlayer, 'Node not found.');
         else
             local tKeys = {};
             for sKey, sValue in pairs(oNode) do
@@ -49,9 +50,9 @@ function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
         end; -- if failed to fetch node at pos
         local tMeta = minetest.get_meta(tPos);
         if nil == tMeta then
-            SwissalpS.info.notifyPlayer(sName, 'Meta-data not found.');
+            SwissalpS.info.notifyPlayer(sPlayer, 'Meta-data not found.');
         else
-            --SwissalpS.info.notifyPlayer(sName, 'Meta-data: ' .. dump(tMeta:to_table()));
+            --SwissalpS.info.notifyPlayer(sPlayer, 'Meta-data: ' .. dump(tMeta:to_table()));
             local ttMeta = tMeta:to_table();
             local tKeys = {};
             for sKey, mValue in pairs(ttMeta.fields) do
@@ -81,7 +82,7 @@ function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
     elseif 'object' == oPointedThing.type then
         local oObject = oPointedThing.ref;
         if nil == oObject then
-            SwissalpS.info.notifyPlayer(sName, 'Object not found.');
+            SwissalpS.info.notifyPlayer(sPlayer, 'Object not found.');
             return oItemStack;
         end; -- if no object
         sInfo = sInfo .. "\n" .. 'object:get_luaentity().name: '
@@ -104,7 +105,7 @@ function SssSiNiT.onPlace(oItemStack, oPlacer, oPointedThing)
         print('unknown pointed_thing.type detected');
         sInfo = sInfo .. "\n" .. 'Sorry, can not yet help with that.';
     end;
-    SwissalpS.info.notifyPlayer(sName, sInfo);
+    SwissalpS.info.notifyPlayer(sPlayer, sInfo);
     return oItemStack; -- nothing consumed, nothing changed
 end; -- SssSiNiT.onPlace
 

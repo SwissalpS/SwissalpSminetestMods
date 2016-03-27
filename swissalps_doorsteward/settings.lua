@@ -15,21 +15,12 @@ local function setting(sType, sName, mDefault)
 		mValue = tonumber(minetest.setting_get(sNameFull));
 	else
 		error('Invalid setting type.');
-	end
+	end;
 	if nil == mValue then
 		mValue = mDefault;
-	end
+	end;
 	SwissalpS.doorsteward.setting[sName] = mValue;
-end -- local setting
-
---------------
--- Settings --
---------------
-
---setting('string', 'filename', world_path .. DIR_DELIM .. 'foo.bar');
---setting('boolean',  'gotWood', false);
---setting('position', 'maxSize', {x = 22, y = 44, z = 44});
---setting('number',   'healthGain', 4);
+end; -- local setting
 
 -- set-up player db
 setting('string', 'db_prefix_slot', '');

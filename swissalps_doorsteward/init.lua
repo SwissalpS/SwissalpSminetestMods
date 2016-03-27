@@ -1,12 +1,12 @@
 -- Minetest mod: swissalps_doorsteward
 -- See LICENSE.txt and README.txt for licensing and other information.
 
-SwissalpS = SwissalpS or {}
+SwissalpS = SwissalpS or {};
 SwissalpS.doorsteward = {
     version = 0.1,
     sSwissalpSmodTag = 'mod_doorsteward',
     sSwissalpSmodTitle = 'doorsteward',
-}
+};
 SwissalpS.info.timerStart(SwissalpS.doorsteward);
 
 SwissalpS.doorsteward.sPrivGlobal = 'SwissalpS_doorsteward_Global';

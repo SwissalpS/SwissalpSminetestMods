@@ -33,7 +33,7 @@ function SwissalpS.doorsteward.cc_addPlayersToGroups(sName, sPlayers, sGroups)
 	end; -- loop all given players
 	SwissalpS.info.notifyPlayer(sName, 'Added ' .. #aPlayers .. ' Players to '
 								.. #aGroups .. ' Groups');
-end --SwissalpS.doorsteward.cc_addPlayersToGroups
+end; --SwissalpS.doorsteward.cc_addPlayersToGroups
 
 function SwissalpS.doorsteward.cc_removePlayersFromGroups(sName, sPlayers, tGroups)
 	local aPlayersRaw = string.split(sPlayers, ',');
@@ -69,7 +69,7 @@ function SwissalpS.doorsteward.cc_removePlayersFromGroups(sName, sPlayers, tGrou
 	end; -- loop all given players
 	SwissalpS.info.notifyPlayer(sName, 'Removed ' .. #aPlayers .. ' Players from '
 								.. #aGroups .. ' Groups');
-end --SwissalpS.doorsteward.cc_removePlayersFromGroupss
+end; --SwissalpS.doorsteward.cc_removePlayersFromGroupss
 
 function SwissalpS.doorsteward.cc_listPlayerGroups(sName, sPlayer)
 	if nil == sPlayer or '' == sPlayer then
@@ -78,4 +78,4 @@ function SwissalpS.doorsteward.cc_listPlayerGroups(sName, sPlayer)
 	local aGroups = SwissalpS.doorsteward.groupsOfPlayer(sPlayer);
 	local sGroups = table.implodeStrings(aGroups, ', ');
 	SwissalpS.info.notifyPlayer(sName, 'Player ' .. sPlayer .. ' is a member of following SwissalpS_doorsteward Groups:' .. "\n" .. sGroups);
-end --SwissalpS.doorsteward.cc_listPlayerGroups
+end; --SwissalpS.doorsteward.cc_listPlayerGroups

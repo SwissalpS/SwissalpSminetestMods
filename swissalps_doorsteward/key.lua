@@ -4,7 +4,8 @@
 SwissalpS.doorsteward.key = {};
 SssSdsK = SwissalpS.doorsteward.key;
 SssSdsK.name = 'swissalps_doorsteward:key';
-SssSdsK.description = 'SwissalpS doorsteward key. Left-click with it to get information about who owns the door you clicked on.';
+SssSdsK.description = 'SwissalpS doorsteward key. Left-click with it to get '
+					.. 'information about who owns the door you clicked on.';
 SssSdsK.inventory_image = 'swissalps_doorsteward_key.png';
 SssSdsK.wield_image = '';
 SssSdsK.wield_scale = {x=1, y=1, z=1};
@@ -26,11 +27,13 @@ SssSdsK.formEdit.name = 'swissalps_doorsteward:edit';
 -- assumes that tPos has been checked to be the bottom node of a valid door
 -- also that player has change permissions
 function SssSdsK.showForm(tPos, sPlayer)
-    assert(nil ~= tPos and nil ~= tPos.x and nil ~= tPos.y and nil ~= tPos.z, 'invalid position passed');
-    assert('string' == type(sPlayer) and '' ~= sPlayer, 'invalid player name passed');
+    assert(nil ~= tPos and nil ~= tPos.x and nil ~= tPos.y and nil ~= tPos.z,
+		   'invalid position passed');
+    assert('string' == type(sPlayer) and '' ~= sPlayer,
+		   'invalid player name passed');
     local isSuperUser = false;
     if minetest.check_player_privs(sPlayer, {server = true})
-        or minetest.check_player_privs(sPlayer, {SwissalpS_doorsteward_Global = true})then
+        or minetest.check_player_privs(sPlayer, {SwissalpS_doorsteward_Global = true}) then
 		isSuperUser = true;
 	end; -- admins may change anything
 	-- owner may always change his doors
@@ -69,13 +72,16 @@ print('is not owner or admin or has no owner');
     end; -- set-up owner
     local sFgroups;
 	if hasOwner then
-		sFgroups = 'field[1,3.8;7,1;doors_groups;Door opens for members of these groups:;' .. sGroups .. ']';
+		sFgroups = 'field[1,3.8;7,1;doors_groups;Door opens for members of '
+				.. 'these groups:;' .. sGroups .. ']';
 	else
 		sFgroups = 'label[1,3.8;Door opens for anyone, if activated.]';
 	end; -- if has owner for group display
     local sFbuttonClose = 'button_exit[4,5;4,1;buttonClose;Close]';
-    local sFcheckboxLeaveOpen = 'checkbox[1,2.5;bLeaveOpen;Leave this door open;' .. sLeaveOpen .. ']';
-    local sFcheckboxSteward = 'checkbox[1,1.8;bStewardActive;Use Steward on this door;' .. sActive .. ']';
+    local sFcheckboxLeaveOpen = 'checkbox[1,2.5;bLeaveOpen;Leave this door '
+							.. 'open;' .. sLeaveOpen .. ']';
+    local sFcheckboxSteward = 'checkbox[1,1.8;bStewardActive;Use Steward on '
+							.. 'this door;' .. sActive .. ']';
     sFormSpec = sFormSpec .. sFowner .. sFgroups;
     sFormSpec = sFormSpec .. sFcheckboxLeaveOpen .. sFcheckboxSteward;
 	sFormSpec = sFormSpec .. sFbuttonClose;
@@ -144,7 +150,8 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 	local sGroups = tMeta:get_string(sKeyGroups) or '';
 	local sInfo = '"';
 	if '' ~= sOwner then
-		sInfo = sInfo .. 'Owned by ' .. sOwner .. '. Will open for owner ';
+		sInfo = sInfo .. 'Owned by ' .. sOwner
+				.. '. Will open for owner ';
 		if '' ~= sGroups then
 			sInfo = sInfo .. 'and members of any of: '
 					.. sGroups .. '.';
@@ -156,7 +163,8 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 				.. 'groups may change settings: ' .. sGroups .. '.';
 	end; -- if got owner or not
 	if 'false' == tMeta:get_string(sKeyActive) then
-		sInfo = sInfo .. "\n" .. 'SwissalpS Door Steward is not active on this door.';
+		sInfo = sInfo .. "\n" .. 'SwissalpS Door Steward is not active on '
+				.. 'this door.';
 	else
 		if 'true' == tMeta:get_string(sKeyLeaveOpen) then
 			sInfo = sInfo .. "\n" .. 'This door stays open.';
@@ -216,7 +224,8 @@ function SssSdsK.onUse(oItemStack, oPlacer, oPointedThing)
 
     -- check authority
     if not SwissalpS.doorsteward.mayChange(tPos, sPlayer) then
-        SwissalpS.info.notifyPlayer(sPlayer, 'You may not change this door, But here is a list of who can: TODO:');
+        SwissalpS.info.notifyPlayer(sPlayer, 'You may not change this door, '
+									.. 'But here is a list of who can: TODO:');
         return oItemStack;
     end; -- if may not change
     -- show form
