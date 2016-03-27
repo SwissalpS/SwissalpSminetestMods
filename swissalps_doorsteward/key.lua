@@ -52,7 +52,7 @@ function SssSdsK.showForm(tPos, sPlayer)
 		sLeaveOpen = 'false';
 	end;
     local sFormSpec = 'size[9,6]'
-		.. 'label[0,0.2;SwissalpS doorsteward Key Edit: '
+		.. 'label[0,0.2;SwissalpS Door Steward Key Edit: '
 		.. minetest.pos_to_string(tPos, 1) .. ' ' .. oNode.name .. ']';
     local sFowner;
     if hasOwner and (isSuperUser or isOwner) then
@@ -65,8 +65,8 @@ print('is not owner or admin or has no owner');
             sFowner = sFowner .. sOwner .. ']';
         else
             sFowner = sFowner .. '-none-]';
-        end; -- if hase owner at all
-    end; -- setup owner
+        end; -- if has owner at all
+    end; -- set-up owner
     local sFgroups;
 	if hasOwner then
 		sFgroups = 'field[1,3.8;7,1;doors_groups;Door opens for members of these groups:;' .. sGroups .. ']';
@@ -156,7 +156,7 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 				.. 'groups may change settings: ' .. sGroups .. '.';
 	end; -- if got owner or not
 	if 'false' == tMeta:get_string(sKeyActive) then
-		sInfo = sInfo .. "\n" .. 'SwissalpS doorsteward is not active on this door.';
+		sInfo = sInfo .. "\n" .. 'SwissalpS Door Steward is not active on this door.';
 	else
 		if 'true' == tMeta:get_string(sKeyLeaveOpen) then
 			sInfo = sInfo .. "\n" .. 'This door stays open.';
@@ -201,7 +201,7 @@ function SssSdsK.onUse(oItemStack, oPlacer, oPointedThing)
         if nil == oNode then
             SwissalpS.info.notifyPlayer(sPlayer, 'Could not get node.');
             return oItemStack;
-        end; -- if nothing useable
+        end; -- if nothing usable
         -- check for door
         if not SwissalpS.doorsteward:isDoor(oNode) then
             SwissalpS.info.notifyPlayer(sPlayer, 'Not a door I can help with.');
@@ -235,7 +235,7 @@ SssSdsK.def = {
     tool_capabilities = SssSdsK.tool_capabilities,
     node_placement_prediction = nil,
 
-    --on_place = SssSdsK.onPlace, -- right-click (if on a door, need to pass thru)
+    --on_place = SssSdsK.onPlace, -- right-click (if on a door, need to pass through)
     on_use = SssSdsK.onUse, -- left-click aka punch
 };
 

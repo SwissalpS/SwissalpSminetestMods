@@ -6,13 +6,13 @@ function SwissalpS.doorsteward.cc_addPlayersToGroups(sName, sPlayers, sGroups)
 	local aPlayers = {};
 	local aGroupsRaw = string.split(sGroups, ',');
 	local aGroups = {};
-	-- cleanup players
+	-- clean-up players
 	for _, sPlayerRaw in pairs(aPlayersRaw) do
 		local sPlayer = string.trim(sPlayerRaw);
 		--TODO: check validity
 		table.insert(aPlayers, sPlayer);
 	end; -- loop all player names
-	-- cleanup groups
+	-- clean-up groups
 	for _, sGroupRaw in pairs(aGroups) do
 		local sGroup = string.trim(sGroupRaw);
 		--TODO: check validity
@@ -40,13 +40,13 @@ function SwissalpS.doorsteward.cc_removePlayersFromGroups(sName, sPlayers, tGrou
 	local aPlayers = {};
 	local aGroupsRaw = string.split(sGroups, ',');
 	local aGroups = {};
-	-- cleanup players
+	-- clean-up players
 	for _, sPlayerRaw in pairs(aPlayersRaw) do
 		local sPlayer = string.trim(sPlayerRaw);
 		--TODO: check validity
 		table.insert(aPlayers, sPlayer);
 	end; -- loop all player names
-	-- cleanup groups
+	-- clean-up groups
 	for _, sGroupRaw in pairs(aGroups) do
 		local sGroup = string.trim(sGroupRaw);
 		--TODO: check validity
@@ -74,7 +74,7 @@ end --SwissalpS.doorsteward.cc_removePlayersFromGroupss
 function SwissalpS.doorsteward.cc_listPlayerGroups(sName, sPlayer)
 	if nil == sPlayer or '' == sPlayer then
 		sPlayer = sName;
-	end; -- if no player given, fallback to caller
+	end; -- if no player given, fall-back to caller
 	local aGroups = SwissalpS.doorsteward.groupsOfPlayer(sPlayer);
 	local sGroups = table.implodeStrings(aGroups, ', ');
 	SwissalpS.info.notifyPlayer(sName, 'Player ' .. sPlayer .. ' is a member of following SwissalpS_doorsteward Groups:' .. "\n" .. sGroups);

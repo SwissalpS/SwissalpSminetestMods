@@ -1,6 +1,6 @@
--- This is a Libary for minetest mods
+-- This is a library for Minetest mods
 -- author: addi <addi at king-arhtur dot eu>
--- for doku see : https://project.king-arthur.eu/projects/db/wiki
+-- for documentation see : https://project.king-arthur.eu/projects/db/wiki
 -- license: LGPL v3
 -- SwissalpS could not get in touch with author, so here we
 -- have bound it in to SwissalpS repo and modified to our liking
@@ -20,18 +20,18 @@ setmetatable(SwissalpS.db.playerDB, {
 SwissalpS.db.playerDB.errorStrings = {};
 SwissalpS.db.playerDB.errorStrings.newNil =
 	' WARNING: tStrategies is nil, so the database is only temporarily available,'
-	.. ' and will be deleted at shutdown.';
-SwissalpS.db.playerDB.errorStrings.newFS = ' database store on filesystem.';
+	.. ' and will be deleted at shut-down.';
+SwissalpS.db.playerDB.errorStrings.newFS = ' database store on file system.';
 SwissalpS.db.playerDB.errorStrings.notReadyMySQL =
 	' MySQL support is not yet coded.';
 SwissalpS.db.playerDB.errorStrings.notReadySQLite =
 	' SQLite support is not yet coded.';
 SwissalpS.db.playerDB.errorStrings.paramPlayer =
-	' must be the playername or a player object!';
+	' must be the player-name or a player object!';
 SwissalpS.db.playerDB.errorStrings.paramKey = ' must be a string!';
 SwissalpS.db.playerDB.errorStrings.paramValue =
 	' must be a string, number, table or a boolean value. Userdata, functions '
-	.. 'and nil are not alowed!';
+	.. 'and nil are not allowed!';
 SwissalpS.db.playerDB.errorStrings.paramDefault =
 	SwissalpS.db.playerDB.errorStrings.paramValue;
 
@@ -53,7 +53,7 @@ function SwissalpS.db.playerDB.new(tStrategies)
 		else
 			sPath = self.tStrategies.fs.place;
 		end;
-		-- concat our path-to-file
+		-- concatenate our path-to-file
 		self.sPathFile = sPath .. '/' .. self.tStrategies.fs.name
 				.. '.' .. self.tStrategies.fs.form;
 	end; -- if file strategy

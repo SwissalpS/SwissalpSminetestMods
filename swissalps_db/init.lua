@@ -1,6 +1,6 @@
--- This is a Libary for minetest mods
+-- This is a library for Minetest mods
 -- author: addi <addi at king-arhtur dot eu>
--- for doku see : https://project.king-arthur.eu/projects/db/wiki
+-- for documentation see : https://project.king-arthur.eu/projects/db/wiki
 -- license: LGPL v3
 -- SwissalpS could not get in touch with author, so here we
 -- have bound it in to SwissalpS repo and modified to our liking

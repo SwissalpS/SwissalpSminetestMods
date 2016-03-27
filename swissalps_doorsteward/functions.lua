@@ -20,7 +20,7 @@ function SwissalpS.doorsteward.mayChange(tPos, sPlayer)
 	if sPlayer and minetest.check_player_privs(sPlayer,
 							{[SwissalpS.doorsteward.sPrivGlobal] = true}) then
 		return true;
-	end; -- global doorsteward admin may change any door
+	end; -- global door steward admin may change any door
 	-- owner may always change his doors
 	local tMeta = minetest.get_meta(tPos);
 	local sOwner = tMeta:get_string('doors_owner') or '';
@@ -36,7 +36,7 @@ function SwissalpS.doorsteward.mayChange(tPos, sPlayer)
 			end; -- if found a match
 		end; -- loop groups of player
 	end; -- loop groups of node
-	-- fallback to protection rule
+	-- fall-back to protection rule
 	return not minetest.is_protected(tPos, sPlayer);
 end; -- SwissalpS.doorsteward.mayChange
 
@@ -44,7 +44,7 @@ function SwissalpS.doorsteward.mayOpen(tPos, sPlayer)
 	if sPlayer and minetest.check_player_privs(sPlayer, {server = true}) then
 		return true;
 	end; -- admin may open anything
-	-- first check for doorsteward groups
+	-- first check for door steward groups
 	local aGroups = SwissalpS.doorsteward.groupsOfPos(tPos);
 	local aGroupsPlayer = SwissalpS.doorsteward.groupsOfPlayer(sPlayer);
 	for iIndex, sGroup in pairs(aGroups) do
@@ -54,7 +54,7 @@ function SwissalpS.doorsteward.mayOpen(tPos, sPlayer)
 			end; -- if found a match
 		end; -- loop groups of player
 	end; -- loop groups of node
-	-- fallback to normal door behaviuor
+	-- fall-back to normal door behaviour
 	local tMeta = minetest.get_meta(tPos);
 	local sOwner = tMeta:get_string('doors_owner') or '';
 	if '' == sOwner then
