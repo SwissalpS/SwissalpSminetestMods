@@ -17,7 +17,7 @@ SwissalpS.teleport.settings = {
     db_global_player_name = '__SwissalpS_Global_Player_Name__',
     db_strategies = {fs = {
         name = 'SwissalpS_teleport',
-        form = 'json', place = 'world'}},
+        format = 'json', place = 'world'}},
     -- the position a new teleporter points to
     padDefaultPosition = {x = 0, y = 0, z = 0},
     -- the default destination title

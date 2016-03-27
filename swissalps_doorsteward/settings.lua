@@ -38,7 +38,7 @@ setting('string', 'db_global_player_name', '__SwissalpS_Global_Player_Name__');
 -- file-name for player db
 setting('string', 'db_strategies_fs_name', 'SwissalpS_doorsteward');
 -- file format for player db
-setting('string', 'db_strategies_fs_form', 'json');
+setting('string', 'db_strategies_fs_format', 'json');
 -- path to player db
 setting('string', 'db_strategies_fs_place', 'world');
 SssSdsS = SwissalpS.doorsteward.setting;
@@ -47,6 +47,6 @@ SssSdsS.sMetaKeyLeaveOpen = 'swissalps_doorsteward_leaveOpen';
 SssSdsS.sMetaKeyActive = 'swissalps_doorsteward_active';
 SssSdsS.db_strategies = {fs = {
         name = SssSdsS.db_strategies_fs_name,
-        form = SssSdsS.db_strategies_fs_form,
+        format = SssSdsS.db_strategies_fs_format,
 		place = SssSdsS.db_strategies_fs_place,
 }};

@@ -54,8 +54,8 @@ function SwissalpS.db.playerDB.new(tStrategies)
 			sPath = self.tStrategies.fs.place;
 		end;
 		-- concatenate our path-to-file
-		self.sPathFile = sPath .. '/' .. self.tStrategies.fs.name
-				.. '.' .. self.tStrategies.fs.form;
+		self.sPathFile = sPath .. DIR_DELIM .. self.tStrategies.fs.name
+				.. '.' .. self.tStrategies.fs.format;
 	end; -- if file strategy
 	-- these are not yet implemented
 	if self.tStrategies.mysql then
@@ -77,9 +77,9 @@ function SwissalpS.db.playerDB:save()
 	-- save by strategy
 	if self.tStrategies.fs then
 		local rOutput = io.open(self.sPathFile, 'w');
-		if 'json' == self.tStrategies.fs.form then
+		if 'json' == self.tStrategies.fs.format then
 			rOutput:write(minetest.write_json(self.storage, true));
-		elseif 'minetest' == self.tStrategies.fs.form then
+		elseif 'minetest' == self.tStrategies.fs.format then
 			rOutput:write(minetest.serialize(self.storage));
 		end;
 		io.close(rOutput);
@@ -105,10 +105,10 @@ function SwissalpS.db.playerDB:load()
 			sData = rInput:read('*all');
 		end;
 		if sData and '' ~= sData then
-			if 'json' == self.tStrategies.fs.form then
+			if 'json' == self.tStrategies.fs.format then
 				local json = minetest.parse_json(sData);
 				self.storage = json or {};
-			elseif 'minetest' == self.tStrategies.fs.form then
+			elseif 'minetest' == self.tStrategies.fs.format then
 				local serialize = minetest.deserialize(sData);
 				self.storage = serialize or {};
 			end;
