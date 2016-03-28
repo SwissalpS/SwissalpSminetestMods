@@ -5,6 +5,8 @@ Luke@SwissalpS.ws
 This mod provides chat commands and a Node-Info-Tool for inspection.
 It also provides a wrapper to notify players.
 
+Tool(s):
+========
 To get the Node-Info-Tool either:
 /giveme swissalps_info:node_info_tool
 or craft:
@@ -14,10 +16,12 @@ or craft:
 	B
 	B
 
+
 Punch at nodes and mobs with the Node-Info-Tool. A selection of information
 will be presented through the chat interface.
 
-These are the chat commands:
+Chat commands:
+==============
 List all available nodes. Narrow down providing mod-name.
 /-ilab [<restrict to mod name>]
 
@@ -27,6 +31,10 @@ List all available mobs. (TODO: code this)
 List all available methods (TODO: code this, currently lists methods of core)
 /-ilamethods [<restrict to mod name>]
 that supplies player-groups.
+
+Node(s):
+========
+none
 
 Dependencies:
 =============

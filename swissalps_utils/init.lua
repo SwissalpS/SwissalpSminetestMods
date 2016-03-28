@@ -14,10 +14,10 @@ if nil == boolToString then
     function boolToString(b)
         b = not (not b);
         local sOut = 'false';
-        if b then sOut = 'true'; end
+        if b then sOut = 'true'; end;
         return sOut;
-    end -- boolToString
-end -- if field not set
+    end; -- boolToString
+end; -- if field not set
 
 if nil == math.round then
 	function math.round(fFloat, iDigits)
@@ -41,7 +41,7 @@ if '(0.1,0.1,0.1)' ~= minetest.pos_to_string({x = 0.1111, y = 0.1111, z = 0.111}
 		local fZ = tPos.z or 0;
 		if nil == iDigits then
 			return '(' .. fX .. ',' .. fY .. ',' .. fZ .. ')';
-		end; -- if no didgits given
+		end; -- if no digits given
 		return '('	.. string.format('%.' .. iDigits .. 'f', fX) .. ','
 					.. string.format('%.' .. iDigits .. 'f', fY) .. ','
 					.. string.format('%.' .. iDigits .. 'f', fZ) .. ')';

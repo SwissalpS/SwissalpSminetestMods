@@ -12,13 +12,28 @@ https://forum.minetest.net/viewtopic.php?f=11&t=9276&hilit=playerdb
 -- SwissalpS could not get in touch with author, so here we
 -- have bound it in to SwissalpS repo and modified to our liking
 
+Usage examples:
+mod:swissalps_teleport
+mod:swissalps_doorsteward
+
+Chat commands:
+==============
+none
+
+Node(s):
+========
+none
+
+Tool(s):
+========
+none
+
 Dependencies:
+=============
 +mod:swissalps_info -- can easily be made to run without.
 
-Usage example:
-mod:swissalps_teleport
-
 History:
+========
 I wanted to save locations per player and have them persist between games.
 So a search in the Minetest mod forum I found Addi's approach and liked it.
 To learn and understand how it works, I went through the code line by line

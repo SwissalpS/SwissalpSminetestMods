@@ -9,6 +9,8 @@ Also a Teleport-Pad-Node that can...
 ... teleport players to a random location from a pre-defined list of locations.
 ... teleport players to a random, unclaimed area. (main reason for writing this)
 
+Node(s):
+========
 To get the Teleport-Pad either:
 /giveme swissalps_teleport:pad
 or craft I:
@@ -77,6 +79,10 @@ or
 
 All commands that set bookmarks, use the issuing player's location.
 
+Tool(s):
+========
+none
+
 Dependencies:
 =============
 +mod:swissalps_db
@@ -105,3 +111,4 @@ Special thanks to:
 Bad_Command [teleporter]
 All those involved in [compassgps]
 I learned a lot reading your code and mine may reflect some aspects.
+Ogrebane for providing a basic sound-bite for me to resample and add effects.
