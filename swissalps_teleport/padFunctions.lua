@@ -47,12 +47,12 @@ function SssStpP.buildCocoonForPlayer(tPos, sPlayer, sHomeBlock)
 print('OK, making air');
 	local tCtarget = vector.new(tPos);
 	for iCx = -iRadiusHoleMax, iRadiusHoleMax do
-		tCtarget.x = tTarget.x + iCx;
+		tCtarget.x = tPos.x + iCx;
 		for iCz = -iRadiusHoleMax, iRadiusHoleMax do
-			tCtarget.z = tTarget.z + iCz;
+			tCtarget.z = tPos.z + iCz;
 			for iCy = 0, iRadiusHoleMax do
-				tCtarget.y = tTarget.y + iCy;
-				if vector.distance(tCtarget, tTarget) <= iRadiusHoleMax then
+				tCtarget.y = tPos.y + iCy;
+				if vector.distance(tCtarget, tPos) <= iRadiusHoleMax then
 					local tCnode = SssStpP.getValidNodeAt(tCtarget);
 					if 'air' ~= tCnode.name then
 						minetest.set_node(tCtarget, {name = 'air'});
@@ -65,10 +65,10 @@ print('OK, making air');
 print('OK, making floor');
 	tCtarget = vector.new(tPos);
 	for iCx = -iRadiusHoleMax, iRadiusHoleMax do
-		tCtarget.x = tTarget.x + iCx;
+		tCtarget.x = tPos.x + iCx;
 		for iCz = -iRadiusHoleMax, iRadiusHoleMax do
-			tCtarget.z = tTarget.z + iCz;
-			if vector.distance(tCtarget, tTarget) <= iRadiusHoleMax then
+			tCtarget.z = tPos.z + iCz;
+			if vector.distance(tCtarget, tPos) <= iRadiusHoleMax then
 				minetest.set_node(tCtarget, {name = sHomeBlock});
 			end; -- if inside hole radius
 		end; -- loop z
@@ -79,12 +79,12 @@ print('OK, making dome');
 	local iDistance = 0;
 	tCtarget = vector.new(tPos);
 	for iCx = -iRadiusHoleMax, iRadiusHoleMax do
-		tCtarget.x = tTarget.x + iCx;
+		tCtarget.x = tPos.x + iCx;
 		for iCz = -iRadiusHoleMax, iRadiusHoleMax do
-			tCtarget.z = tTarget.z + iCz;
+			tCtarget.z = tPos.z + iCz;
 			for iCy = 0, iRadiusHoleMax do
-				tCtarget.y = tTarget.y + iCy;
-				iDistance = vector.distance(tTarget, tCtarget);
+				tCtarget.y = tPos.y + iCy;
+				iDistance = vector.distance(tPos, tCtarget);
 				if (iDistance <= iRadiusHoleMax)
 						and (iDistance >= iRadiusHole) then
 					minetest.set_node(tCtarget, {name = sHomeBlock});
