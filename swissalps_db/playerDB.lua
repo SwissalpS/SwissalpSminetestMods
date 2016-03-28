@@ -101,7 +101,7 @@ function SwissalpS.db.playerDB:load()
 		print(sMethod .. 'loading playerDB from file' .. self.sPathFile);
 		local rInput = io.open(self.sPathFile, 'r');
 		local sData = nil;
-		if rInput then;
+		if rInput then
 			sData = rInput:read('*all');
 		end;
 		if sData and '' ~= sData then
