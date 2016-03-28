@@ -3,7 +3,7 @@
 
 SwissalpS = SwissalpS or {};
 SwissalpS.info = {
-	version = 0.1,
+	version = 0.3,
 	sSwissalpSmodTag = 'mod_info',
 	sSwissalpSmodTitle = 'info'
 };

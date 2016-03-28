@@ -7,7 +7,7 @@
 
 SwissalpS = SwissalpS or {};
 SwissalpS.db = SwissalpS.db or {
-    version = 0.2,
+    version = 0.3,
     sSwissalpSmodTag = 'mod_db',
     sSwissalpSmodTitle = 'db'
 };

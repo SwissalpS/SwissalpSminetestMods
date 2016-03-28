@@ -3,7 +3,7 @@
 
 SwissalpS = SwissalpS or {};
 SwissalpS.teleport = {
-    version = 0.1,
+    version = 0.3,
     sSwissalpSmodTag = 'mod_teleport',
     sSwissalpSmodTitle = 'teleport',
 };
