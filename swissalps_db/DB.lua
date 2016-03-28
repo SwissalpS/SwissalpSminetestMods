@@ -8,7 +8,7 @@
 SwissalpS.db.DB = {};
 SwissalpS.db.DB.__index = SwissalpS.db.DB;
 setmetatable(SwissalpS.db.DB, {
-	__call = function (oClass, ...);
+	__call = function (oClass, ...)
 		return oClass.new(...);
 	end,
 });
