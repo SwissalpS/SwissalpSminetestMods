@@ -34,7 +34,7 @@ function SssStpP.afterPlaceNode(tPos, oPlayer)
 	tMeta:set_float('enabled', 1);
 end; -- SssStpP.afterPlaceNode
 
-function SssStpP.buildPlatformOrHole(tPos, sPlayer, sHomeBlock)
+function SssStpP.buildCocoonForPlayer(tPos, sPlayer, sHomeBlock)
 	-- build Platform or make hole/dome
 	assert('table' == type(tPos) and nil ~= tPos.x and nil ~= tPos.y and nil ~= tPos.z, 'invalid position passed.');
 	assert('string' == type(sPlayer), 'player name needs to be a string');
