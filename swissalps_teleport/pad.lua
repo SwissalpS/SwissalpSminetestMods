@@ -35,12 +35,12 @@ SssStpP.craft.recipe2 = {
 };
 
 SssStpP.craft.def = {
-    output = SssStpP.name,
+    output = SssStpP.name .. ' 2',
     recipe = SssStpP.craft.recipe,
 };
 
 SssStpP.craft.def2 = {
-    output = SssStpP.name,
+    output = SssStpP.name .. ' 8',
     recipe = SssStpP.craft.recipe2,
 };
 
