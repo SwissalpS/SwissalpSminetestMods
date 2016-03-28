@@ -41,7 +41,7 @@ function SwissalpS.info.timerDiff(oMod)
 		return -2;
 	end;
 	return os.clock() - fStartTime;
-en; -- SwissalpS.info.timerDiff
+end; -- SwissalpS.info.timerDiff
 
 function SwissalpS.info.timerDiffLog(oMod)
 	if not minetest.setting_getbool('log_mod') then
