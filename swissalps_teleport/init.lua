@@ -10,7 +10,7 @@ SwissalpS.teleport = {
 SwissalpS.info.timerStart(SwissalpS.teleport);
 
 SssStp = SwissalpS.teleport;
--- setup player db
+-- set-up player db
 SwissalpS.teleport.settings = {
     db_prefix_slot = '_SssS_tp_slot_',
     -- the player name to use to store values for all players

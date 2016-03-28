@@ -202,7 +202,7 @@ function SssStpP.formIndexDropDown(sPlayer)
 		print('adjusting drop-down-index');
 		iIndex = 1;
 		SssStpP.cachePut(sPlayer, 'iIndexDropDown', iIndex);
-	end; -- if invalid dropdown index
+	end; -- if invalid drop-down index
 	return iIndex;
 end; -- SssStpP.indexDropDown
 
@@ -212,7 +212,7 @@ function SssStpP.formIndexDropDownCustomType(sPlayer)
 		print('adjusting drop-down-index for custom type');
 		iIndex = 1;
 		SssStpP.cachePut(sPlayer, 'iIndexDropDownCustomType', iIndex);
-	end; -- if invalid dropdown index
+	end; -- if invalid drop-down index
 	return iIndex;
 end; -- SssStpP.formIndexDropDownCustomType
 
@@ -272,7 +272,7 @@ function SssStpP.newPlaceForPlayerRelativeToPad(tPos, sPlayer)
 	--bRelative = 'true' == bRelative;
 	local fYMax = tPos.y + fHeightMax;
 	local fYMin = tPos.y + fHeightMin;
-print('randomNewPlaceForPlayer with relative radi - not yet coded');
+print('randomNewPlaceForPlayer with relative radii - not yet coded');
 	return nil;
 	--TODO:
 end; -- SssStpP.newPlaceForPlayerRelativeToPad
@@ -477,7 +477,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	end; -- if checkbox value changed
 	if nil ~= tFields.dropDownCustomType then
 		if tDropDownCustomTypeValues[iIndexDropDownCustomType] ~= tFields.dropDownCustomType then
-			-- switch occuring
+			-- switch occurring
 			local iIndexDropDownNew;
 			for i, sValue in ipairs(tDropDownCustomTypeValues) do
 				if sValue == tFields.dropDownCustomType then
@@ -492,7 +492,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 	end; -- if switched custom type
 	if nil ~= tFields.dropDownSwitch then
 		if tDropDownValues[iIndexDropDown] ~= tFields.dropDownSwitch then
-			-- switch occuring
+			-- switch occurring
 			local iIndexDropDownNew;
 			for i, sValue in ipairs(tDropDownValues) do
 				if sValue == tFields.dropDownSwitch then
@@ -519,7 +519,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 			local tAll = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
 			tBookmark = tAll[iIndex];
 			if nil == tBookmark then
-				SwissalpS.index.notifyPlayer(sPlayer, 'Sorry, something went wrong. Close dialog and try again.');
+				SwissalpS.index.notifyPlayer(sPlayer, 'Sorry, something went wrong. Close dialogue and try again.');
 				tFields.quit = 'true';
 			end;
 			tTarget = tBookmark.position;
@@ -556,7 +556,7 @@ function SssStpP.onFieldsAdvanced(tPos, tFields, sPlayer)
 			local tAll = SssStpP.cacheGet(sPlayer, 'listSssStp', {});
 			tBookmark = tAll[iIndex];
 			if nil == tBookmark then
-				SwissalpS.index.notifyPlayer(sPlayer, 'Sorry, something went wrong. Close dialog and try again.');
+				SwissalpS.index.notifyPlayer(sPlayer, 'Sorry, something went wrong. Close dialogue and try again.');
 				tFields.quit = 'true';
 			end;
 			sTitle = tBookmark.title;
@@ -701,7 +701,7 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 	else
 		fYMax = fHeightMax;
 		fYMin = fHeightMin;
-		print('randomNewPlaceForPlayer with standard radi');
+		print('randomNewPlaceForPlayer with standard radii');
 		if bUseMaxRadius then
 			-- need to find protected areas and then see which have space nearby
 			return SssStpP.randomNewPlaceForPlayerNearExistingArea(
@@ -712,7 +712,7 @@ function SssStpP.randomNewPlaceForPlayer(tPos, sPlayer)
 			--print('randomNewPlaceForPlayer with only min radius - not yet coded');
 			--return nil;
 		else
-			-- don't use either minimum or maximum radi to protected areas
+			-- don't use either minimum or maximum radii to protected areas
 			-- only need a space for dome, if at all
 			-- searching for a place to put a dome is a lot easier and different
 			-- from searching for a place to survive.
@@ -777,7 +777,7 @@ print('outside loopX');
 			if not bViolationFound then
 				bIsUseable = true;
 print('OK, found a spot at ' .. minetest.pos_to_string(tTarget, 1));
-			end; -- if useable found i.e. no violation found
+			end; -- if usable found i.e. no violation found
 			if (not bIsUseable) and (iMaxTries < iCountTries) then
 print('tried ' .. iCountTries .. 'times and gave up.');
 				return nil;
@@ -813,7 +813,7 @@ function SssStpP.randomNewPlaceForPlayerNearExistingArea(
 	assert(7 < fRadiusMaxDistanceToExisting, 'fRadiusMaxDistanceToExisting must be positive and larger than 7');
 	if 0 < fRadiusMinSpaceForPlayer then
 		-- need protected areas so we can go as close as possible leaving min room.
-		print('randomNewPlaceForPlayer with min and max radi - not yet coded');
+		print('randomNewPlaceForPlayer with min and max radii - not yet coded');
 		return nil;
 	else
 		-- need protected areas so we can go as close as possible
@@ -952,10 +952,10 @@ sFieldRadiusToNeighbourMax = '';
 			else
 				sLabelRadius = sLabelRadius .. 'Radius from protected areas.';
 			end; -- if using relative values
-			sLabelRadius = sLabelRadius .. ' Negative radi disable.]'
+			sLabelRadius = sLabelRadius .. ' Negative radii disable.]'
 			local sLabelHeight = 'label[1,5.3;Sea-level = 0. Negative heights are underground.]';
 			sFormSpec = sFormSpec
-				.. 'label[1,3;Generatesa random target whenever used.]'
+				.. 'label[1,3;Generates a random target whenever used.]'
 				.. sCheckboxBuildPlatformOrHole
 				.. sCheckboxValuesRelativeToPad
 				.. sFieldHeightMin .. sFieldHeightMax
@@ -974,7 +974,7 @@ sFieldRadiusToNeighbourMax = '';
 	local sFormName = SssStpP.formAdvanced.name .. '|' .. minetest.pos_to_string(tPos);
 	minetest.show_formspec(sPlayer, sFormName, sFormSpec);
 	--textlist[X,Y;W,H;name;listelem 1,listelem 2,...,listelem n;selected idx;transparent]
-	--Scrollable itemlist showing arbitrary text elements Name fieldname sent to server on singleclick or doubleclick value is current selected element, with a prefix of CHG: for singleclick and "DBL:" for doubleclick. Use minetest.explode_table_event(string) Listelements can be prepended by #color in hexadecimal format RRGGBB
+	--Scrollable itemlist showing arbitrary text elements Name fieldname sent to server on single-click or double-click value is current selected element, with a prefix of CHG: for single-click and "DBL:" for double-click. Use minetest.explode_table_event(string) Listelements can be prepended by #colour in hexadecimal format RRGGBB
 end; -- SssStpP.showFormAdvanced
 
 function SssStpP.showFormStandard(tPos, sPlayer)
@@ -1051,7 +1051,7 @@ function SssStpP.targetForPlayer(tPos, sPlayer)
 		sTitle = SssStpP.addHomeBookmarkForPlayer(tTarget, sPlayer);
 		return {position = tTarget, title = sTitle};
 	end; -- if switch type
-	-- fallback to standard
+	-- fall-back to standard
 	tTarget = SssStpP.metaToPos(tMeta);
 	sTitle = tMeta:get_string('title');
 	if '' == sTitle then

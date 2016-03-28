@@ -14,6 +14,7 @@ SssStpP.iMinRadiusFromSpawn = 1000;
 SssStpP.iRadiusHole = 5; -- will add 3 for thick walls and one more for ledge
 SssStpP.formAdvanced = {};
 SssStpP.formAdvanced.name = 'swissalps_teleport:padAdvanced';
+--TODO: add disable option to list
 SssStpP.formAdvanced.sDropDownCustomTypeValues = 'Random Bookmark,Random From List,Random New Destination';
 SssStpP.formAdvanced.tDropDownCustomTypeValues = string.split(SssStpP.formAdvanced.sDropDownCustomTypeValues, ',');
 SssStpP.formStandard = {};
