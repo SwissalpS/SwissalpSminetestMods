@@ -5,12 +5,12 @@ function SssStpP.addHomeBookmarkForPlayer(tPos, sPlayer)
 	local sTitle = '_home_';
 	local sPrefix = SssStpS.db_prefix_slot;
 	local tPos = SwissalpS.teleport.dbPlayer:get(
-			sPlayer, sPrefix .. sTitle, nil);
-	if nil ~= tPos then
+			sPlayer, sPrefix .. sTitle, '');
+	if '' ~= tPos then
 		sTitle = 'home';
 		local iCount = 0;
-		while nil ~= SwissalpS.teleport.dbPlayer:get(
-					sPlayer, sPrefix .. sTitle, nil) do
+		while '' ~= SwissalpS.teleport.dbPlayer:get(
+					sPlayer, sPrefix .. sTitle, '') do
 			sTitle = 'home' .. iCount;
 			iCount = iCount +1;
 		end; -- loop until a free slot is found
