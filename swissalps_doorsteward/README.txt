@@ -49,10 +49,27 @@ none
 
 Dependencies:
 =============
-?mod:doors
+?mod:doors -- now in basic game
 +mod:swissalps_info
 +swissalps_db
 +swissalps_utils
+
+API/exposed functions:
+======================
+SssSdsK -- alias to SwissalpS.doorsteward.key
+SssSdsS -- alias to SwissalpS.doorsteward.setting
+SwissalpS.doorsteward.cc_addPlayersToGroups(sName, sPlayers, sGroups)
+SwissalpS.doorsteward.cc_removePlayersFromGroups(sName, sPlayers, tGroups)
+SwissalpS.doorsteward.cc_listPlayerGroups(sName, sPlayer)
+SwissalpS.doorsteward.groupsOfPos(tPos)
+SwissalpS.doorsteward.groupsOfPlayer(sPlayer)
+SwissalpS.doorsteward.mayChange(tPos, sPlayer)
+SwissalpS.doorsteward.mayOpen(tPos, sPlayer)
+SwissalpS.doorsteward.registeredDoors()
+
+Privileges:
+===========
+SwissalpS_doorsteward_Global -- May change any door.
 
 History:
 ========

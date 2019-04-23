@@ -49,13 +49,14 @@ local sPathMod = minetest.get_modpath(minetest.get_current_modname()) .. DIR_DEL
 dofile(sPathMod .. 'padFunctions.lua');
 
 SssStpP.defNode = {
-	tile_images = {SssStpP.inventoryImage},
+	tiles = {SssStpP.inventoryImage},
 	drawtype = 'signlike',
 	paramtype = 'light',
 	paramtype2 = 'wallmounted',
 	walkable = false,
 	description = SssStpP.description,
 	inventory_image = SssStpP.inventoryImage,
+	-- TODO: causes Warning: 'Field "metadata_name": Deprecated; use on_add and metadata callbacks'
 	metadata_name = 'sign',
 	--sounds = default.node_sound_defaults(),
 	groups = {choppy = 2, dig_immediate = 2},

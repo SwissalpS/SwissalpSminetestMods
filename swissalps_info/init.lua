@@ -1,7 +1,9 @@
 -- Minetest mod: swissalps_info
 -- See LICENSE.txt and README.txt for licensing and other information.
 
-SwissalpS = SwissalpS or {};
+if not minetest.global_exists('SwissalpS') then
+	SwissalpS = {};
+end;
 SwissalpS.info = {
 	version = 0.3,
 	sSwissalpSmodTag = 'mod_info',
@@ -13,7 +15,14 @@ SwissalpS.info.tStartTimes[SwissalpS.info.sSwissalpSmodTag] = os.clock();
 --TODO: figure a way to determine if NTFS/FAT OS
 DIR_DELIM = DIR_DELIM or '/';
 
-SwissalpS.info.bCanShell = os.execute();
+--TODO: make sure SwissalpS.info.bCanShell is bool
+--this is only a work-around to silence warnings
+--when os.execute() is not available
+SwissalpS.info.bInsecureEnvironment = _G;
+if minetest.request_insecure_environment then
+	SwissalpS.info.bInsecureEnvironment = minetest.request_insecure_environment();
+end;
+SwissalpS.info.bCanShell = os.execute;
 
 -- depricated, use SwissalpS.info.notifyPlayer instead
 SwissalpS.info.player_notify = function(sPlayer, sMessage)

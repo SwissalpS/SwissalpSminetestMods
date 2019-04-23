@@ -16,9 +16,9 @@ SssSdsK.tool_capabilities = {
     full_punch_interval = 1.0,
     max_drop_level = 0,
     groupcaps = {
-        fleshy = {times = {[2] = 0.80, [3] = 0.40}, maxwear = 0.05, maxlevel = 1},
-        snappy = {times = {[2] = 0.80, [3] = 0.40}, maxwear = 0.05, maxlevel = 1},
-        choppy = {times = {[3] = 0.90}, maxwear = 0.05, maxlevel = 0}
+        fleshy = {times = {[2] = 0.80, [3] = 0.40}, uses = 999, maxlevel = 1},
+        snappy = {times = {[2] = 0.80, [3] = 0.40}, uses = 999, maxlevel = 1},
+        choppy = {times = {[3] = 0.90}, uses = 999, maxlevel = 0}
     },
 };
 SssSdsK.formEdit = {};
@@ -38,7 +38,7 @@ function SssSdsK.showForm(tPos, sPlayer)
 	end; -- admins may change anything
 	-- owner may always change his doors
 	local tMeta = minetest.get_meta(tPos);
-	local sOwner = tMeta:get_string('doors_owner') or '';
+	local sOwner = tMeta:get_string('owner') or '';
     local isOwner = sOwner == sPlayer;
     local hasOwner = 0 < #sOwner;
     local oNode = minetest.get_node(tPos);
@@ -60,7 +60,7 @@ function SssSdsK.showForm(tPos, sPlayer)
     local sFowner;
     if hasOwner and (isSuperUser or isOwner) then
 print('hasOwner and (isSuperUser or isOwner)');
-        sFowner = 'field[1,1.4;5,1;doors_owner;Owner:;' .. sOwner .. ']';
+        sFowner = 'field[1,1.4;5,1;owner;Owner:;' .. sOwner .. ']';
     else
 print('is not owner or admin or has no owner');
         sFowner = 'label[1,1.2;Owner: ';
@@ -107,10 +107,10 @@ function SssSdsK.onFields(oPlayer, sForm, tFields)
 	local sKeyActive = SwissalpS.doorsteward.setting.sMetaKeyActive;
 	local sKeyGroups = SwissalpS.doorsteward.setting.sMetaKeyGroups;
 	local sKeyLeaveOpen = SwissalpS.doorsteward.setting.sMetaKeyLeaveOpen;
-	local sKeyOwner = 'doors_owner';
+	local sKeyOwner = 'owner';
 
-	if nil ~= tFields.doors_owner then
-		local sOwnerNew = string.trim(tFields.doors_owner);
+	if nil ~= tFields.owner then
+		local sOwnerNew = string.trim(tFields.owner);
 		local sOwnerOld = tMeta:get_string(sKeyOwner) or '';
 		if sOwnerOld ~= sOwnerNew and '' ~= sOwnerNew then
 			tMeta:set_string(sKeyOwner, sOwnerNew);
@@ -202,25 +202,25 @@ function SssSdsK.onUse(oItemStack, oPlacer, oPointedThing)
         return oItemStack;
     end;
     -- check that is bottom
-    if not SwissalpS.doorsteward:isBottomNode(oNode) then
-        tPos.y = tPos.y -1;
+    --if not SwissalpS.doorsteward:isBottomNode(oNode) then
+    --    tPos.y = tPos.y -1;
         -- double check
-        oNode = minetest.get_node(tPos);
-        if nil == oNode then
-            SwissalpS.info.notifyPlayer(sPlayer, 'Could not get node.');
-            return oItemStack;
-        end; -- if nothing usable
-        -- check for door
-        if not SwissalpS.doorsteward:isDoor(oNode) then
-            SwissalpS.info.notifyPlayer(sPlayer, 'Not a door I can help with.');
-            return oItemStack;
-        end; -- if not door
-        -- check that is bottom
-        if not SwissalpS.doorsteward:isBottomNode(oNode) then
-            SwissalpS.info.notifyPlayer(sPlayer, 'KO: gave up trying to find door.');
-            return oItemStack;
-        end; -- if not bottom node AGAIN
-    end; -- if not bottom node
+    --    oNode = minetest.get_node(tPos);
+    --    if nil == oNode then
+    --        SwissalpS.info.notifyPlayer(sPlayer, 'Could not get node.');
+    --        return oItemStack;
+    --    end; -- if nothing usable
+    --    -- check for door
+    --    if not SwissalpS.doorsteward:isDoor(oNode) then
+    --        SwissalpS.info.notifyPlayer(sPlayer, 'Not a door I can help with.');
+    --        return oItemStack;
+    --    end; -- if not door
+    --    -- check that is bottom
+    --    if not SwissalpS.doorsteward:isBottomNode(oNode) then
+    --        SwissalpS.info.notifyPlayer(sPlayer, 'KO: gave up trying to find door.');
+    --        return oItemStack;
+    --    end; -- if not bottom node AGAIN
+    --end; -- if not bottom node
 
     -- check authority
     if not SwissalpS.doorsteward.mayChange(tPos, sPlayer) then

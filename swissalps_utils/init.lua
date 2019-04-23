@@ -1,7 +1,9 @@
 -- Minetest mod: swissalps_utils
 -- See LICENSE.txt and README.txt for licensing and other information.
 
-SwissalpS = SwissalpS or {};
+if not minetest.global_exists('SwissalpS') then
+	SwissalpS = {};
+end;
 SwissalpS.utils = {
 	version = 0.3,
 	sSwissalpSmodTag = 'mod_utils',
@@ -10,7 +12,7 @@ SwissalpS.utils = {
 local bHaveSssSinfo = (nil ~= SwissalpS.info);
 SwissalpS.info.timerStart(SwissalpS.utils);
 
-if nil == boolToString then
+if not minetest.global_exists('boolToString') then
     function boolToString(b)
         b = not (not b);
         local sOut = 'false';

@@ -1,5 +1,5 @@
 If not otherwise stated in code parts,
-Copyright 2016 Luke Zimmermann aka SwissalpS
+Copyright 2016-2019 Luke Zimmermann aka SwissalpS
 Luke@SwissalpS.ws
 
 Redistribution and use in source and binary forms, with or without modification,

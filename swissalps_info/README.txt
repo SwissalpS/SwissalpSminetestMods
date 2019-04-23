@@ -40,6 +40,21 @@ Dependencies:
 =============
 none
 
+API/exposed functions:
+======================
+SwissalpS.info.cc_listAvailableBlocks(sPlayer, sModName)
+SwissalpS.info.cc_listAvailableMethods(sPlayer, o) -- not yet coded properly
+SwissalpS.info.cc_listAvailableMobs(sPlayer, sMobName) -- not yet coded
+SwissalpS.info.bCanShell -- not tested
+SwissalpS.info.notifyPlayer(sPlayer, sMessage) -- wrapper to minetest.chat_send_player(
+												sPlayer, 'SssSinfo - ' .. sMessage, false)
+SwissalpS.info.broadcast(sMessage) -- wrapper to minetest.chat_send_all(
+																'SssSinfo b- ' .. sMessage)
+SwissalpS.info.timerDiff(oMod) -- for displaying load times
+SwissalpS.info.timerDiffLog(oMod)
+SwissalpS.info.timerStart(oMod)
+SssSiNiT -- alias to SwissalpS.info.nodeInfoTool
+
 History:
 ========
 My very first mod. Hello World, as it was.

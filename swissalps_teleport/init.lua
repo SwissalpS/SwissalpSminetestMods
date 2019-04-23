@@ -1,7 +1,9 @@
 -- Minetest mod: swissalps_teleport
 -- See LICENSE.txt and README.txt for licensing and other information.
 
-SwissalpS = SwissalpS or {};
+if not minetest.global_exists('SwissalpS') then
+	SwissalpS = {};
+end;
 SwissalpS.teleport = {
     version = 0.3,
     sSwissalpSmodTag = 'mod_teleport',

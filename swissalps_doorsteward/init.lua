@@ -1,7 +1,9 @@
 -- Minetest mod: swissalps_doorsteward
 -- See LICENSE.txt and README.txt for licensing and other information.
 
-SwissalpS = SwissalpS or {};
+if not minetest.global_exists('SwissalpS') then
+	SwissalpS = {};
+end;
 SwissalpS.doorsteward = {
     version = 0.3,
     sSwissalpSmodTag = 'mod_doorsteward',
@@ -25,7 +27,7 @@ dofile(sPathMod .. 'registerChatCommands.lua');
 SwissalpS.doorsteward.dbPlayer = SwissalpS.db.playerDB(SssSdsS.db_strategies);
 
 SwissalpS.doorsteward.tABM = {
-    nodenames = SwissalpS.doorsteward.doorBottoms(),
+    nodenames = SwissalpS.doorsteward.registeredDoors(),
 	interval = 1.0,
 	chance = 1,
 	action = SwissalpS.doorsteward.fABM,

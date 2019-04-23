@@ -23,7 +23,7 @@ function SwissalpS.doorsteward.mayChange(tPos, sPlayer)
 	end; -- global door steward admin may change any door
 	-- owner may always change his doors
 	local tMeta = minetest.get_meta(tPos);
-	local sOwner = tMeta:get_string('doors_owner') or '';
+	local sOwner = tMeta:get_string('owner') or '';
 	if sPlayer == sOwner then
 		return true;
 	end; -- if owner
@@ -56,7 +56,7 @@ function SwissalpS.doorsteward.mayOpen(tPos, sPlayer)
 	end; -- loop groups of node
 	-- fall-back to normal door behaviour
 	local tMeta = minetest.get_meta(tPos);
-	local sOwner = tMeta:get_string('doors_owner') or '';
+	local sOwner = tMeta:get_string('owner') or '';
 	if '' == sOwner then
 		return true;
 	end; -- if no owner, anybody may open and close
@@ -72,6 +72,15 @@ function SwissalpS.doorsteward:close(oNodeDoor)
     return self:toggle(oNodeDoor:getpos(), oNodeDoor);
 end; -- SwissalpS.doorsteward.close
 
+function SwissalpS.doorsteward.registeredDoors()
+	local aOut = {};
+	for sName, _ in pairs(doors.registered_doors) do
+		table.insert(aOut, sName);
+	end; -- loop all doors
+	return aOut;
+end; -- SwissalpS.doorsteward.registeredDoors
+
+--!! old -> use SwissalpS.doorsteward.registeredDoors()
 function SwissalpS.doorsteward.doorBottoms()
 	local aOut = {};
 	local bIsTrapdoor = false;
@@ -112,6 +121,7 @@ function SwissalpS.doorsteward:open(oNodeDoor)
     return self:toggle(oNodeDoor:getpos(), oNodeDoor);
 end; -- SwissalpS.doorsteward.open
 
+--!! old
 function SwissalpS.doorsteward:toggle(tPos, oNodeDoor)
     local tParams, sReplaceBottom, sReplaceTop;
     local p2 = oNodeDoor.param2;
@@ -154,6 +164,7 @@ function SwissalpS.doorsteward:toggle(tPos, oNodeDoor)
     return self;
 end; -- SwissalpS.doorsteward:toggle
 
+--!! old
 function SwissalpS.doorsteward:isBottomNode(oNodeDoor)
     assert(nil ~= oNodeDoor, 'NIL passed as oNodeDoor');
     local sNameDoorFull = oNodeDoor.name;
@@ -165,6 +176,7 @@ function SwissalpS.doorsteward:isBottomNode(oNodeDoor)
     return ('b' == string.sub(sNameDoorFull, -3, -3));
 end; -- SwissalpS.doorsteward:isBottomNode
 
+--!! old
 function SwissalpS.doorsteward:isDoor(oNode)
 	assert(nil ~= oNode and nil ~= oNode.name, 'Invalid node passed');
 	local sName = oNode.name;
@@ -178,6 +190,7 @@ function SwissalpS.doorsteward:isDoor(oNode)
 	return false;
 end; -- SwissalpS.doorsteward:isDoor
 
+--!! old
 function SwissalpS.doorsteward:isOpen(oNodeDoor)
     assert(nil ~= oNodeDoor, 'NIL passed as oNodeDoor');
     local sNameDoorFull = oNodeDoor.name;
@@ -203,8 +216,12 @@ function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, iCountActiveObject, iCountA
 	local sLeaveOpen = tMeta:get_string(sKeyLeaveOpen) or 'false';
 	local bLeaveOpen = 'true' == sLeaveOpen;
     -- determine if door is open or not
-    local sNameDoor = oNodeDoor.name;
-    local bOpen = ('2' == string.sub(sNameDoor, -1));
+    local oDoor = doors.get(tPos);
+    --if nil == oDoor then
+    --	print('this should not have happened');
+    --	return;
+    --end;
+    local bOpen = oDoor:state();
 	-- collect nearby players
     local iCountPlayers = 0;
     local tObjects = minetest.get_objects_inside_radius(tPos, 2);
@@ -230,7 +247,8 @@ function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, iCountActiveObject, iCountA
 --SwissalpS.info.broadcast('door is open and 0 players nearby');
 			-- TODO: check which player last was near door?
             --return SwissalpS.doorsteward:close(minetest.get_node_or_nil(tPos));
-            return SwissalpS.doorsteward:toggle(tPos, oNodeDoor);
+            --return SwissalpS.doorsteward:toggle(tPos, oNodeDoor);
+            return oDoor:close();
         end; -- if no players
     else
         -- door is closed
@@ -241,7 +259,8 @@ function SwissalpS.doorsteward.fABM(tPos, oNodeDoor, iCountActiveObject, iCountA
 			for iIndex, sPlayer in pairs(tNames) do
 				if SwissalpS.doorsteward.mayOpen(tPos, sPlayer) then
 					--return SwissalpS.doorsteward:open(minetest.get_node_or_nil(tPos));
-					return SwissalpS.doorsteward:toggle(tPos, oNodeDoor);
+					--return SwissalpS.doorsteward:toggle(tPos, oNodeDoor);
+					return oDoor:open();
 				end;
 			end; -- loop all nearby players to see if one is allowed to open
         end; -- if got players

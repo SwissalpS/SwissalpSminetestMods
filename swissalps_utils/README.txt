@@ -24,6 +24,14 @@ Dependencies:
 =============
 +mod:swissalps_info
 
+API/exposed functions:
+======================
+boolToString(b)
+math.round(fFloat, iDigits)
+minetest.pos_to_string(tPos, iDigits)
+table.containsString(tHayStack, sNeedle)
+table.implodeStrings(tTable, sDelimiter)
+
 History:
 ========
 Instead of repeating code in almost all my mods, I have centralized them in

@@ -91,6 +91,37 @@ If present, can make use of:
 mod:areas
 mod:compassgps
 
+API/exposed functions:
+======================
+SssStp -- alias for SwissalpS.teleport
+SssStp.cc_goHome(sPlayer)
+SssStp.cc_goHomeGlobal(sPlayer)
+SssStp.cc_goToSlot(sPlayer, sSlot)
+SssStp.cc_goToSlotGlobal(sPlayer, sSlot)
+SssStp.cc_help(sPlayer)
+SssStp.cc_listSlots(sPlayer)
+SssStp.cc_saveSlot(sPlayer, sSlot)
+SssStp.cc_saveSlotGlobal(sPlayer, sSlot)
+SssStp.cc_setHome(sPlayer)
+SssStp.cc_setHomeGlobal(sPlayer)
+
+SssStpP -- alias for SwissalpS.teleport.pad
+SssStpP.addHomeBookmarkForPlayer(tPos, sPlayer)
+SssStpP.buildCocoonForPlayer(tPos, sPlayer, sHomeBlock)
+SssStpP.getValidNodeAt(tPos)
+SssStpP.mayDig(tPos, oPlayer)
+SssStpP.metaToPos(tMeta)
+SssStpP.newPlaceForPlayerRelativeToPad(tPos, sPlayer) -- tPos is position of a pad
+SssStpP.posToMeta(tPos, tMeta)
+SssStpP.protecetAreaForPlayer(tPos, sPlayer, fRadius) -- only works with areas mod
+SssStpP.randomNewPlaceForPlayer(tPos, sPlayer) -- tPos is position of a pad
+SssStpP.randomNewPlaceForPlayerNearExistingArea(sPlayer, fRadiusMinSpaceForPlayer, fRadiusMaxDistanceToExisting, fHeightMin, fHeightMax, bBuildCocoon)
+
+Privileges:
+===========
+SwissalpS_teleport_Global -- May set global teleport locations.
+SwissalpS_teleport_Random -- May set teleporter-pads to point somewhere random.
+
 Notes:
 ======
 - This mod can transport players very far in a very short time. You may need to

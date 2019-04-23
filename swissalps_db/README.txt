@@ -32,6 +32,10 @@ Dependencies:
 =============
 +mod:swissalps_info -- can easily be made to run without.
 
+API/exposed functions:
+======================
+look at the examples and code to figure out how to use.
+
 History:
 ========
 I wanted to save locations per player and have them persist between games.

@@ -5,7 +5,9 @@
 -- SwissalpS could not get in touch with author, so here we
 -- have bound it in to SwissalpS repo and modified to our liking
 
-SwissalpS = SwissalpS or {};
+if not minetest.global_exists('SwissalpS') then
+	SwissalpS = {};
+end;
 SwissalpS.db = SwissalpS.db or {
     version = 0.3,
     sSwissalpSmodTag = 'mod_db',
